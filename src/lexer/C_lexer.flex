@@ -6,7 +6,9 @@ identifier              [_a-zA-Z]+[0-9_a-zA-Z]*
 
 floating-constant       []
 
-integer-constant        []
+integer-suffix          [u|U][l|L]? | [l|L][u|U]?
+
+decimal                 [1-9][0-9]*[integer-suffix]?
 
 enumeration-constant    []
 
