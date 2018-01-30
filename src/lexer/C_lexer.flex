@@ -37,5 +37,4 @@ character-constant      []
 
 octal                   [0][0-7]*[integer-suffix]?
 
-hexadecimal-constant    0x[0-9a-fA-F]+ | 0X[0-9a-fA-F]+
-
+hexadecimal-constant    (0x|0X)[0-9a-fA-F]+
