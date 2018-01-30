@@ -1,2 +1,4 @@
 MilestoneID,             Dependencies, EstimatedEffort, Lead,  Completed, Description
-DefineInitialMilestones,             ,               1,    ?,           , Come up with initial milestones for getting started
+DefineInitialMilestones,             ,1,    ?,           , Come up with initial milestones for getting started
+Preliminary  C lexer,,3,joint,no,produce a skeletal outline of the c lexer with all the parameters
+Preliminary C parser ,,3,Joint ,no,Produce a skeletal outline of the C parser with all the necessary parameters
