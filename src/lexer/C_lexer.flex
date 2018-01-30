@@ -4,13 +4,11 @@ identifier              [_a-zA-Z]+[0-9_a-zA-Z]*
 //C++ always start off with either none digit or underscore as c variables cannot start off with digits
 // go back to hard stuff 
 
-floating-constant       []
+floating-constant       [+-]?( ([0-9]+[.][0-9]*) | ([.][0-9]+) | ([0-9]+([.][0-9]*)?[eE][+-]?[0-9]+) | ([.][0-9]+[eE][+-]?[0-9]+) )[lfLF]?
 
 integer-suffix          [u|U][l|L]? | [l|L][u|U]?
 
 decimal                 [1-9][0-9]*[integer-suffix]?
-
-enumeration-constant    []
 
 character-constant      []
 
