@@ -1,7 +1,12 @@
 %option noyywrap
 
 %{
+/* Now in a section of C that will be embedded
+   into the auto-generated code. Flex will not
+   try to interpret code surrounded by %{ ... %} */
 
+/* Bring in our declarations for token types and
+   the yylval variable. */
 #include "histogram.hpp"
 
 
@@ -11,6 +16,7 @@ extern "C" int fileno(FILE *stream);
 
 /* End the embedded code section. */
 %}
+
 
 Keyword     			auto|double|int|struct|break|else|long|switch|case
 						|enum|register|typedef|char|extern|return|union|const
@@ -31,7 +37,7 @@ Floating_constant       [+-]?( ([0-9]+[.][0-9]*) | ([.][0-9]+) | ([0-9]+([.][0-9
 
 Character_constant      '[.]'
 
-WhiteSpace				[ \n\t]
+WhiteSpace			[ \n\t]
 
 Other					.
 
@@ -49,7 +55,7 @@ Other					.
 					}
 
 {Decimal_constant}  { fprintf(stderr, "Decimal : %s\n", yytext);
-						bool u = false;, l = false;
+						bool u = false, l = false;
 						checkIntSuffix(u,l);
 						if(!u && !l) getiDecimal();
 						if(u && !l) getuDecimal();
@@ -59,7 +65,7 @@ Other					.
 					}
 
 {Octal_constant}  	{ fprintf(stderr, "Octal : %s\n", yytext);
-						bool u = false;, l = false;
+						bool u = false, l = false;
 						checkIntSuffix(u,l);
 						if(!u && !l) getiOctal();
 						if(u && !l) getuOctal();
@@ -69,7 +75,7 @@ Other					.
 					}
 					
 {Hexadecimal_constant}  	{ fprintf(stderr, "Hexadecimal : %s\n", yytext);
-						bool u = false;, l = false;
+						bool u = false, l = false;
 						checkIntSuffix(u,l);
 						if(!u && !l) getiHexa();
 						if(u && !l) getuHexa();
@@ -79,7 +85,7 @@ Other					.
 					}
 					
 {Floating_constant}	{ fprintf(stderr, "Floating : %s\n", yytext);
-						bool f = false;, l = false;
+						bool f = false, l = false;
 						checkFloatSuffix(f,l);
 						if(!f && !l) getdFloat();
 						if(f && !l) getfFloat();
