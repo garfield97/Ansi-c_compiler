@@ -32,9 +32,9 @@ Hexadecimal-constant    (0x|0X)[0-9a-fA-F]+[integer-suffix]?
 
 Floating-constant       [+-]?( ([0-9]+[.][0-9]*) | ([.][0-9]+) | ([0-9]+([.][0-9]*)?[eE][+-]?[0-9]+) | ([.][0-9]+[eE][+-]?[0-9]+) )[lfLF]?
 
-WhiteSpace	[ \n\t]
+WhiteSpace				[ \n\t]
 
-Other		.
+Other					.
 
 
 %%
@@ -50,7 +50,8 @@ Other		.
 					}
 
 {Decimal-constant}  { fprintf(stderr, "Number : %s\n", yytext);
-						
+						bool u = false;, f = false;
+						checkSuffix(u,f);
 						return Decimal-constant; 
 					}
 
@@ -106,6 +107,15 @@ void getHexa(){
     sscanf(ytext,"%x", &num);
     
     yylval.intValue = num;
+}
+
+checkSuffix(bool &u_exist, bool &l_exist){
+	int size = strlen(yytext);
+	if(size < 2){
+		return;
+	}
+	if(yytext[] == ('u' || 'U') || yytext[] == ('u' || 'U')) u_exist = true;
+	if(yytext[] == ('l' || 'L') || yytext[] == ('l' || 'L')) l_exist = true;
 }
 
 

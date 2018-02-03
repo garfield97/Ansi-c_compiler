@@ -42,5 +42,6 @@ void calcFraction();
 void toString();
 void wordB();
 void yyerror (char const *s);
+void checkSuffix(bool &u_exist, bool &l_exist);
 
 #endif
