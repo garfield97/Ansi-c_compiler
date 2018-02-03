@@ -8,22 +8,22 @@ enum TokenType{
     None   = 0, // This indicates there are no more tokens
     Keyword,
     Identifier,
-    Floating-constant,
-    Decimal-constant,
-    Octal-constants,
-    Hexadecimal-constant,
-    Character-constant
+    Floating_constant,
+    Decimal_constant,
+    Octal_constants,
+    Hexadecimal_constant,
+    Character_constant
 };
 
 union TokenValue{
     float ffloatValue;
-    double dfloatValue
-    long float lfloatValue
+    double dfloatValue;
+    long double lfloatValue;
     std::string *wordValue;
     int intValue;
-    uint uintValue;
+    unsigned int uintValue;
     long int longintValue;
-    long uint longuintValue;
+    unsigned long longuintValue;
     char characterValue;
 
 };
