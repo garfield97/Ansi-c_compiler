@@ -245,7 +245,79 @@ void yyerror (char const *s)
 
 
 
-
+void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();void getdFloat();
+void getfFloat();
+void getlFloat();
 
 
 
