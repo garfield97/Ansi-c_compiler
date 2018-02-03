@@ -88,6 +88,27 @@ void getDecimal(){
 
 }
 
+void getOctal(){
+
+    int num;
+
+    sscanf(ytext,"%o", &num);
+    
+    yylval.intValue = num;
+    
+}
+
+
+void getHexa(){
+
+    int num;
+
+    sscanf(ytext,"%x", &num);
+    
+    yylval.intValue = num;
+}
+
+
 void toString(){
  	std::string *word = new std::string; // take value out of yylex scope
 	*word = yytext;

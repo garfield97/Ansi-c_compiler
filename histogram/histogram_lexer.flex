@@ -93,6 +93,20 @@ void calcFraction(){
 
 }
 
+
+
+void getOctal(){
+
+    int 
+
+    sscanf(ytext,"%o",
+
+
+void getHexa(){
+
+
+
+
 void word(){
  	std::string *word = new std::string; // take value out of yylex scope
 	*word = yytext;
