@@ -29,7 +29,7 @@ Hexadecimal-constant    (0x|0X)[0-9a-fA-F]+[integer-suffix]?
 
 Floating-constant       [+-]?( ([0-9]+[.][0-9]*) | ([.][0-9]+) | ([0-9]+([.][0-9]*)?[eE][+-]?[0-9]+) | ([.][0-9]+[eE][+-]?[0-9]+) )[lfLF]?
 
-Character-constant      []
+Character-constant      '[.]'
 
 WhiteSpace				[ \n\t]
 
@@ -80,11 +80,16 @@ Other					.
 					
 {Floating-constant}	{ fprintf(stderr, "Floating : %s\n", yytext);
 						bool f = false;, l = false;
-						checkIntSuffix(f,l);
+						checkFloatSuffix(f,l);
 						if(!f && !l) getdFloat();
 						if(f && !l) getfFloat();
 						if(!f && l) getlFloat();
 						return Floating-constant;
+					}
+
+{Character-constant} { fprintf(stderr, "Character : %s\n", yytext);
+						getCharacter();
+						return Character-constant; 
 					}
 
 
@@ -96,7 +101,6 @@ Other					.
 
 %%
 
-checkIntSuffix(bool &u_exist, bool &l_exist){
 void getuDecimal(){
     
     uint num;
@@ -238,13 +242,23 @@ void getCharacter(){
 
 
 
-checkSuffix(bool &u_exist, bool &l_exist){
+checkIntSuffix(bool &u_exist, bool &l_exist){
 	int size = strlen(yytext);
 	if(size < 2){
 		return;
 	}
-	if(yytext[] == ('u' || 'U') || yytext[] == ('u' || 'U')) u_exist = true;
-	if(yytext[] == ('l' || 'L') || yytext[] == ('l' || 'L')) l_exist = true;
+	if(yytext[size-1] == ('u' || 'U') || yytext[size-2] == ('u' || 'U')) u_exist = true;
+	if(yytext[size-1] == ('l' || 'L') || yytext[size-2] == ('l' || 'L')) l_exist = true;
+}
+
+checkFloatSuffix(bool &f_exist, bool &l_exist){
+	int last = strlen(yytext) - 1;
+	if(size < 1){
+		return;
+	}
+
+	if(yytext[last] == ('f' || 'F') ) f_exist = true;
+	else if(yytext[last] == ('l' || 'L') l_exist = true;
 }
 
 
