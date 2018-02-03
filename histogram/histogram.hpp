@@ -18,10 +18,9 @@ enum TokenType{
 
 union TokenValue{
     double numberValue;
-    float floatvalue;
+    float floatValue;
     std::string *wordValue;
-    auto valuestore;
-    int intvalue;
+    int intValue;
 };
 
 // This is a global variable used to move the

@@ -39,25 +39,25 @@ Other		.
 
 %%
 
-{Keyword}		{ fprintf(stderr, "Keyword : %s\n", yytext);
-					toString();
-					return Keyword;
-				}
+{Keyword}			{ fprintf(stderr, "Keyword : %s\n", yytext);
+						toString();	//stored in wordValue
+						return Keyword;
+					}
 
-{Fraction}		{ fprintf(stderr, "Number : %s\n", yytext);
-                      calcFraction();
-                      return Number; 
-                }
+{Identifier}		{ fprintf(stderr, "Identifier : %s\n", yytext);
+						toString();
+						return Identifier; 
+					}
 
-{DecimalI}      { fprintf(stderr, "Number : %s\n", yytext);
-                      yylval.numberValue = atof(yytext);
-                      return Number; 
-                }
+{Decimal-constant}  { fprintf(stderr, "Number : %s\n", yytext);
+						
+						return Decimal-constant; 
+					}
 
-{DecimalF}		{ fprintf(stderr, "Number : %s\n", yytext);
-					  yylval.numberValue = atof(yytext);
-					  return Number; 
-			   	}
+{Octal-constant}  { fprintf(stderr, "Number : %s\n", yytext);
+						yylval.numberValue = atof(yytext);
+						return Number; 
+					}
 
 {Word}			{ fprintf(stderr, "Word : %s\n", yytext); 
 					  word();
@@ -78,13 +78,13 @@ Other		.
 %%
 
 
-void calcFraction(){
+void getDecimal(){
 
-	int num, den;
+	int num
 
-	sscanf(yytext, "%d/%d", &num, &den);
+	sscanf(yytext, "%d", &num);
 
-	yylval.numberValue = double(num) / double(den);
+	yylval.intValue = num;
 
 }
 
