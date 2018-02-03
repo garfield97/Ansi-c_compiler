@@ -1,1 +1,17 @@
 *.DS_store
+*historgram/.tab.cpp
+*historgram/.tab.hpp
+*historgram/.yy.cpp
+*.got.txt
+historgram/
+historgram/bin/*
+*historgram/.o
+*historgram/.output
+*historgram/.log
+*historgram/.stackdump
+
+*historgram/.DS_Store
+
+historgram/.vagrant
+
+historgram/histogram
