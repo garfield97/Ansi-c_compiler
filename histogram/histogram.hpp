@@ -21,6 +21,11 @@ union TokenValue{
     float floatValue;
     std::string *wordValue;
     int intValue;
+    uint uintValue;
+    long int longintValue;
+    long uint longuintValue;
+    
+    
 };
 
 // This is a global variable used to move the
