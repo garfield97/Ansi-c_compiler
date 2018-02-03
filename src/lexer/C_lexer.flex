@@ -202,6 +202,33 @@ void getluOctal(){
     
 }
 
+void getdFloat(){
+    
+    double num;
+    sscanf(ytext,"%f", &num);    
+    yylval.dfloatValue = num;
+
+}
+    
+
+
+
+void getfFloat(){
+
+    float num;
+    sscanf(ytext,"%f", &num);    
+    yylval.ffloatValue = num;
+}
+
+
+void getlFloat(){
+
+    long float num;
+    sscanf(ytext,"%f", &num);    
+    yylval.lfloatValue = num;
+
+}
+
 
 
 
@@ -239,8 +266,6 @@ void yyerror (char const *s)
 {
   fprintf (stderr, "Flex Error: %s\n", s); /* s is the text that wasn't matched */
 }
-
-
 
 
 
