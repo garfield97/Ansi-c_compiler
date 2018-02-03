@@ -97,7 +97,7 @@ void calcFraction(){
 
 void getOctal(){
 
-    int 
+    int num;
 
     sscanf(ytext,"%o",
 
@@ -105,7 +105,18 @@ void getOctal(){
 void getHexa(){
 
 
-
+void getiDecimal();
+void getuDecimal();
+void getlDecimal();
+void getluDecimal();
+void getiHexa();
+void getuHexa();
+void getlHexa();
+void getluHexa();
+void getiOctal();
+void getuOctal();
+void getlOctal();
+void getluOctal();
 
 void word(){
  	std::string *word = new std::string; // take value out of yylex scope
