@@ -1,6 +1,3 @@
-
-character-constant      []
-
 %option noyywrap
 
 %{
@@ -32,6 +29,8 @@ Hexadecimal-constant    (0x|0X)[0-9a-fA-F]+[integer-suffix]?
 
 Floating-constant       [+-]?( ([0-9]+[.][0-9]*) | ([.][0-9]+) | ([0-9]+([.][0-9]*)?[eE][+-]?[0-9]+) | ([.][0-9]+[eE][+-]?[0-9]+) )[lfLF]?
 
+Character-constant      []
+
 WhiteSpace				[ \n\t]
 
 Other					.
@@ -50,33 +49,42 @@ Other					.
 					}
 
 {Decimal-constant}  { fprintf(stderr, "Decimal : %s\n", yytext);
-						bool u = false;, f = false;
-						checkSuffix(u,f);
-						if(!u && !f) getiDecimal();
-						if(u && !f) getuDecimal();
-						if(!u && f) getlDecimal();
-						if(u && f) getluDecimal();
+						bool u = false;, l = false;
+						checkIntSuffix(u,l);
+						if(!u && !l) getiDecimal();
+						if(u && !l) getuDecimal();
+						if(!u && l) getlDecimal();
+						if(u && l) getluDecimal();
 						return Decimal-constant; 
 					}
 
 {Octal-constant}  	{ fprintf(stderr, "Octal : %s\n", yytext);
-						bool u = false;, f = false;
-						checkSuffix(u,f);
-						if(!u && !f) getiOctal();
-						if(u && !f) getuOctal();
-						if(!u && f) getlOctal();
-						if(u && f) getluOctal();
+						bool u = false;, l = false;
+						checkIntSuffix(u,l);
+						if(!u && !l) getiOctal();
+						if(u && !l) getuOctal();
+						if(!u && l) getlOctal();
+						if(u && l) getluOctal();
 						return Octal-constant; 
 					}
 					
 {Hexadecimal-constant}  	{ fprintf(stderr, "Hexadecimal : %s\n", yytext);
-						bool u = false;, f = false;
-						checkSuffix(u,f);
-						if(!u && !f) getiHexa();
-						if(u && !f) getuHexa();
-						if(!u && f) getlHexa();
-						if(u && f) getluHexa();
+						bool u = false;, l = false;
+						checkIntSuffix(u,l);
+						if(!u && !l) getiHexa();
+						if(u && !l) getuHexa();
+						if(!u && l) getlHexa();
+						if(u && l) getluHexa();
 						return Hexadecimal-constant; 
+					}
+					
+{Floating-constant}	{ fprintf(stderr, "Floating : %s\n", yytext);
+						bool f = false;, l = false;
+						checkIntSuffix(f,l);
+						if(!f && !l) getdFloat();
+						if(f && !l) getfFloat();
+						if(!f && l) getlFloat();
+						return Floating-constant;
 					}
 
 
@@ -120,7 +128,7 @@ void getiHexa(){
     yylval.intValue = num;
 }
 
-checkSuffix(bool &u_exist, bool &l_exist){
+checkIntSuffix(bool &u_exist, bool &l_exist){
 	int size = strlen(yytext);
 	if(size < 2){
 		return;

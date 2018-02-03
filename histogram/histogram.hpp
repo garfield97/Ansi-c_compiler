@@ -12,8 +12,7 @@ enum TokenType{
     Decimal-constant,
     Octal-constants,
     Hexadecimal-constant,
-    Number , // token codes must be positive
-    Word      // = 2, implicit from C++ enumeration
+    Character-constant
 };
 
 union TokenValue{
@@ -24,9 +23,7 @@ union TokenValue{
     uint uintValue;
     long int longintValue;
     long uint longuintValue;
-    
-    
-    
+
 };
 
 // This is a global variable used to move the
@@ -47,7 +44,12 @@ extern int yylex();
 void toString();
 void wordB();
 void yyerror (char const *s);
-void checkSuffix(bool &u_exist, bool &l_exist);
+void checkIntSuffix(bool &u_exist, bool &l_exist);
+void checkFloatSuffix(bool &f_exist, bool &l_exist);
+
+void getdFloat();
+void getfFloat();
+void getlFloat();
 
 void getiDecimal();
 void getuDecimal();
