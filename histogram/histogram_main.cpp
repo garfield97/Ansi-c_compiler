@@ -31,29 +31,19 @@ int main()
 
         }else if(type==Keyword){
             
-            
-            histogram[*yylval.wordValue] ++;
-            // TODO: Free the pointer yylval.wordValue to stop leaks
-          //  yylval.wordValue = NULL;
-            delete yylval.wordValue;
-            
+     
             
         }else if(type==Identifier){
     
     
-           histogram[*yylval.wordValue] ++;
-            // TODO: Free the pointer yylval.wordValue to stop leaks
-          //  yylval.wordValue = NULL;
-            delete yylval.wordValue;
-            
-            
         }else if(type==Floating_constant){
             
-            yylval.
+        
           
           
             
         }else if(Decimal_constant){
+        
         
             
         }else if(Octal_constants){
