@@ -9,7 +9,6 @@ enum TokenType{
     Keyword,
     Identifier,
     Floating-constant,
-    Integer-suffix,
     Decimal-constant,
     Octal-constants,
     Hexadecimal-constant,
@@ -41,7 +40,7 @@ extern int yylex();
 
 // functions used in pattern matching
 void calcFraction();
-void word();
+void toString();
 void wordB();
 void yyerror (char const *s);
 
