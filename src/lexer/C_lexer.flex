@@ -112,6 +112,21 @@ void getiHexa(){
     yylval.intValue = num;
 }
 
+void getiDecimal();
+void getuDecimal();
+void getlDecimal();
+void getluDecimal();
+void getiHexa();
+void getuHexa();
+void getlHexa();
+void getluHexa();
+void getiOctal();
+void getuOctal();
+void getlOctal();
+void getluOctal();
+
+
+
 checkSuffix(bool &u_exist, bool &l_exist){
 	int size = strlen(yytext);
 	if(size < 2){
