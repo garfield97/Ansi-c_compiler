@@ -21,6 +21,11 @@ union TokenValue{
     float floatValue;
     std::string *wordValue;
     int intValue;
+    uint uintValue;
+    long int longintValue;
+    long uint longuintValue;
+    
+    
 };
 
 // This is a global variable used to move the
@@ -38,10 +43,24 @@ extern int yylex();
 
 
 // functions used in pattern matching
-void calcFraction();
 void toString();
 void wordB();
 void yyerror (char const *s);
 void checkSuffix(bool &u_exist, bool &l_exist);
+
+void getiDecimal();
+void getuDecimal();
+void getlDecimal();
+void getluDecimal();
+void getiHexa();
+void getuHexa();
+void getlHexa();
+void getluHexa();
+void getiOctal();
+void getuOctal();
+void getlOctal();
+void getluOctal();
+
+
 
 #endif

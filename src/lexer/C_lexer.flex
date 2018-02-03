@@ -52,6 +52,8 @@ Other					.
 {Decimal-constant}  { fprintf(stderr, "Number : %s\n", yytext);
 						bool u = false;, f = false;
 						checkSuffix(u,f);
+						if(!u && !f) getDecimal();
+						
 						return Decimal-constant; 
 					}
 
@@ -79,7 +81,7 @@ Other					.
 %%
 
 
-void getDecimal(){
+void getiDecimal(){
 
 	int num
 
@@ -89,7 +91,8 @@ void getDecimal(){
 
 }
 
-void getOctal(){
+
+void getiOctal(){
 
     int num;
 
@@ -100,7 +103,7 @@ void getOctal(){
 }
 
 
-void getHexa(){
+void getiHexa(){
 
     int num;
 
