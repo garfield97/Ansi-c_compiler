@@ -29,24 +29,41 @@ int main()
         if(type==None){
             break; // No more tokens
 
-        }else if(type==Number){
-            // We have a number. The value will be
-            // in yylval.numberValue
-
-            // TODO: add to sum
-            sum += yylval.numberValue;
+        }else if(type==Keyword){
             
-        }else if(type==Word){
-            // We have a string. The value is in a string
-            // _pointed to_ by yylval.wordValue. Note that
-            // the string is allocated by the lexer, but
-            // deallocated by us.
-
-            // TODO: add yylval.wordValue to histogram
-            histogram[*yylval.wordValue]++;
-
+            
+            histogram[*yylval.wordValue] ++;
             // TODO: Free the pointer yylval.wordValue to stop leaks
+          //  yylval.wordValue = NULL;
             delete yylval.wordValue;
+            
+            
+        }else if(type==Identifier){
+    
+    
+           histogram[*yylval.wordValue] ++;
+            // TODO: Free the pointer yylval.wordValue to stop leaks
+          //  yylval.wordValue = NULL;
+            delete yylval.wordValue;
+            
+            
+        }else if(type==Floating_constant){
+            
+            yylval.
+          
+          
+            
+        }else if(Decimal_constant){
+        
+            
+        }else if(Octal_constants){
+      
+       
+        }else if(Hexadecimal_constant){
+        
+        
+        }else if(Character_constant){
+
 
         }else{
             assert(0); // There are only three token types.
