@@ -29,7 +29,7 @@ Hexadecimal-constant    (0x|0X)[0-9a-fA-F]+[integer-suffix]?
 
 Floating-constant       [+-]?( ([0-9]+[.][0-9]*) | ([.][0-9]+) | ([0-9]+([.][0-9]*)?[eE][+-]?[0-9]+) | ([.][0-9]+[eE][+-]?[0-9]+) )[lfLF]?
 
-Character-constant      []
+Character-constant      '[.]'
 
 WhiteSpace				[ \n\t]
 
@@ -87,9 +87,9 @@ Other					.
 						return Floating-constant;
 					}
 
-{Character-constant} {
-
-
+{Character-constant} { fprintf(stderr, "Character : %s\n", yytext);
+						getCharacter();
+						return Character-constant; 
 					}
 
 
