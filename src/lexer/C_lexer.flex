@@ -120,18 +120,80 @@ void getiHexa(){
     yylval.intValue = num;
 }
 
-void getiDecimal();
-void getuDecimal();
-void getlDecimal();
-void getluDecimal();
-void getiHexa();
-void getuHexa();
-void getlHexa();
-void getluHexa();
-void getiOctal();
-void getuOctal();
-void getlOctal();
-void getluOctal();
+void getuDecimal(){
+    
+    uint num;
+	sscanf(yytext, "%u", &num);
+	yylval.uintValue = num;
+
+}
+
+
+void getlDecimal(){
+   
+    long int num;
+	sscanf(yytext, "%d", &num);
+	yylval.longintValue = num;
+
+}
+
+void getluDecimal(){   
+
+    long uint num;
+	sscanf(yytext, "%u", &num);
+	yylval.longuintValue = num;
+
+}
+
+void getuHexa(){
+
+    uint num;
+	sscanf(yytext, "%x", &num);
+	yylval.uintValue = num;    
+
+}
+
+
+void getlHexa(){
+    
+    long int num;
+    sscanf(yytext,"%x",&num);
+    yylval.longintValue = num;
+    
+}
+    
+void getluHexa(){
+    
+    long uint num;
+    sscanf(yytext,"%x",&num);
+    yylval.longuintValue = num;
+}
+    
+void getuOctal(){
+
+    uint num;
+    sscanf(ytext,"%o", &num);    
+    yylval.uintValue = num;
+    
+}
+
+void getlOctal(){
+ 
+    long int num;
+    sscanf(ytext,"%o", &num);    
+    yylval.longintValue = num;
+
+}
+
+void getluOctal(){
+
+    long uint num;
+    sscanf(ytext,"%o", &num);    
+    yylval.longuintValue = num;
+    
+    
+}
+
 
 
 
