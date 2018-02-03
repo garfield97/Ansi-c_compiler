@@ -4,14 +4,25 @@
 #include <string>
 
 enum TokenType{
+
     None   = 0, // This indicates there are no more tokens
-    Number = 1, // token codes must be positive
+    Keyword,
+    Identifier,
+    Floating-constant,
+    Integer-suffix,
+    Decimal-constant,
+    Octal-constants,
+    Hexadecimal-constant,
+    Number , // token codes must be positive
     Word      // = 2, implicit from C++ enumeration
 };
 
 union TokenValue{
     double numberValue;
+    float floatvalue;
     std::string *wordValue;
+    auto valuestore;
+    int intvalue;
 };
 
 // This is a global variable used to move the
