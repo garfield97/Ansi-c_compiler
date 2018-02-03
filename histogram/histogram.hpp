@@ -17,7 +17,9 @@ enum TokenType{
 
 union TokenValue{
     double numberValue;
-    float floatValue;
+    float ffloatValue;
+    double dfloatValue
+    long float lfloatValue
     std::string *wordValue;
     int intValue;
     uint uintValue;
