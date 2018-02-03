@@ -26,7 +26,7 @@ Integer-suffix          ([uU][lL]?) | ([lL][uU]?)
 
 Decimal-constant        [1-9][0-9]*[integer-suffix]?
 
-Octal-constants         [0][0-7]*[integer-suffix]?
+Octal-constant		    [0][0-7]*[integer-suffix]?
 
 Hexadecimal-constant    (0x|0X)[0-9a-fA-F]+[integer-suffix]?
 
@@ -49,28 +49,36 @@ Other					.
 						return Identifier; 
 					}
 
-{Decimal-constant}  { fprintf(stderr, "Number : %s\n", yytext);
+{Decimal-constant}  { fprintf(stderr, "Decimal : %s\n", yytext);
 						bool u = false;, f = false;
 						checkSuffix(u,f);
-						if(!u && !f) getDecimal();
-						
+						if(!u && !f) getiDecimal();
+						if(u && !f) getuDecimal();
+						if(!u && f) getlDecimal();
+						if(u && f) getluDecimal();
 						return Decimal-constant; 
 					}
 
-{Octal-constant}  { fprintf(stderr, "Number : %s\n", yytext);
-						yylval.numberValue = atof(yytext);
-						return Number; 
+{Octal-constant}  	{ fprintf(stderr, "Octal : %s\n", yytext);
+						bool u = false;, f = false;
+						checkSuffix(u,f);
+						if(!u && !f) getiOctal();
+						if(u && !f) getuOctal();
+						if(!u && f) getlOctal();
+						if(u && f) getluOctal();
+						return Octal-constant; 
+					}
+					
+{Hexadecimal-constant}  	{ fprintf(stderr, "Hexadecimal : %s\n", yytext);
+						bool u = false;, f = false;
+						checkSuffix(u,f);
+						if(!u && !f) getiHexa();
+						if(u && !f) getuHexa();
+						if(!u && f) getlHexa();
+						if(u && f) getluHexa();
+						return Hexadecimal-constant; 
 					}
 
-{Word}			{ fprintf(stderr, "Word : %s\n", yytext); 
-					  word();
-                  	  return Word; 
-               	}
-
-{WordBra} 		{ fprintf(stderr, "Word : %s\n", yytext); 
-					  wordB();
-                      return Word; 
-               	}
 
 {WhiteSpace}    { fprintf(stderr, "Newline, tab or space\n"); }
 
