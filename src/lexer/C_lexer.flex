@@ -19,17 +19,17 @@ Keyword     			auto|double|int|struct|break|else|long|switch|case
 			
 Identifier  			[_a-zA-Z][0-9_a-zA-Z]*
 
-Integer-suffix          ([uU][lL]?) | ([lL][uU]?)
+Integer_suffix          ([uU][lL]?) | ([lL][uU]?)
 
-Decimal-constant        [1-9][0-9]*[integer-suffix]?
+Decimal_constant        [1-9][0-9]*[integer_suffix]?
 
-Octal-constant		    [0][0-7]*[integer-suffix]?
+Octal_constant		    [0][0-7]*[integer_suffix]?
 
-Hexadecimal-constant    (0x|0X)[0-9a-fA-F]+[integer-suffix]?
+Hexadecimal_constant    (0x|0X)[0-9a-fA-F]+[integer_suffix]?
 
-Floating-constant       [+-]?( ([0-9]+[.][0-9]*) | ([.][0-9]+) | ([0-9]+([.][0-9]*)?[eE][+-]?[0-9]+) | ([.][0-9]+[eE][+-]?[0-9]+) )[lfLF]?
+Floating_constant       [+-]?( ([0-9]+[.][0-9]*) | ([.][0-9]+) | ([0-9]+([.][0-9]*)?[eE][+-]?[0-9]+) | ([.][0-9]+[eE][+-]?[0-9]+) )[lfLF]?
 
-Character-constant      '[.]'
+Character_constant      '[.]'
 
 WhiteSpace				[ \n\t]
 
@@ -48,7 +48,7 @@ Other					.
 						return Identifier; 
 					}
 
-{Decimal-constant}  { fprintf(stderr, "Decimal : %s\n", yytext);
+{Decimal_constant}  { fprintf(stderr, "Decimal : %s\n", yytext);
 						bool u = false;, l = false;
 						checkIntSuffix(u,l);
 						if(!u && !l) getiDecimal();
@@ -58,7 +58,7 @@ Other					.
 						return Decimal-constant; 
 					}
 
-{Octal-constant}  	{ fprintf(stderr, "Octal : %s\n", yytext);
+{Octal_constant}  	{ fprintf(stderr, "Octal : %s\n", yytext);
 						bool u = false;, l = false;
 						checkIntSuffix(u,l);
 						if(!u && !l) getiOctal();
@@ -68,7 +68,7 @@ Other					.
 						return Octal-constant; 
 					}
 					
-{Hexadecimal-constant}  	{ fprintf(stderr, "Hexadecimal : %s\n", yytext);
+{Hexadecimal_constant}  	{ fprintf(stderr, "Hexadecimal : %s\n", yytext);
 						bool u = false;, l = false;
 						checkIntSuffix(u,l);
 						if(!u && !l) getiHexa();
@@ -78,7 +78,7 @@ Other					.
 						return Hexadecimal-constant; 
 					}
 					
-{Floating-constant}	{ fprintf(stderr, "Floating : %s\n", yytext);
+{Floating_constant}	{ fprintf(stderr, "Floating : %s\n", yytext);
 						bool f = false;, l = false;
 						checkFloatSuffix(f,l);
 						if(!f && !l) getdFloat();
@@ -87,7 +87,7 @@ Other					.
 						return Floating-constant;
 					}
 
-{Character-constant} { fprintf(stderr, "Character : %s\n", yytext);
+{Character_constant} { fprintf(stderr, "Character : %s\n", yytext);
 						getCharacter();
 						return Character-constant; 
 					}
@@ -227,7 +227,7 @@ void getfFloat(){
 
 void getlFloat(){
 
-    long float num;
+    long double num;
     sscanf(yytext,"%f", &num);    
     yylval.lfloatValue = num;
 
