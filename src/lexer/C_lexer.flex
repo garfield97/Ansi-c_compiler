@@ -120,7 +120,7 @@ void getiOctal(){
 
     int num;
 
-    sscanf(ytext,"%o", &num);
+    sscanf(yytext,"%o", &num);
     
     yylval.intValue = num;
     
@@ -131,7 +131,7 @@ void getiHexa(){
 
     int num;
 
-    sscanf(ytext,"%x", &num);
+    sscanf(yytext,"%x", &num);
     
     yylval.intValue = num;
 }
@@ -180,7 +180,7 @@ void getluHexa(){
 void getuOctal(){
 
     uint num;
-    sscanf(ytext,"%o", &num);    
+    sscanf(yytext,"%o", &num);    
     yylval.uintValue = num;
     
 }
@@ -188,7 +188,7 @@ void getuOctal(){
 void getlOctal(){
  
     long int num;
-    sscanf(ytext,"%o", &num);    
+    sscanf(yytext,"%o", &num);    
     yylval.longintValue = num;
 
 }
@@ -196,7 +196,7 @@ void getlOctal(){
 void getluOctal(){
 
     long uint num;
-    sscanf(ytext,"%o", &num);    
+    sscanf(yytext,"%o", &num);    
     yylval.longuintValue = num;
     
     
@@ -205,7 +205,7 @@ void getluOctal(){
 void getdFloat(){
     
     double num;
-    sscanf(ytext,"%f", &num);    
+    sscanf(yytext,"%f", &num);    
     yylval.dfloatValue = num;
 
 }
@@ -216,7 +216,7 @@ void getdFloat(){
 void getfFloat(){
 
     float num;
-    sscanf(ytext,"%f", &num);    
+    sscanf(yytext,"%f", &num);    
     yylval.ffloatValue = num;
 }
 
@@ -224,11 +224,17 @@ void getfFloat(){
 void getlFloat(){
 
     long float num;
-    sscanf(ytext,"%f", &num);    
+    sscanf(yytext,"%f", &num);    
     yylval.lfloatValue = num;
 
 }
 
+void getCharacter(){
+    char val;
+    sscanf(yytext,"%c", &val);
+    yylval.characterValue = val;
+}
+    
 
 
 

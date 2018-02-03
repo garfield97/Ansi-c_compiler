@@ -23,6 +23,7 @@ union TokenValue{
     uint uintValue;
     long int longintValue;
     long uint longuintValue;
+    char characterValue;
 
 };
 
@@ -63,6 +64,8 @@ void getiOctal();
 void getuOctal();
 void getlOctal();
 void getluOctal();
+
+void getCharacter();
 
 
 
