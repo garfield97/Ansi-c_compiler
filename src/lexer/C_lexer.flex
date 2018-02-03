@@ -96,6 +96,14 @@ Other					.
 
 %%
 
+checkIntSuffix(bool &u_exist, bool &l_exist){
+void getuDecimal(){
+    
+    uint num;
+	sscanf(yytext, "%u", &num);
+	yylval.uintValue = num;
+
+}
 
 void getiDecimal(){
 
@@ -128,7 +136,76 @@ void getiHexa(){
     yylval.intValue = num;
 }
 
-checkIntSuffix(bool &u_exist, bool &l_exist){
+
+void getlDecimal(){
+   
+    long int num;
+	sscanf(yytext, "%d", &num);
+	yylval.longintValue = num;
+
+}
+
+void getluDecimal(){   
+
+    long uint num;
+	sscanf(yytext, "%u", &num);
+	yylval.longuintValue = num;
+
+}
+
+void getuHexa(){
+
+    uint num;
+	sscanf(yytext, "%x", &num);
+	yylval.uintValue = num;    
+
+}
+
+
+void getlHexa(){
+    
+    long int num;
+    sscanf(yytext,"%x",&num);
+    yylval.longintValue = num;
+    
+}
+    
+void getluHexa(){
+    
+    long uint num;
+    sscanf(yytext,"%x",&num);
+    yylval.longuintValue = num;
+}
+    
+void getuOctal(){
+
+    uint num;
+    sscanf(ytext,"%o", &num);    
+    yylval.uintValue = num;
+    
+}
+
+void getlOctal(){
+ 
+    long int num;
+    sscanf(ytext,"%o", &num);    
+    yylval.longintValue = num;
+
+}
+
+void getluOctal(){
+
+    long uint num;
+    sscanf(ytext,"%o", &num);    
+    yylval.longuintValue = num;
+    
+    
+}
+
+
+
+
+checkSuffix(bool &u_exist, bool &l_exist){
 	int size = strlen(yytext);
 	if(size < 2){
 		return;
