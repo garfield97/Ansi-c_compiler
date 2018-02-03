@@ -38,9 +38,13 @@ extern int yylex();
 
 
 // functions used in pattern matching
-void calcFraction();
 void toString();
 void wordB();
 void yyerror (char const *s);
+void getHexa();
+void getOctal();
+void getDecimal();
+
+
 
 #endif
