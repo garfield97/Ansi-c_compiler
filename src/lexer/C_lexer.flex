@@ -96,7 +96,6 @@ Other					.
 
 %%
 
-
 void getuDecimal(){
     
     uint num;
