@@ -31,6 +31,16 @@ WordBra		[[][^]\n]*[]]
 
 WhiteSpace	[ \n\t]
 
+hexadecimal-constant    (0x|0X)[0-9a-fA-F]+[integer-suffix]?
+
+octal-constants         [0][0-7]*[integer-suffix]?
+
+decimal-constant        [1-9][0-9]*[integer-suffix]?
+
+integer-suffix          ([uU][lL]?) | ([lL][uU]?)
+
+
+
 Other		.
 
 
@@ -65,6 +75,9 @@ Other		.
 
 
 {Other}			{ yyerror(yytext); }
+
+
+
 
 
 %%
