@@ -16,7 +16,6 @@ enum TokenType{
 };
 
 union TokenValue{
-    double numberValue;
     float ffloatValue;
     double dfloatValue
     long float lfloatValue

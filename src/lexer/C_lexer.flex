@@ -87,6 +87,11 @@ Other					.
 						return Floating-constant;
 					}
 
+{Character-constant} {
+
+
+					}
+
 
 {WhiteSpace}    { fprintf(stderr, "Newline, tab or space\n"); }
 
