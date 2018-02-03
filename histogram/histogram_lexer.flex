@@ -55,7 +55,7 @@ Other					.
 						if(u && !l) getuDecimal();
 						if(!u && l) getlDecimal();
 						if(u && l) getluDecimal();
-						return Decimal-constant; 
+						return Decimal_constant; 
 					}
 
 {Octal_constant}  	{ fprintf(stderr, "Octal : %s\n", yytext);
@@ -65,7 +65,7 @@ Other					.
 						if(u && !l) getuOctal();
 						if(!u && l) getlOctal();
 						if(u && l) getluOctal();
-						return Octal-constant; 
+						return Octal_constant; 
 					}
 					
 {Hexadecimal_constant}  	{ fprintf(stderr, "Hexadecimal : %s\n", yytext);
@@ -75,7 +75,7 @@ Other					.
 						if(u && !l) getuHexa();
 						if(!u && l) getlHexa();
 						if(u && l) getluHexa();
-						return Hexadecimal-constant; 
+						return Hexadecimal_constant; 
 					}
 					
 {Floating_constant}	{ fprintf(stderr, "Floating : %s\n", yytext);
@@ -84,12 +84,12 @@ Other					.
 						if(!f && !l) getdFloat();
 						if(f && !l) getfFloat();
 						if(!f && l) getlFloat();
-						return Floating-constant;
+						return Floating_constant;
 					}
 
 {Character_constant} { fprintf(stderr, "Character : %s\n", yytext);
 						getCharacter();
-						return Character-constant; 
+						return Character_constant; 
 					}
 
 
