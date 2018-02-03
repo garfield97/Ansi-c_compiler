@@ -26,6 +26,7 @@ union TokenValue{
     long uint longuintValue;
     
     
+    
 };
 
 // This is a global variable used to move the
@@ -49,7 +50,7 @@ void yyerror (char const *s);
 void getHexa();
 void getOctal();
 void getDecimal();
-
+void getLongint();
 
 
 #endif
