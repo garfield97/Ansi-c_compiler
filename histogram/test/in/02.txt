@@ -1,0 +1,8 @@
+int main(){
+    
+    int Var;
+    double number;
+    string  word;
+       
+    return 0;
+}
