@@ -103,9 +103,9 @@ Other					.
 
 void getuDecimal(){
     
-    uint num;
+    unsigned int num;
 	sscanf(yytext, "%u", &num);
-	yylval.uintValue = num;
+	yylval.unsigned intValue = num;
 
 }
 
@@ -151,17 +151,17 @@ void getlDecimal(){
 
 void getluDecimal(){   
 
-    long uint num;
+    unsigned long num;
 	sscanf(yytext, "%u", &num);
-	yylval.longuintValue = num;
+	yylval.longunsigned intValue = num;
 
 }
 
 void getuHexa(){
 
-    uint num;
+    unsigned int num;
 	sscanf(yytext, "%x", &num);
-	yylval.uintValue = num;    
+	yylval.unsigned intValue = num;    
 
 }
 
@@ -176,16 +176,16 @@ void getlHexa(){
     
 void getluHexa(){
     
-    long uint num;
+    unsigned long int num;
     sscanf(yytext,"%x",&num);
-    yylval.longuintValue = num;
+    yylval.longunsigned intValue = num;
 }
     
 void getuOctal(){
 
-    uint num;
+    unsigned int num;
     sscanf(yytext,"%o", &num);    
-    yylval.uintValue = num;
+    yylval.unsigned intValue = num;
     
 }
 
@@ -199,9 +199,9 @@ void getlOctal(){
 
 void getluOctal(){
 
-    long uint num;
+    unsigned long num;
     sscanf(yytext,"%o", &num);    
-    yylval.longuintValue = num;
+    yylval.longunsigned intValue = num;
     
     
 }
