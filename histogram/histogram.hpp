@@ -9,7 +9,7 @@ enum TokenType{
     Keyword,
     Identifier,
     Decimal_constant,
-    Octal_constants,
+    Octal_constant,
     Hexadecimal_constant,
     Character_constant
 };

@@ -97,13 +97,13 @@ void getuDecimal(){
     
     unsigned int num;
 	sscanf(yytext, "%u", &num);
-	yylval.unsigned intValue = num;
+	yylval.uintValue = num;
 
 }
 
 void getiDecimal(){
 
-	int num
+	int num;
 
 	sscanf(yytext, "%d", &num);
 
@@ -145,7 +145,7 @@ void getluDecimal(){
 
     unsigned long num;
 	sscanf(yytext, "%u", &num);
-	yylval.longunsigned intValue = num;
+	yylval.longuintValue = num;
 
 }
 
@@ -153,7 +153,7 @@ void getuHexa(){
 
     unsigned int num;
 	sscanf(yytext, "%x", &num);
-	yylval.unsigned intValue = num;    
+	yylval.uintValue = num;    
 
 }
 
@@ -170,14 +170,14 @@ void getluHexa(){
     
     unsigned long int num;
     sscanf(yytext,"%x",&num);
-    yylval.longunsigned intValue = num;
+    yylval.longuintValue = num;
 }
     
 void getuOctal(){
 
     unsigned int num;
     sscanf(yytext,"%o", &num);    
-    yylval.unsigned intValue = num;
+    yylval.uintValue = num;
     
 }
 
@@ -193,36 +193,9 @@ void getluOctal(){
 
     unsigned long num;
     sscanf(yytext,"%o", &num);    
-    yylval.longunsigned intValue = num;
+    yylval.longuintValue = num;
     
     
-}
-
-void getdFloat(){
-    
-    double num;
-    sscanf(yytext,"%f", &num);    
-    yylval.dfloatValue = num;
-
-}
-    
-
-
-
-void getfFloat(){
-
-    float num;
-    sscanf(yytext,"%f", &num);    
-    yylval.ffloatValue = num;
-}
-
-
-void getlFloat(){
-
-    long double num;
-    sscanf(yytext,"%f", &num);    
-    yylval.lfloatValue = num;
-
 }
 
 void getCharacter(){
@@ -232,9 +205,7 @@ void getCharacter(){
 }
     
 
-
-
-checkIntSuffix(bool &u_exist, bool &l_exist){
+void checkIntSuffix(bool &u_exist, bool &l_exist){
 	int size = strlen(yytext);
 	if(size < 2){
 		return;

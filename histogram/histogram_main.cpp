@@ -37,7 +37,7 @@ int main()
       
         }else if(Decimal_constant){    
             
-        }else if(Octal_constants){     
+        }else if(Octal_constant){     
        
         }else if(Hexadecimal_constant){
         
