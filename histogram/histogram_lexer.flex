@@ -27,8 +27,6 @@ Octal_constant		    [0][0-7]*[integer_suffix]?
 
 Hexadecimal_constant    (0x|0X)[0-9a-fA-F]+[integer_suffix]?
 
-Floating_constant       [+-]?( ([0-9]+[.][0-9]*) | ([.][0-9]+) | ([0-9]+([.][0-9]*)?[eE][+-]?[0-9]+) | ([.][0-9]+[eE][+-]?[0-9]+) )[lfLF]?
-
 Character_constant      '[.]'
 
 WhiteSpace				[ \n\t]
@@ -76,15 +74,6 @@ Other					.
 						if(!u && l) getlHexa();
 						if(u && l) getluHexa();
 						return Hexadecimal_constant; 
-					}
-					
-{Floating_constant}	{ fprintf(stderr, "Floating : %s\n", yytext);
-						bool f = false;, l = false;
-						checkFloatSuffix(f,l);
-						if(!f && !l) getdFloat();
-						if(f && !l) getfFloat();
-						if(!f && l) getlFloat();
-						return Floating_constant;
 					}
 
 {Character_constant} { fprintf(stderr, "Character : %s\n", yytext);
@@ -251,31 +240,8 @@ checkIntSuffix(bool &u_exist, bool &l_exist){
 	if(yytext[size-1] == ('l' || 'L') || yytext[size-2] == ('l' || 'L')) l_exist = true;
 }
 
-checkFloatSuffix(bool &f_exist, bool &l_exist){
-	int last = strlen(yytext) - 1;
-	if(size < 1){
-		return;
-	}
-
-	if(yytext[last] == ('f' || 'F') ) f_exist = true;
-	else if(yytext[last] == ('l' || 'L') l_exist = true;
-}
-
 
 void toString(){
- 	std::string *word = new std::string; // take value out of yylex scope
-	*word = yytext;
-	yylval.wordValue = word;
-}
-
-void wordB(){
-	// remove brackets from yytext
-	yytext[strlen(yytext)-1] = '\0'; //removes ]
-
-	for(unsigned int i=0; i < strlen(yytext); i++){
-		yytext[i] = yytext[i+1];
-	}	// shift char's
-
  	std::string *word = new std::string; // take value out of yylex scope
 	*word = yytext;
 	yylval.wordValue = word;

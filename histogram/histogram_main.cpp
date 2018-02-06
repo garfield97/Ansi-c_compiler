@@ -34,20 +34,10 @@ int main()
      
             
         }else if(type==Identifier){
-    
-    
-        }else if(type==Floating_constant){
-            
-        
-          
-          
-            
-        }else if(Decimal_constant){
-        
-        
-            
-        }else if(Octal_constants){
       
+        }else if(Decimal_constant){    
+            
+        }else if(Octal_constants){     
        
         }else if(Hexadecimal_constant){
         

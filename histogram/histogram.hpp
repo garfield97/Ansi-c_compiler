@@ -8,7 +8,6 @@ enum TokenType{
     None   = 0, // This indicates there are no more tokens
     Keyword,
     Identifier,
-    Floating_constant,
     Decimal_constant,
     Octal_constants,
     Hexadecimal_constant,
@@ -16,9 +15,6 @@ enum TokenType{
 };
 
 union TokenValue{
-    float ffloatValue;
-    double dfloatValue;
-    long double lfloatValue;
     std::string *wordValue;
     int intValue;
     unsigned int uintValue;
@@ -47,11 +43,6 @@ void toString();
 void wordB();
 void yyerror (char const *s);
 void checkIntSuffix(bool &u_exist, bool &l_exist);
-void checkFloatSuffix(bool &f_exist, bool &l_exist);
-
-void getdFloat();
-void getfFloat();
-void getlFloat();
 
 void getiDecimal();
 void getuDecimal();
