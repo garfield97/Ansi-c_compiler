@@ -40,7 +40,6 @@ extern int yylex();
 
 // functions used in pattern matching
 void toString();
-void wordB();
 void yyerror (char const *s);
 void checkIntSuffix(bool &u_exist, bool &l_exist);
 
