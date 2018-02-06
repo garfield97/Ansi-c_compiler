@@ -30,9 +30,57 @@ Octal_constant		    [0][0-7]*[integer_suffix]?
 
 Hexadecimal_constant    (0x|0X)[0-9a-fA-F]+[integer_suffix]?
 
-Character_constant      '[.]'
+Character_constant      ['][.]+[']
 
-WhiteSpace			[ \n\t]
+String_literal			["][.]+["]
+
+L_BRACE					[{]
+
+R_BRACE					[}]
+
+L_BRACKET				[(]
+
+R_BRACKET				[)]
+
+L_INDEX					[[]
+
+R_INDEX					[]]
+
+ADD						[+]
+
+MINUS					[-]
+
+MUL						[*]
+
+DIV						[/]
+
+MOD						[%]
+
+EQUAL					[=]
+
+NOT_EQUAL				[!=]
+
+LESS_THAN				[<]
+
+LESS_THAN_ORE			[<=]
+
+MORE_THAN				[>]
+
+MORE_THAN_ORE			[>=]
+
+L_AND					[&&]
+
+L_OR					[||]
+
+B_AND					[&]
+
+B_OR					[|]
+
+B_XOR					[^]
+
+INCLUDE					#[.^\n]
+
+WhiteSpace				[ \n\t]
 
 Other					.
 
