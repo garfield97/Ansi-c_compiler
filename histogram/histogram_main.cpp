@@ -6,6 +6,7 @@
 #include <cassert>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 // Use a hash-table to maintain a word -> count mapping.
 // This deliberately uses std::unordered_map rather than std::map,
@@ -31,11 +32,20 @@ int main()
 
         }else if(type==Keyword){
             
+            histogram[*yylval.wordValue] ++;
+            delete yylval.wordValue;
      
             
         }else if(type==Identifier){
-      
-        }else if(Decimal_constant){    
+        
+            string s;
+            ss<<yylval.characterValue;
+            ss>>s;
+            histogram[s] ++;
+        
+        }else if(Decimal_constant){   
+            sum = yylval.numberValue + sum;
+             
             
         }else if(Octal_constant){     
        
