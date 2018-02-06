@@ -1,10 +1,10 @@
 *.DS_store
 historgram\*.tab.cpp
 historgram\*.tab.hpp
-historgram\*.yy.cpp
+*.yy.cpp
 *.got.txt
 historgram\bin\*
-historgram\*.o
+*.o
 historgram\*.output
 historgram\*.log
 historgram\*.stackdump
@@ -13,4 +13,4 @@ historgram\*.DS_Store
 
 historgram\*.vagrant
 
-historgram\histogram
+histogram\histogram
