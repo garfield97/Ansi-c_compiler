@@ -19,8 +19,7 @@ extern "C" int fileno(FILE *stream);
 %}
 
 
-KEYWORD     			auto|double|int|struct|break|else|long|switch|case|enum|register|typedef|char|extern|return|union|const|float|short|unsigned|continue|for|signed|void|default|goto|sizeof|volatile|do|if|static|while
-			
+		
 IDENTIFIER  			[_a-zA-Z][0-9_a-zA-Z]*
 
 INTEGER_SUFFIX          ([uU][lL]?) | ([lL][uU]?)
@@ -29,9 +28,9 @@ DECIMAL_CONSTANT        [1-9][0-9]*[integer_suffix]?
 
 OCTAL_CONSTANT		    [0][0-7]*[integer_suffix]?
 
-HEXADECIMAL_CONSTANT    (0x|0X)[0-9a-fA-F]+[integer_suffix]?
+HEXAD_CONSTANT    		(0x|0X)[0-9a-fA-F]+[integer_suffix]?
 
-CHARACTER_CONSTANT      ['][.]+[']
+CHAR_CONSTANT     		['][.]+[']
 
 STRING_LITERAL			["][.]+["]
 
@@ -44,10 +43,102 @@ OTHER					.
 
 %%
 
-{KEYWORD}			{ fprintf(stderr, "Keyword : %s\n", yytext);
-						toString();	//stored in wordValue
-						return KEYWORD;
-					}
+auto			{ fprintf(stderr, "AUTO\n");
+						return AUTO; }
+
+double			{ fprintf(stderr, "DOUBLE\n");
+						return DOUBLE; }
+
+int				{ fprintf(stderr, "INT\n");
+						return INT; }
+
+struct			{ fprintf(stderr, "STRUCT\n");
+						return STRUCT; }
+
+break			{ fprintf(stderr, "BREAK\n");
+						return BREAK; }
+
+else			{ fprintf(stderr, "ELSE\n");
+						return ELSE; }
+
+long			{ fprintf(stderr, "LONG\n");
+						return LONG; }
+
+switch			{ fprintf(stderr, "SWITCH\n");
+						return SWITCH; }
+
+case			{ fprintf(stderr, "CASE\n");
+						return CASE; }
+
+enum			{ fprintf(stderr, "ENUM\n");
+						return ENUM; }
+
+register		{ fprintf(stderr, "REGISTER\n");
+						return REGISTER; }
+
+typedef			{ fprintf(stderr, "TYPEDEF\n");
+						return TYPEDEF; }
+
+char			{ fprintf(stderr, "CHAR\n");
+						return CHAR; }
+
+extern			{ fprintf(stderr, "EXTERN\n");
+						return EXTERN; }
+
+return			{ fprintf(stderr, "RETURN\n");
+						return RETURN; }
+
+union			{ fprintf(stderr, "UNION\n");
+						return UNION; }
+
+const			{ fprintf(stderr, "CONST\n");
+						return CONST; }
+
+float			{ fprintf(stderr, "FLOAT\n");
+						return FLOAT; }
+
+short			{ fprintf(stderr, "SHORT\n");
+						return SHORT; }
+
+unsigned		{ fprintf(stderr, "UNSIGNED\n");
+						return UNSIGNED; }
+
+continue		{ fprintf(stderr, "CONTINUE\n");
+						return CONTINUE; }
+
+for				{ fprintf(stderr, "FOR\n");
+						return FOR; }
+
+signed			{ fprintf(stderr, "SIGNED\n");
+						return SIGNED; }
+
+void			{ fprintf(stderr, "VOID\n");
+						return VOID; }
+
+default			{ fprintf(stderr, "DEFAULT\n");
+						return DEFAULT; }
+
+goto			{ fprintf(stderr, "GOTO\n");
+						return GOTO; }
+
+sizeof			{ fprintf(stderr, "SIZEOF\n");
+						return SIZEOF; }
+
+volatile		{ fprintf(stderr, "VOLATILE\n");
+						return VOLATILE; }
+
+do				{ fprintf(stderr, "DO\n");
+						return DO; }
+
+if				{ fprintf(stderr, "IF\n");
+						return IF; }
+
+static			{ fprintf(stderr, "STATIC\n");
+						return STATIC; }
+
+while			{ fprintf(stderr, "WHILE\n");
+						return WHILE; }
+
 
 {IDENTIFIER}		{ fprintf(stderr, "Identifier : %s\n", yytext);
 						toString();
@@ -57,83 +148,84 @@ OTHER					.
 {DECIMAL_CONSTANT}  { fprintf(stderr, "Decimal : %s\n", yytext);
 						bool u = false, l = false;
 						checkIntSuffix(u,l);
-						if(!u && !l)	{ get_DECIMAL(); 	return DECIMAL;}
-						if(u && !l)		{ get_DECIMAL_U(); 	return DECIMAL_;}
-						if(!u && l)		{ get_DECIMAL_L(); 	return DECIMAL_L;}
-						if(u && l)		{ get_DECIMAL_UL(); return DECIMAL_UL;}
+						if(!u && !l)	{ get_DECIMAL(); 	return INT_C;}
+						if(u && !l)		{ get_DECIMAL_U(); 	return UNSIGNED_C;}
+						if(!u && l)		{ get_DECIMAL_L(); 	return LONG_C;}
+						if(u && l)		{ get_DECIMAL_UL(); return UNSIGNED_LONG_C;}
 					}
 
 {OCTAL_CONSTANT}  	{ fprintf(stderr, "Octal : %s\n", yytext);
 						bool u = false, l = false;
 						checkIntSuffix(u,l);
-						if(!u && !l)	{ get_OCTAL(); 		return OCTAL;}
-						if(u && !l)		{ get_OCTAL_U(); 	return OCTAL_;}
-						if(!u && l)		{ get_OCTAL_L(); 	return OCTAL_L;}
-						if(u && l)		{ get_OCTAL_UL(); 	return OCTAL_UL;}
+						if(!u && !l)	{ get_OCTAL(); 		return INT_C;}
+						if(u && !l)		{ get_OCTAL_U(); 	return UNSIGNED_C;}
+						if(!u && l)		{ get_OCTAL_L(); 	return LONG_C;}
+						if(u && l)		{ get_OCTAL_UL(); 	return UNSIGNED_LONG_C;}
 					}
 					
-{HEXADECIMAL_CONSTANT}  	{ fprintf(stderr, "Hexadecimal : %s\n", yytext);
+{HEXAD_CONSTANT}  	{ fprintf(stderr, "Hexadecimal : %s\n", yytext);
 						bool u = false, l = false;
 						checkIntSuffix(u,l);
-						if(!u && !l)	{ get_HEXAD(); 		return HEXAD;}
-						if(u && !l)		{ get_HEXADL_U(); 	return HEXAD_;}
-						if(!u && l)		{ get_HEXAD_L(); 	return HEXAD_L;}
-						if(u && l)		{ get_HEXAD_UL(); 	return HEXAD_UL;}
+						if(!u && !l)	{ get_HEXAD(); 		return INT_C;}
+						if(u && !l)		{ get_HEXADL_U(); 	return UNSIGNED_C;}
+						if(!u && l)		{ get_HEXAD_L(); 	return LONG_C;}
+						if(u && l)		{ get_HEXAD_UL(); 	return UNSIGNED_LONG_C;}
 					}
 
-{CHARACTER_CONSTANT} { fprintf(stderr, "Character : %s\n", yytext);
+{CHAR_CONSTANT}		{ fprintf(stderr, "Character : %s\n", yytext);
 						get_CHARACTER();
-						return CHARACTER_CONSTANT; 
-					 }
+						return CHARACTER_C; 
+					}
 
-{STRING_LITERAL}	 { fprintf(stderr, "String : %s\n", yytext);
+{STRING_LITERAL}	{ fprintf(stderr, "String : %s\n", yytext);
 						toString();
 						return STRING_LITERAL;
-					 }
+					}
 
-L_BRACE					[{]
+{
 
-R_BRACE					[}]
+}
 
-L_BRACKET				[(]
+(
 
-R_BRACKET				[)]
+)
 
-L_INDEX					[[]
+[[]
 
-R_INDEX					[]]
+[]]
 
-ADD						[+]
++
 
-MINUS					[-]
+-
 
-MUL						[*]
+*
 
-DIV						[/]
+/
 
-MOD						[%]
+%
 
-EQUAL					[=]
+=
 
-NOT_EQUAL				[!=]
+!=
 
-LESS_THAN				[<]
+<
 
-LESS_THAN_ORE			[<=]
+<=
 
-MORE_THAN				[>]
+>
 
-MORE_THAN_ORE			[>=]
+>=
 
-L_AND					[&&]
+&&
 
-L_OR					[||]
+||
 
-B_AND					[&]
+&
 
-B_OR					[|]
+|
 
-B_XOR					[^]
+^
+
 
 {INCLUDE}		{ fprintf(stderr, "#Include\n"); }
 
