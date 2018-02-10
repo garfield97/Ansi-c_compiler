@@ -16,18 +16,30 @@
 // AST node.
 %union{
   const Expression *expr;
-  double number;
   std::string *string;
+  int intValue;
+  unsigned int uintValue;
+  long int longintValue;
+  unsigned long longuintValue;
+  char characterValue;
 }
 
-%token T_TIMES T_DIVIDE T_PLUS T_MINUS T_EXPONENT
-%token T_LBRACKET T_RBRACKET
-%token T_LOG T_EXP T_SQRT
-%token T_NUMBER T_VARIABLE
 
-%type <expr> EXPR TERM FACTOR
-%type <number> T_NUMBER
-%type <string> T_VARIABLE T_LOG T_EXP T_SQRT FUNCTION_NAME
+%token KEYWORD IDENTIFIER
+%token DECIMAL DECIMAL_U DECIMAL_L DECIMAL_UL
+%token OCTAL OCTAL_U OCTAL_L OCTAL_UL
+%token HEXAD HEXAD_U HEXAD_L HEXAD_UL
+%token CHARACTER_CONSTANT
+
+
+%type <expr> 
+%type <string> KEYWORD IDENTIFIER STRING_LITERAL
+%type <intValue> DECIMAL OCTAL HEXAD
+%type <uintValue> DECIMAL_U OCTAL_U HEXAD_U
+%type <longintValue> DECIMAL_L OCTAL_L HEXAD_L
+%type <longuintValue> DECIMAL_UL OCTAL_UL HEXAD_IL
+%type <characterValue> CHARACTER_CONSTANT
+
 
 %start ROOT
 
