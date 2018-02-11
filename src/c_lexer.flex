@@ -35,9 +35,9 @@ STRING_LITERAL			L?["]([.^"])*["]
 
 INCLUDE					#[.^\n]
 
-COMMENT_L				//[.^\n]*
+COMMENT_L				"//"[.^\n]*
 
-COMMENT					[/][*]([.])*[*][/]
+COMMENT					"/*"[.]*"*/"
 
 WHITESPACE				[ \n\t\v\f]
 
@@ -114,7 +114,7 @@ unsigned		{ fprintf(stderr, "UNSIGNED\n");
 continue		{ fprintf(stderr, "CONTINUE\n");
 						return CONTINUE; }
 
-for				{ fprintf(stderr, "FOR\n");
+"for"			{ fprintf(stderr, "FOR\n");
 						return FOR; }
 
 signed			{ fprintf(stderr, "SIGNED\n");
@@ -174,10 +174,10 @@ while			{ fprintf(stderr, "WHILE\n");
 {HEXAD_CONSTANT}  	{ fprintf(stderr, "Hexadecimal : %s\n", yytext);
 						bool u = false, l = false;
 						checkIntSuffix(u,l);
-						if(!u && !l)	{ get_HEXAD(); 		return INT_C;}
-						if(u && !l)		{ get_HEXADL_U(); 	return UNSIGNED_C;}
-						if(!u && l)		{ get_HEXAD_L(); 	return LONG_C;}
-						if(u && l)		{ get_HEXAD_UL(); 	return UNSIGNED_LONG_C;}
+						if(!u && !l)	{ get_HEXA(); 		return INT_C;}
+						if(u && !l)		{ get_HEXA_U(); 	return UNSIGNED_C;}
+						if(!u && l)		{ get_HEXA_L(); 	return LONG_C;}
+						if(u && l)		{ get_HEXA_UL(); 	return UNSIGNED_LONG_C;}
 					}
 
 {CHAR_CONSTANT}		{ fprintf(stderr, "Character : %s\n", yytext);
@@ -197,10 +197,10 @@ while			{ fprintf(stderr, "WHILE\n");
 }				{ fprintf(stderr, "R_BRACE\n");
 						return R_BRACE; }
 
-\(				{ fprintf(stderr, "L_BRACKET\n");
+\(\				{ fprintf(stderr, "L_BRACKET\n");
 						return L_BRACKET; }
 
-)				{ fprintf(stderr, "R_BRACKET\n");
+[)]				{ fprintf(stderr, "R_BRACKET\n");
 						return R_BRACKET; }
 
 \[				{ fprintf(stderr, "L_SQUARE\n");
@@ -210,127 +210,127 @@ while			{ fprintf(stderr, "WHILE\n");
 						return R_SQUARE; }
 
 
-+				{ fprintf(stderr, "OP_PLUS\n");
+\+				{ fprintf(stderr, "OP_PLUS\n");
 						return OP_PLUS; }
 
--				{ fprintf(stderr, "OP_MINUS\n");
+\-				{ fprintf(stderr, "OP_MINUS\n");
 						return OP_MINUS; }
 
-*				{ fprintf(stderr, "OP_MUL\n");
+\*				{ fprintf(stderr, "OP_MUL\n");
 						return OP_MUL; }
 
-/				{ fprintf(stderr, "OP_DIV\n");
+\/				{ fprintf(stderr, "OP_DIV\n");
 						return OP_DIV; }
 
 \%				{ fprintf(stderr, "OP_MOD\n");
 						return OP_MOD; }
 
-++ 				{ fprintf(stderr, "OP_INC\n");
+'++' 			{ fprintf(stderr, "OP_INC\n");
 						return OP_INC; }
 
--- 				{ fprintf(stderr, "OP_DEC\n");
+'--' 			{ fprintf(stderr, "OP_DEC\n");
 						return OP_DEC; }
 
 
-<= 				{ fprintf(stderr, "OP_LE\n");
+'<=' 			{ fprintf(stderr, "OP_LE\n");
 						return OP_LE; }
 
->= 				{ fprintf(stderr, "OP_GE\n");
+'>=' 			{ fprintf(stderr, "OP_GE\n");
 						return OP_GE; }
 
-== 				{ fprintf(stderr, "OP_EQ\n");
+'==' 			{ fprintf(stderr, "OP_EQ\n");
 						return OP_EQ; }
 
-!=				{ fprintf(stderr, "OP_NE\n");
+'!='			{ fprintf(stderr, "OP_NE\n");
 						return OP_NE; }
 
-<				{ fprintf(stderr, "OP_L\n");
+\<				{ fprintf(stderr, "OP_L\n");
 						return OP_L; }
 
->				{ fprintf(stderr, "OP_G\n");
+\>				{ fprintf(stderr, "OP_G\n");
 						return OP_G; }
 
 
-&& 				{ fprintf(stderr, "OP_LAND\n");
+'&&' 			{ fprintf(stderr, "OP_LAND\n");
 						return OP_LAND; }
 
-|| 				{ fprintf(stderr, "OP_LOR\n");
+'|''|' 			{ fprintf(stderr, "OP_LOR\n");
 						return OP_LOR; }
 
-!				{ fprintf(stderr, "OP_LNOT\n");
-						return OP_LNOR; }
+\!				{ fprintf(stderr, "OP_LNOT\n");
+						return OP_LNOT; }
 
 
-&				{ fprintf(stderr, "OP_BAND\n");
+\&				{ fprintf(stderr, "OP_BAND\n");
 						return OP_BAND; }
 
-|				{ fprintf(stderr, "OP_BOR\n");
+\|				{ fprintf(stderr, "OP_BOR\n");
 						return OP_BOR; }
 
-^				{ fprintf(stderr, "OP_BXOR\n");
+\^				{ fprintf(stderr, "OP_BXOR\n");
 						return OP_BXOR; }
 
-~				{ fprintf(stderr, "OP_B_ONESC\n");
+\~				{ fprintf(stderr, "OP_B_ONESC\n");
 						return OP_B_ONESC; }
 
->>				{ fprintf(stderr, "OP_BRIGHT\n");
+'>>'			{ fprintf(stderr, "OP_BRIGHT\n");
 						return OP_BRIGHT; }
 
-<< 				{ fprintf(stderr, "OP_BLEFT\n");
+'<<' 			{ fprintf(stderr, "OP_BLEFT\n");
 						return OP_BLEFT; }
 
 
--> 				{ fprintf(stderr, "OP_PTR\n");
+'->' 			{ fprintf(stderr, "OP_PTR\n");
 						return OP_PTR; }
 
 
-=				{ fprintf(stderr, "ASSIGN\n");
+\=				{ fprintf(stderr, "ASSIGN\n");
 						return ASSIGN; }
 
->>= 			{ fprintf(stderr, "RIGHT_ASSIGN\n");
+'>>=' 			{ fprintf(stderr, "RIGHT_ASSIGN\n");
 						return RIGHT_ASSIGN; }
 
-<<=				{ fprintf(stderr, "LEFT_ASSIGN\n");
+'<<='			{ fprintf(stderr, "LEFT_ASSIGN\n");
 						return LEFT_ASSIGN; }
 
-+=				{ fprintf(stderr, "ADD_ASSIGN\n");
+'+='			{ fprintf(stderr, "ADD_ASSIGN\n");
 						return ADD_ASSIGN; }
 
--=				{ fprintf(stderr, "SUB_ASSIGN\n");
+'-='			{ fprintf(stderr, "SUB_ASSIGN\n");
 						return SUB_ASSIGN; }
 
-*=				{ fprintf(stderr, "MUL_ASSIGN\n");
+'*='			{ fprintf(stderr, "MUL_ASSIGN\n");
 						return MUL_ASSIGN; }
 
-/=				{ fprintf(stderr, "DIV_ASSIGN\n");
+"/="			{ fprintf(stderr, "DIV_ASSIGN\n");
 						return DIV_ASSIGN; }
 
-\%=				{ fprintf(stderr, "MOD_ASSIGN\n");
+'%='			{ fprintf(stderr, "MOD_ASSIGN\n");
 						return MOD_ASSIGN; }
 
-&=				{ fprintf(stderr, "AND_ASSIGN\n");
+'&='			{ fprintf(stderr, "AND_ASSIGN\n");
 						return AND_ASSIGN; }
 
-|=				{ fprintf(stderr, "OR_ASSIGN\n");
+"|="			{ fprintf(stderr, "OR_ASSIGN\n");
 						return OR_ASSIGN; }
 
-^=				{ fprintf(stderr, "XOR_ASSIGN\n");
+"^="			{ fprintf(stderr, "XOR_ASSIGN\n");
 						return XOR_ASSIGN; }
 
 
-?				{ fprintf(stderr, "?\n");
+\?				{ fprintf(stderr, "?\n");
 						return '?'; }
 
-:				{ fprintf(stderr, ":\n");
+\:				{ fprintf(stderr, ":\n");
 						return ':'; }
 
-;				{ fprintf(stderr, ";\n");
+\;				{ fprintf(stderr, ";\n");
 						return ';'; }
 
-,				{ fprintf(stderr, ",\n");
+\,				{ fprintf(stderr, ",\n");
 						return ','; }
 
-.				{ fprintf(stderr, ".\n");
+\.				{ fprintf(stderr, ".\n");
 						return '.'; }
 
 

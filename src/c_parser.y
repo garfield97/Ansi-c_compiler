@@ -24,7 +24,9 @@
   char characterValue;
 }
 
-            
+           
+%token EXPR
+ 
 %token IDENTIFIER STRING_LITERAL SIZEOF 
  
 %token INT_C UNSIGNED_C LONG_C UNSIGNED_LONG_C
@@ -49,7 +51,7 @@
 %token RIGHT_ASSIGN LEFT_ASSIGN ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
 
 
-%type <expr> // for grammar production rules
+%type <expr> EXPR // for grammar production rules
 
 %type <string> IDENTIFIER STRING_LITERAL
 %type <intValue> INT_C
@@ -65,8 +67,6 @@
 
 
 ROOT : EXPR { g_root = $1; }
-
-EXPR : TERM                 { $$ = $1; }
 
 %%
 
