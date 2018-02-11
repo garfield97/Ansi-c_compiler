@@ -18,7 +18,6 @@ extern "C" int fileno(FILE *stream);
 /* End the embedded code section. */
 %}
 
-
 		
 IDENTIFIER  			[_a-zA-Z][0-9_a-zA-Z]*
 
@@ -30,15 +29,21 @@ OCTAL_CONSTANT		    [0][0-7]*[integer_suffix]?
 
 HEXAD_CONSTANT    		(0x|0X)[0-9a-fA-F]+[integer_suffix]?
 
-CHAR_CONSTANT     		['][.]+[']
+CHAR_CONSTANT     		L?['][.]+[']
 
-STRING_LITERAL			["][.]+["]
+STRING_LITERAL			L?["]([.^"])*["]
 
 INCLUDE					#[.^\n]
 
-WHITESPACE				[ \n\t]
+COMMENT_L				//[.^\n]*
+
+COMMENT					[/][*]([.])*[*][/]
+
+WHITESPACE				[ \n\t\v\f]
 
 OTHER					.
+
+
 
 
 %%
@@ -72,6 +77,9 @@ case			{ fprintf(stderr, "CASE\n");
 
 enum			{ fprintf(stderr, "ENUM\n");
 						return ENUM; }
+
+... 			{ fprintf(stderr, "ELIPSIS\n");
+						return ELIPSIS; }
 
 register		{ fprintf(stderr, "REGISTER\n");
 						return REGISTER; }
@@ -182,52 +190,155 @@ while			{ fprintf(stderr, "WHILE\n");
 						return STRING_LITERAL;
 					}
 
-{
 
-}
+{				{ fprintf(stderr, "L_BRACE\n");
+						return L_BRACE; }
 
-(
+}				{ fprintf(stderr, "R_BRACE\n");
+						return R_BRACE; }
 
-)
+\(				{ fprintf(stderr, "L_BRACKET\n");
+						return L_BRACKET; }
 
-[[]
+)				{ fprintf(stderr, "R_BRACKET\n");
+						return R_BRACKET; }
 
-[]]
+\[				{ fprintf(stderr, "L_SQUARE\n");
+						return L_SQUARE; }
 
-+
-
--
-
-*
-
-/
-
-%
-
-=
-
-!=
-
-<
-
-<=
-
->
-
->=
-
-&&
-
-||
-
-&
-
-|
-
-^
+]				{ fprintf(stderr, "R_SQUARE\n");
+						return R_SQUARE; }
 
 
-{INCLUDE}		{ fprintf(stderr, "#Include\n"); }
++				{ fprintf(stderr, "OP_PLUS\n");
+						return OP_PLUS; }
+
+-				{ fprintf(stderr, "OP_MINUS\n");
+						return OP_MINUS; }
+
+*				{ fprintf(stderr, "OP_MUL\n");
+						return OP_MUL; }
+
+/				{ fprintf(stderr, "OP_DIV\n");
+						return OP_DIV; }
+
+\%				{ fprintf(stderr, "OP_MOD\n");
+						return OP_MOD; }
+
+++ 				{ fprintf(stderr, "OP_INC\n");
+						return OP_INC; }
+
+-- 				{ fprintf(stderr, "OP_DEC\n");
+						return OP_DEC; }
+
+
+<= 				{ fprintf(stderr, "OP_LE\n");
+						return OP_LE; }
+
+>= 				{ fprintf(stderr, "OP_GE\n");
+						return OP_GE; }
+
+== 				{ fprintf(stderr, "OP_EQ\n");
+						return OP_EQ; }
+
+!=				{ fprintf(stderr, "OP_NE\n");
+						return OP_NE; }
+
+<				{ fprintf(stderr, "OP_L\n");
+						return OP_L; }
+
+>				{ fprintf(stderr, "OP_G\n");
+						return OP_G; }
+
+
+&& 				{ fprintf(stderr, "OP_LAND\n");
+						return OP_LAND; }
+
+|| 				{ fprintf(stderr, "OP_LOR\n");
+						return OP_LOR; }
+
+!				{ fprintf(stderr, "OP_LNOT\n");
+						return OP_LNOR; }
+
+
+&				{ fprintf(stderr, "OP_BAND\n");
+						return OP_BAND; }
+
+|				{ fprintf(stderr, "OP_BOR\n");
+						return OP_BOR; }
+
+^				{ fprintf(stderr, "OP_BXOR\n");
+						return OP_BXOR; }
+
+~				{ fprintf(stderr, "OP_B_ONESC\n");
+						return OP_B_ONESC; }
+
+>>				{ fprintf(stderr, "OP_BRIGHT\n");
+						return OP_BRIGHT; }
+
+<< 				{ fprintf(stderr, "OP_BLEFT\n");
+						return OP_BLEFT; }
+
+
+-> 				{ fprintf(stderr, "OP_PTR\n");
+						return OP_PTR; }
+
+
+=				{ fprintf(stderr, "ASSIGN\n");
+						return ASSIGN; }
+
+>>= 			{ fprintf(stderr, "RIGHT_ASSIGN\n");
+						return RIGHT_ASSIGN; }
+
+<<=				{ fprintf(stderr, "LEFT_ASSIGN\n");
+						return LEFT_ASSIGN; }
+
++=				{ fprintf(stderr, "ADD_ASSIGN\n");
+						return ADD_ASSIGN; }
+
+-=				{ fprintf(stderr, "SUB_ASSIGN\n");
+						return SUB_ASSIGN; }
+
+*=				{ fprintf(stderr, "MUL_ASSIGN\n");
+						return MUL_ASSIGN; }
+
+/=				{ fprintf(stderr, "DIV_ASSIGN\n");
+						return DIV_ASSIGN; }
+
+\%=				{ fprintf(stderr, "MOD_ASSIGN\n");
+						return MOD_ASSIGN; }
+
+&=				{ fprintf(stderr, "AND_ASSIGN\n");
+						return AND_ASSIGN; }
+
+|=				{ fprintf(stderr, "OR_ASSIGN\n");
+						return OR_ASSIGN; }
+
+^=				{ fprintf(stderr, "XOR_ASSIGN\n");
+						return XOR_ASSIGN; }
+
+
+?				{ fprintf(stderr, "?\n");
+						return '?'; }
+
+:				{ fprintf(stderr, ":\n");
+						return ':'; }
+
+;				{ fprintf(stderr, ";\n");
+						return ';'; }
+
+,				{ fprintf(stderr, ",\n");
+						return ','; }
+
+.				{ fprintf(stderr, ".\n");
+						return '.'; }
+
+
+{INCLUDE}		{ fprintf(stderr, "#include\n"); }
+
+{COMMENT_L}		{ fprintf(stderr, "Line comment\n"); }
+
+{COMMENT}		{ fprintf(stderr, "comment\n"); }
 
 {WHITESPACE}    { fprintf(stderr, "Newline, tab or space\n"); }
 
@@ -236,6 +347,9 @@ while			{ fprintf(stderr, "WHILE\n");
 
 
 %%
+
+
+
 
 
 void toString(){
