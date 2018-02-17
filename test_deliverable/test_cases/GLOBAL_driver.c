@@ -1,17 +1,13 @@
-int g();
-/*
-    returns c - global variable below
-    also g var's 'a' and 'b' declared in global.c, both = 3
-*/
+extern int a; // global variable from 'global.c'
+int b = 1;
 
-int c = 3;
+int g(); // returns b
 
-#define SUM 9
-// SUM = c + a + b
+#define SUM 2 // SUM = a + b
 
 int main(){
 
-    int sum = a + b + g();
+    int sum = a + g();
 
     return (sum - SUM) ? 1:0;
 }
