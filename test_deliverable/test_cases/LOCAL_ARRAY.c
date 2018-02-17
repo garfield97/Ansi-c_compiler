@@ -1,10 +1,11 @@
 int local_array(int index){ // 0 <= index <= 9
 
+    int val; // not used until set
+
     // local array - also tests array initialisation
     int la [10] = {1,1,1,1,1,1,1,1,1,1};
 
-    // tests read from local array
-    int val = la[index];
+    val = la[index]; // tests read from local array
 
     // tests write to local array
     la[0] = 0;
@@ -23,6 +24,7 @@ int local_array(int index){ // 0 <= index <= 9
 
     return val; // return should be 1
 
-    // could have done 'return sum + la[index];'
-    // but this would require the compiler to ensure return works for more than just one variable
+    /* could have done 'return sum + la[index];'
+       but this would require the compiler to ensure return works for more than just one variable
+    */
 }
