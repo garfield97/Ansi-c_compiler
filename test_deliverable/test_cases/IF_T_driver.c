@@ -4,5 +4,5 @@ int main(){
     int val = IF_T();
     
     // if IF_T 'failed' and returned 0, ternary operator makes main return 10
-    return (val) ? 0:10;    
+    return (val) ? 0:1;    
 }
