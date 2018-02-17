@@ -10,4 +10,5 @@
 bin/*
 
 test_deliverable/bin/*
+test_deliverable/test_results.txt
 
