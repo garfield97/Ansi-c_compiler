@@ -9,3 +9,5 @@
 *.yy.cpp
 bin/*
 
+test_deliverable/bin/*
+
