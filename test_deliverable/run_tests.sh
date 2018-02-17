@@ -10,7 +10,7 @@ echo $? >> test_results.txt
 
 echo IF_F >> test_results.txt
 mips-linux-gnu-gcc -S test_cases/IF_F.c -o asm/IF_F.s
-mips-linux-gnu-gcc -static -o bin/IF_F asm/IF_F.s test_cases/IF_F_driver_driver.c
+mips-linux-gnu-gcc -static -o bin/IF_F asm/IF_F.s test_cases/IF_F_driver.c
 qemu-mips bin/IF_F
 echo $? >> test_results.txt
 
