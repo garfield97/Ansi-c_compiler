@@ -1,7 +1,7 @@
 extern int a; // global variable from 'global.c'
 int b = 1;
 
-int g(); // returns b
+int g(); // should return b
 
 #define SUM 2 // SUM = a + b
 
