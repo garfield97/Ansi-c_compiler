@@ -2,7 +2,7 @@ int FOR_N(int n);
 /* MUST pass in a number >=0
    tests spec condition when n >=2
    expect return val 0
-   dependancy - decrementer working for int
+   dependancy - sub for int
    dependancy - function parameters working on compiler being tested
    reason for this:
    - could have used internal variable n , and set to >=2 (hard code)
