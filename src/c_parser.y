@@ -344,7 +344,19 @@ ENUMERATOR : IDENTIFIER
            | IDENTIFIER ASSIGN EXPR_CONST
            
 
-                                 
+QUALIFIER_TYPE : CONST
+               | VOLATILE
+               
+               
+DECLARATOR : DECLARATOR_POINTER_DIRECT
+           : DECLARATOR_DIRECT
+           
+DECLARATOR_DIRECT : IDENTIFIER
+                  | L_BRACKET DECLARATOR R_BRACKET
+                  | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE
+                  | DECLARATOR_DIRECT L_SQUARE R_SQUARE
+                  | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET
+                  | DECLARATOR_DIRECT L_BRACKET IDENTIFIER_LIST                                 
             
             
             
