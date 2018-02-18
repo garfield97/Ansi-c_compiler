@@ -56,7 +56,7 @@
 %type <expr> EXPR,EXPR_PRIMARY,EXPR_POSTFIX,EXPR_UNARY,NAME_TYPE,OPR_UNARY,EXPR_CAST,EXPR_MUL,EXPR_ADD,
              EXPR_SHIFT,EXPR_RELATIONAL,EXPR_EQUALITY,EXPR_AND,EXPR_XOR,EXPR_INCLUSIVE_OR,
              EXPR_LOGIC_AND,EXPR_LOGIC_OR,EXPR_CONDITIONAL,OPR_ASSIGNMENT,EXPR_CONST,DECLARATION,SPECIFIER_DECLARATION
-             DECLARATOR_INIT_LIST,DECLARATOR_INIT,
+             DECLARATOR_INIT_LIST,DECLARATOR_INIT,SPECIFIER_STORE_CLASS,SPECIFIER_TYPE,SPECIFIER_UNION_OR_STRUCT,UNION_OR_STRUCT
                              
                                        // for grammar production rules
 %type <string> IDENTIFIER STRING_LITERAL
@@ -233,16 +233,19 @@ DECLARATION : SPECIFIER_DECLARATION ;
 
 
 
-SPECIFIER_DECLARATION : SPECIFIER_STOR_CLSS
+SPECIFIER_DECLARATION : SPECIFIER_STORE_CLASS
                        | SPECIFIER_STOR_CLSS SPECIFIER_DECLARATION
                        | SPECIFIER_TYPE
-                       | SPECIFIER_TYPE SPECIFIER_DECLARATIOn
+                       | SPECIFIER_TYPE SPECIFIER_DECLARATION
                        | QUALIFIER_TYPE
                        | QUALIFIER_TYPE SPECIFIER_DECLARATION
+ 
+ 
                        
 
 DECLARATOR_INIT_LIST : DECLARATOR_INIT
                      | DECLARATOR_INIT_LIST , DECLARATOR_INIT
+   
                      
                      
 DECLARATOR_INIT : DECLARATOR
@@ -250,6 +253,67 @@ DECLARATOR_INIT : DECLARATOR
                 
                 
                 
+
+SPECIFIER_STORE_CLASS : TYPEDEF
+                      | EXTERN
+                      | STATIC
+                      | AUTO
+                      | REGISTER
+              
+              
+              
+                      
+SPECIFIER_TYPE : VOID
+               | CHAR
+               | SHORT
+               | INT
+               | LONG
+               | FLOAT
+               | DOUBLE
+               | SIGNED
+               | UNSIGNED
+               | SPECIFIER_UNION_OR_STRUCT
+               | SPECIFIER_ENUM 
+               | NAME_TYPE
+               
+               
+               
+               
+               
+SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_STRUCT R_BRACE
+                          | UNION_OR_STRUCT L_BRACE DECLAR_LIST_STRUCT R_BRACE
+                          | UNION_OR_STRUCT IDENTIFIER
+                          
+                          
+                          
+                          
+                          
+UNION_OR_STRUCT : STRUCT
+                | UNION
+                
+                
+                
+                
+DECLARATION_LIST_STRUCT : DECLARATION_STRUCT
+                        | DECLARATION_LIST_STRUCT DECLARATION_STRUCT
+                        
+
+
+DECLARATION_STRUCT : LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR ;
+
+
+
+LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL
+               | SPECIFIER_TYPE 
+               | SPEICIFER_TYPE LIST_SPEC_QUAL
+               | SPECIFIER_TYPE
+               
+               
+                             
+                          
+                          
+
+                                 
             
             
             
