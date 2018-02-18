@@ -68,6 +68,22 @@
 
 ROOT : EXPR { g_root = $1; }
 
+
+EXPR : IDENTIFIER
+     |INT_C 
+     |UNSIGNED_C 
+     |LONG_C 
+     |UNSIGNED_LONG_C
+     |CHARACTER_C
+     |STRING_LITERAL
+     |L_BRACKET EXPR R_BRACKET
+
+
+
+
+
+
+
 %%
 
 const Expression *g_root; // Definition of variable (to match declaration earlier)
