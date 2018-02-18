@@ -53,7 +53,9 @@
 %token RIGHT_ASSIGN LEFT_ASSIGN ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
 
 
-%type <expr> EXPR,EXPR_PRIMARY,EXPR_POSTFIX,EXPR_UNARY
+%type <expr> EXPR,EXPR_PRIMARY,EXPR_POSTFIX,EXPR_UNARY,NAME_TYPE,OPR_UNARY,EXPR_CAST,EXPR_MUL,EXPR_ADD,
+             EXPR_SHIFT,
+                
                                        // for grammar production rules
 %type <string> IDENTIFIER STRING_LITERAL
 %type <intValue> INT_C
@@ -94,9 +96,45 @@ EXPR_POSTFIX : EXPR_PRIMARY
            
 
 EXPR_UNARY : EXPR_POSTFIX 
-            
+           | OP_INC EXPR_UNARY
+           | OP_DEC EXPR_UNARY
+           | EXPR_UNARY EXPR_CAST
+           | SIZEOF EXPR_UNARY
+           | SIZEOF L_BRACKET NAME_TYPE R_BRACKET            
 
 
+
+OPR_UNARY : OP_BAND
+          | OP_MUL
+          | OP_PLUS
+          | OP_MINUS
+          | OP_B_ONESC
+          | OP_LNOT
+          
+          
+EXPR_CAST : EXPR_UNARY
+          | L_BRACKET NAME_TYPE R_BRACKET EXPR_CAST
+        
+          
+          
+          
+EXPR_MUL : EXPR_CAST
+         | EXPR_MUL OP_MUL EXPR_CAST
+         | EXPR_MUL OP_DIV EXPR_CAST
+         | EXPR_MUL OP_MOD EXPR_CAST
+         
+         
+         
+EXPR_ADD : EXPR_MUL
+         | EXPR_ADD OP_PLUS EXPR_MUL
+         | EXPR_ADD OP_MINUS EXPR_MUL
+         
+         
+         
+EXPR_SHIFT : EXPR_ADD
+           | EXPR_SHIFT OP_LEFT EXPR_ADD
+           | EXPR_SHIFT OP_RIGHT EXPR_ADD
+           
 
 
 
