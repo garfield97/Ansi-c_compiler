@@ -377,8 +377,13 @@ LIST_PARAM_TYPE : LIST_PARAMETER
 LIST_PARAMETER : DECLARATION_PARAMETER
                | LIST_PARAMETER , DECLARATION PARAMETER
                
-               
-        
+
+DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR        
+                      | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT
+                      | SPECIFIER_DECLARATION
+                      
+                      
+
                                          
             
             
