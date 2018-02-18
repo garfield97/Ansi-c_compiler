@@ -396,12 +396,33 @@ LIST_IDENTIFIER : IDENTIFIER
 DECLARATOR_ABSTRACT : POINTER
                     | DECLARATOR_DIRECT_ABSTRACT
                     | POINTER DECLARATOR_DIRECT_ABSTRACT
+   
+   
+   
                     
 DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET
                            | L_SQUARE R_SQUARE
-                           |
+                           | L_SQUARE EXPR_CONST R_SQUARE
+                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE R_SQUARE
+                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE EXPR_CONST R_SQUARE
+                           | L_BRACKET R_BRACKET
+                           | L_BRACKET LIST_PARAM_TYPE R_BRACKET
+                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET R_BRACKET
+                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET LIST_PARAM_TYPE R_BRACKET
+                           
                                          
+
+INITIALIZER : EXPR_ASSIGNMENT    
+            | L_BRACKET LIST_INITIALIZER R_BRACKET
+            | L_BRACKET LIST_INITIALIZER , R_BRACKET 
             
+
+
+LIST_INITIALIZER : INITIALIZER
+                 | LIST_INITIALIZER , INITIALIZER
+                 
+                 
+
             
             
 
