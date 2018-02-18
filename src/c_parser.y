@@ -356,7 +356,17 @@ DECLARATOR_DIRECT : IDENTIFIER
                   | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE
                   | DECLARATOR_DIRECT L_SQUARE R_SQUARE
                   | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET
-                  | DECLARATOR_DIRECT L_BRACKET IDENTIFIER_LIST                                 
+                  | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET
+                  | DECLARATOR_DIRECT L_BRACKET R_BRACKET
+
+POINTER : OP_MUL
+        | OP_MUL LIST_TYPE_QUALIFIER
+        | OP_MUL POINTER
+        | OP_MUL LIST_TYPE_QUALIFIER POINTER
+
+
+        
+                                         
             
             
             
