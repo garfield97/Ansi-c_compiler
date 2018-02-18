@@ -130,9 +130,14 @@ EXPR_ADD : EXPR_MUL
          | EXPR_ADD OP_MINUS EXPR_MUL
             
          
+         
+         
 EXPR_SHIFT : EXPR_ADD
            | EXPR_SHIFT OP_LEFT EXPR_ADD
            | EXPR_SHIFT OP_RIGHT EXPR_ADD
+        
+        
+        
         
            
 EXPR_RELATIONAL : EXPR_SHIFT
@@ -142,10 +147,13 @@ EXPR_RELATIONAL : EXPR_SHIFT
                 | EXPR_RELATIONAL OP_GE EXPR_SHIFT
      
      
+     
                 
 EXPR_EQUALITY : EXPR_RELATIONAL
               | EXPR_EQUALITY OP_EQ EXPR_RELATIONAL
               | EXPR_EQUALITY OP_NE EXPR_RELATIONAL
+
+
 
 
 EXPR_AND : EXPR_EQUALITY
@@ -154,6 +162,19 @@ EXPR_AND : EXPR_EQUALITY
 
 
 
+
+EXPR_XOR : EXPR_AND
+         | EXPR_XOR OP_BXOR EXPR_AND
+         
+
+
+
+EXPR_INCLUSIVE_OR : EXPR_XOR 
+                  | EXPR_INCLUSIVE_OR OP_BOR EXPR_EXOR
+                  
+                  
+                  
+EXPR_LOGIC_AND       
 
 
 
