@@ -478,14 +478,28 @@ STATEMENT_JUMP : GOTO IDENTIFIER ';'
                | BREAK ';'
                | RETURN ';'
                | RETURN EXPR ';'
-               
-UNIT_TRANSL 
 
+
+               
+UNIT_TRANSL : DECLARATION_EXTERNAL
+            | UNIT_TRANSL DECLARATION_EXTERNAL
+
+
+
+DECLARATION_EXTERNAL : DEFINITION_FUNCTION
+                     : DECLARATION
+
+
+DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMENT COMPOUND
+                    | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND
+                    | DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND
+                    | DECLARATOR STATEMENT_COMPOUND
          
             
 
 
 %%
+
 
 const Expression *g_root; // Definition of variable (to match declaration earlier)
 
@@ -495,3 +509,18 @@ const Expression *parseAST()
   yyparse();
   return g_root;
 }
+
+
+#include <stdio.h>
+
+extern char yytext[];
+extern int column;
+
+yyerror(s)
+char *s;
+{
+	fflush(stdout);
+	printf("\n%*s\n%*s\n", column, "^", column, s);
+}
+
+
