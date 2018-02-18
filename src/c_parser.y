@@ -374,9 +374,11 @@ LIST_PARAM_TYPE : LIST_PARAMETER
                 | LIST_PARAMETER , ELLIPSIS
 
 
+
 LIST_PARAMETER : DECLARATION_PARAMETER
                | LIST_PARAMETER , DECLARATION PARAMETER
                
+
 
 DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR        
                       | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT
@@ -384,6 +386,20 @@ DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR
                       
                       
 
+LIST_IDENTIFIER : IDENTIFIER 
+                | LIST_IDENTIFIER , IDENTIFIER
+
+
+
+
+
+DECLARATOR_ABSTRACT : POINTER
+                    | DECLARATOR_DIRECT_ABSTRACT
+                    | POINTER DECLARATOR_DIRECT_ABSTRACT
+                    
+DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET
+                           | L_SQUARE R_SQUARE
+                           |
                                          
             
             
