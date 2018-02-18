@@ -54,7 +54,7 @@
 
 
 %type <expr> EXPR,EXPR_PRIMARY,EXPR_POSTFIX,EXPR_UNARY,NAME_TYPE,OPR_UNARY,EXPR_CAST,EXPR_MUL,EXPR_ADD,
-             EXPR_SHIFT,
+             EXPR_SHIFT,EXPR_RELATIONAL,
                 
                                        // for grammar production rules
 %type <string> IDENTIFIER STRING_LITERAL
@@ -135,8 +135,12 @@ EXPR_SHIFT : EXPR_ADD
            | EXPR_SHIFT OP_LEFT EXPR_ADD
            | EXPR_SHIFT OP_RIGHT EXPR_ADD
            
-
-
+EXPR_RELATIONAL : EXPR_SHIFT
+                | EXPR_RELATIONAL OP_LEFT EXPR_SHIFT
+                | EXPR_RELATIONAL OP_RIGHT EXPR_SHIFT
+                | EXPR_RELATIONAL OP_LE EXPR_SHIFT
+                | EXPR_RELATIONAL OP_GE EXPR_SHIFT
+                
 
 
 
