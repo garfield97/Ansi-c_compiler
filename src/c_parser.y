@@ -54,7 +54,8 @@
 
 
 %type <expr> EXPR,EXPR_PRIMARY,EXPR_POSTFIX,EXPR_UNARY,NAME_TYPE,OPR_UNARY,EXPR_CAST,EXPR_MUL,EXPR_ADD,
-             EXPR_SHIFT,EXPR_RELATIONAL,
+             EXPR_SHIFT,EXPR_RELATIONAL,EXPR_EQUALITY,EXPR_AND,EXPR_XOR,EXPR_INCLUSIVE_OR,
+             EXPR_LOGIC_AND,EXPR_LOGIC_OR,EXPR_CONDITIONAL,OPR_ASSIGNMENT,DECLAR
                 
                                        // for grammar production rules
 %type <string> IDENTIFIER STRING_LITERAL
@@ -174,15 +175,40 @@ EXPR_INCLUSIVE_OR : EXPR_XOR
                   
                   
                   
+                  
 EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR  
                | EXPR_LOGIC_AND OP_BAND EXPR_INCLUSIVE_OR
              
              
                
+               
 EXPR_LOGIC_OR : EXPR_LOGIC_AND
               | EXPR_LOGIC_OR OP_BOR
               
- 
+              
+              
+              
+EXPR_CONDITIONAL : EXPR_LOGIC_OR
+                 | EXPR_LOGIC_OR ? EXPR : EXPR_CONDITIONAL
+         
+EXPR_ASSIGNMENT : EXPR_CONDITIONAL
+                | EXPR_UNARY OPR_ASSIGNMENT EXPR_ASSIGNMENT
+
+                 
+OPR_ASSIGNMENT : ASSIGN
+               | MUL_ASSIGN
+               | DIV_ASSIGN
+               | MOD_ASSIGN
+               | ADD_ASSIGN
+               | SUB_ASSIGN
+               | LEFT_ASSIGN
+               | RIGHT_ASSIGN
+               | AND_ASSIGN
+               | XOR_ASSIGN
+               | OR_ASSIGN
+
+EXPR : EXPR_ASSIGNMENT
+
 
 
 
