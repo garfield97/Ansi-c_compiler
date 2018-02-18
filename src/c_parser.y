@@ -310,8 +310,39 @@ LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL
                
                
                              
+LIST_STRUCT_DECLARATOR : STRUCT_DECLARATOR
+                       | LIST_STRUCT_DECLARATOR , STRUCT_DECLARATOR
+                       
+
+
+
+
+
+STRUCT_DECLARATOR : DECLARATOR
+                  | : EXPR_CONST
+                  | DECLARATOR : EXPR_CONST
+                  
+
+
+
+                         
                           
-                          
+SPECIFIER_ENUM : ENUM L_BRACE LIST_ENUMERATOR R_BRACE
+               | ENUM IDENTIFIER L_BRACE LIST_ENUMERATOR R_BRACE
+               | ENUM IDENTIFIER
+               
+
+
+
+
+
+LIST_ENUMERATOR : ENUMERATOR
+                | LIST_ENUMERATOR , ENUMERATOR
+                
+                
+ENUMERATOR : IDENTIFIER 
+           | IDENTIFIER ASSIGN EXPR_CONST
+           
 
                                  
             
