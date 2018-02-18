@@ -174,7 +174,15 @@ EXPR_INCLUSIVE_OR : EXPR_XOR
                   
                   
                   
-EXPR_LOGIC_AND       
+EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR  
+               | EXPR_LOGIC_AND OP_BAND EXPR_INCLUSIVE_OR
+             
+             
+               
+EXPR_LOGIC_OR : EXPR_LOGIC_AND
+              | EXPR_LOGIC_OR OP_BOR
+              
+ 
 
 
 
