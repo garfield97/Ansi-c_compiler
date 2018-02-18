@@ -128,19 +128,29 @@ EXPR_MUL : EXPR_CAST
 EXPR_ADD : EXPR_MUL
          | EXPR_ADD OP_PLUS EXPR_MUL
          | EXPR_ADD OP_MINUS EXPR_MUL
-         
-         
+            
          
 EXPR_SHIFT : EXPR_ADD
            | EXPR_SHIFT OP_LEFT EXPR_ADD
            | EXPR_SHIFT OP_RIGHT EXPR_ADD
+        
            
 EXPR_RELATIONAL : EXPR_SHIFT
                 | EXPR_RELATIONAL OP_LEFT EXPR_SHIFT
                 | EXPR_RELATIONAL OP_RIGHT EXPR_SHIFT
                 | EXPR_RELATIONAL OP_LE EXPR_SHIFT
                 | EXPR_RELATIONAL OP_GE EXPR_SHIFT
+     
+     
                 
+EXPR_EQUALITY : EXPR_RELATIONAL
+              | EXPR_EQUALITY OP_EQ EXPR_RELATIONAL
+              | EXPR_EQUALITY OP_NE EXPR_RELATIONAL
+
+
+EXPR_AND : EXPR_EQUALITY
+         | EXPR_AND OP_BAND EXPR_EQUALITY
+         
 
 
 
