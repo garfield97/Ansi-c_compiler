@@ -1,8 +1,8 @@
 #include "ast.hpp"
 
-int main()
+int main(int argc, char[] argv)
 {
-    const Expression *ast=parseAST();
+    const Unit_Translation *ast=parseAST();
 
     ast->print(std::cout);
     std::cout<<std::endl;
