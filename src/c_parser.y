@@ -512,9 +512,6 @@ STATEMENT_JUMP : GOTO IDENTIFIER ';'
                | BREAK ';'
                | RETURN ';'
                | RETURN EXPR ';'
-<<<<<<< HEAD
->>>>>>> parent of b495090... GRAMMAR ALL DONE
-=======
 >>>>>>> parent of b495090... GRAMMAR ALL DONE
                
 UNIT_TRANSL 
