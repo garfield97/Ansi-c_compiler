@@ -72,7 +72,7 @@
 %%
 
 
-ROOT : EXPR { g_root = $1; }
+ROOT : UNIT_TRANSL { g_root = $1; }
 
 
 EXPR_PRIMARY : IDENTIFIER
