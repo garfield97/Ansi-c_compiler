@@ -485,26 +485,42 @@ LIST_STATEMENT : STATEMENT
                   
 
 
+<<<<<<< HEAD
+=======
+STATEMENT_EXPR : ';'
+               | EXPR ';'
                
-UNIT_TRANSL : DECLARATION_EXTERNAL
-            | UNIT_TRANSL DECLARATION_EXTERNAL
+
+
+STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT
+                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT
+                    | SWITCH L_BRACKET EXPR R_BRACKET STATEMENT
+                    
 
 
 
-DECLARATION_EXTERNAL : DEFINITION_FUNCTION
-                     : DECLARATION
+STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
+                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';' 
+                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT
+                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMENT
 
 
-DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMENT COMPOUND
-                    | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND
-                    | DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND
-                    | DECLARATOR STATEMENT_COMPOUND
+
+
+STATEMENT_JUMP : GOTO IDENTIFIER ';'
+               | CONTINUE ';'
+               | BREAK ';'
+               | RETURN ';'
+               | RETURN EXPR ';'
+>>>>>>> parent of b495090... GRAMMAR ALL DONE
+               
+UNIT_TRANSL 
+
          
             
 
 
 %%
-
 
 const Expression *g_root; // Definition of variable (to match declaration earlier)
 
@@ -514,18 +530,3 @@ const Expression *parseAST()
   yyparse();
   return g_root;
 }
-
-
-#include <stdio.h>
-
-extern char yytext[];
-extern int column;
-
-yyerror(s)
-char *s;
-{
-	fflush(stdout);
-	printf("\n%*s\n%*s\n", column, "^", column, s);
-}
-
-
