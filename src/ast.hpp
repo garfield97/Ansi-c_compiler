@@ -3,7 +3,7 @@
 
 #include "ast/ast_unit_translation.hpp"
 #include "ast/ast_declaration.hpp"
-#include "ast/ast_function_defenition.hpp"
+#include "ast/ast_function_definition.hpp"
 #include "ast/ast_specifier_qualifier.hpp"
 #include "ast/ast_statements.hpp"
 #include "ast/ast_expressions.hpp"
