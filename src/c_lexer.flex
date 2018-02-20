@@ -458,7 +458,7 @@ void get_CHARACTER(){
 
 
 /* Error handler. This will get called if none of the rules match. */
-void yyerror (char const *s)
+void yyerror (FILE* fp, char const *s)
 {
   fprintf (stderr, "Flex Error: %s\n", s); /* s is the text that wasn't matched */
 }

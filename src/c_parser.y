@@ -9,8 +9,10 @@
   // We are declaring the functions provided by Flex, so
   // that Bison generated code can call them.
   int yylex(void);
-  void yyerror(const char *);
+  void yyerror(FILE* fp, const char *);
 }
+
+%parse-param { FILE* fp };
 
 // Represents the value associated with any kind of
 // AST node.
@@ -503,10 +505,10 @@ DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMEN
 
 const Node *g_root; // Definition of variable (to match declaration earlier)
 
-const Node *parseAST()
+const Node *parseAST(FILE* fp)
 {
   g_root=0;
-  yyparse();
+  yyparse(fp);
   return g_root;
 }
 
