@@ -3,7 +3,7 @@
 
   #include <cassert>
 
-  extern const Unit_Translation *g_root; // A way of getting the AST out
+  extern const Node *g_root; // A way of getting the AST out
 
   //! This is to fix problems when generating C++
   // We are declaring the functions provided by Flex, so
@@ -15,7 +15,7 @@
 // Represents the value associated with any kind of
 // AST node.
 %union{
-  const Expression *expr;
+  const Node *node;
   std::string *string;
   int intValue;
   unsigned int uintValue;
@@ -53,7 +53,7 @@
 %token RIGHT_ASSIGN LEFT_ASSIGN ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
 
 
-%type <expr> EXPR,EXPR_PRIMARY,EXPR_POSTFIX,EXPR_UNARY,NAME_TYPE,OPR_UNARY,EXPR_CAST,EXPR_MUL,EXPR_ADD,
+%type <node> EXPR,EXPR_PRIMARY,EXPR_POSTFIX,EXPR_UNARY,NAME_TYPE,OPR_UNARY,EXPR_CAST,EXPR_MUL,EXPR_ADD,
              EXPR_SHIFT,EXPR_RELATIONAL,EXPR_EQUALITY,EXPR_AND,EXPR_XOR,EXPR_INCLUSIVE_OR,
              EXPR_LOGIC_AND,EXPR_LOGIC_OR,EXPR_CONDITIONAL,OPR_ASSIGNMENT,EXPR_CONST,DECLARATION,SPECIFIER_DECLARATION
              DECLARATOR_INIT_LIST,DECLARATOR_INIT,SPECIFIER_STORE_CLASS,SPECIFIER_TYPE,SPECIFIER_UNION_OR_STRUCT,UNION_OR_STRUCT
@@ -501,9 +501,9 @@ DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMEN
 %%
 
 
-const Expression *g_root; // Definition of variable (to match declaration earlier)
+const Node *g_root; // Definition of variable (to match declaration earlier)
 
-const Expression *parseAST()
+const Node *parseAST()
 {
   g_root=0;
   yyparse();
