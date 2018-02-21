@@ -10,7 +10,7 @@
 // abstarct class for any node of the AST
 class Node;
 
-typedef const Node *NodePtr;
+typedef const Node* NodePtr;
 
 class Node
 {
@@ -18,10 +18,13 @@ public:
     virtual ~Node()
     {}
 
+    virtual void PrettyPrint() const =0;
+
     //! Tell and expression to print itself to the given stream
-    virtual void printPY(std::ostream &dst) const =0;
+    virtual void translatePY() const =0;
 
     //! Evaluate the tree using the given mapping of variables to numbers
+    virtual void compileASM() const =0;
     
 };
 
