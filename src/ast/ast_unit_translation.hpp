@@ -1,25 +1,35 @@
-#ifndef ast_unit_translation_hpp
-#define ast_unit_translation_hpp
+#ifndef ast_Translation_Unit_hpp
+#define ast_Translation_Unit_hpp
 
 #include "ast_node.hpp"
 
 
-class Unit_Translation
+class Translation_Unit
     : public Node
 {
 private:
-    NodePtr arg;
+    NodePtr declaration;
+    NodePtr UT_next;
 protected:
-    Function(ExpressionPtr _arg)
-        : arg(_arg)
+    Translation_Unit(NodePtr _arg1 = null, NodePtr _arg2)
+        : UT_next(_arg1)
+        , declaration(_arg2)
     {}
 public:
  
-    virtual void printPY(std::ostream &dst) const override
+    virtual void PrettyPrint() const override
     {
-        
+        if(UT_next != null) UT_next->print();
+        declaration->print();
     }
 
+    virtual void toPYPY() const override{
+
+    }
+
+    virtual void renderASM() const override{
+
+    }
 };
 
 

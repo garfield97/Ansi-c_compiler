@@ -18,13 +18,14 @@ public:
     virtual ~Node()
     {}
 
+    // print out AST
     virtual void PrettyPrint() const =0;
 
     //! Tell and expression to print itself to the given stream
-    virtual void translatePY() const =0;
+    virtual void toPY() const =0;
 
     //! Evaluate the tree using the given mapping of variables to numbers
-    virtual void compileASM() const =0;
+    virtual void renderASM() const =0;
     
 };
 

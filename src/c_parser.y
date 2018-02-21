@@ -17,8 +17,8 @@
 // Represents the value associated with any kind of
 // AST node.
 %union{
-  const Node *node;
-  std::string *string;
+  const Node* node;
+  std::string* string;
   int intValue;
   unsigned int uintValue;
   long int longintValue;
@@ -74,7 +74,7 @@
 %%
 
 
-ROOT : UNIT_TRANSL { g_root = $1; }
+ROOT : TRANSL_UNIT { g_root = $1; }
 
 
 EXPR_PRIMARY : IDENTIFIER
@@ -483,8 +483,8 @@ STATEMENT_JUMP : GOTO IDENTIFIER ';'
 
 
                
-UNIT_TRANSL : DECLARATION_EXTERNAL
-            | UNIT_TRANSL DECLARATION_EXTERNAL
+TRANSL_UNIT : DECLARATION_EXTERNAL
+            | TRANSL_UNIT DECLARATION_EXTERNAL
 
 
 
