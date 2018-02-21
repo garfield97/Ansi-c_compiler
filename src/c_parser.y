@@ -174,7 +174,7 @@ EXPR_XOR : EXPR_AND
 
 
 EXPR_INCLUSIVE_OR : EXPR_XOR 
-                  | EXPR_INCLUSIVE_OR OP_BOR EXPR_EXOR
+                  | EXPR_INCLUSIVE_OR OP_BOR EXPR_XOR
                   
                   
                   
