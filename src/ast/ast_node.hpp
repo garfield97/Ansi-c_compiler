@@ -19,13 +19,13 @@ public:
     {}
 
     // print out AST
-    virtual void PrettyPrint() const =0;
+    virtual void PrettyPrint(std::ostream &dst) const =0;
 
     //! Tell and expression to print itself to the given stream
-    virtual void toPY() const =0;
+    virtual void toPY(std::ostream &dst) const =0;
 
     //! Evaluate the tree using the given mapping of variables to numbers
-    virtual void renderASM() const =0;
+    virtual void renderASM(std::ostream &dst) const =0;
     
 };
 

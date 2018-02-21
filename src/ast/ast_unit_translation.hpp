@@ -8,26 +8,30 @@ class Translation_Unit
     : public Node
 {
 private:
+    NodePtr TU_next;
     NodePtr declaration;
-    NodePtr UT_next;
 protected:
-    Translation_Unit(NodePtr _arg1 = null, NodePtr _arg2)
-        : UT_next(_arg1)
+    Translation_Unit(NodePtr _arg1)
+        : TU_next(null)
+        , declaration(_arg1)
+    {}
+    Translation_Unit(NodePtr _arg1, NodePtr _arg2)
+        : TU_next(_arg1)
         , declaration(_arg2)
     {}
 public:
  
-    virtual void PrettyPrint() const override
+    virtual void PrettyPrint(std::ostream &dst) const override
     {
-        if(UT_next != null) UT_next->print();
+        if(UT_next != null) TU_next->print();
         declaration->print();
     }
 
-    virtual void toPYPY() const override{
+    virtual void toPYPY(std::ostream &dst) const override{
 
     }
 
-    virtual void renderASM() const override{
+    virtual void renderASM(std::ostream &dst) const override{
 
     }
 };
