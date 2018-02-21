@@ -8,7 +8,17 @@
 
 
 
-class statement_compound : 
+class statement_compound : public Node{
+
+
+private:
+
+
+protected:
+
+
+
+public:
 
 
 #endif
