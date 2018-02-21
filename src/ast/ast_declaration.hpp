@@ -250,6 +250,43 @@ public:
 
 
 
+class list_declaration : public Node{
+    
+private:  
+    
+    NodePtr declaration;
+    NodePtr list_declaration;
+    
+protected:
+        
+    list_declaration(NodePtr _arg1)
+        :declaration(_arg1)
+        ,list_declaration(NULL)
+    {}
+        
+    
+    list_declaration(NodePtr _arg1,NodePtr _arg2)
+        :declaration(_arg2)
+        ,list_declaration(_arg1)
+    {}
+              
+    
+public:
+
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->print();
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }
 
 
 
