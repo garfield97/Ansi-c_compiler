@@ -74,7 +74,7 @@
 %%
 
 
-ROOT : TRANSL_UNIT { g_root = $1; }
+ROOT : PROGRAM { g_root = $1; }
 
 
 EXPR_PRIMARY : IDENTIFIER
@@ -191,7 +191,7 @@ EXPR_LOGIC_OR : EXPR_LOGIC_AND
               
               
      
-             
+//             
 EXPR_CONDITIONAL : EXPR_LOGIC_OR
                  | EXPR_LOGIC_OR '?' EXPR ':' EXPR_CONDITIONAL
          
@@ -215,14 +215,14 @@ OPR_ASSIGNMENT : ASSIGN
                | OR_ASSIGN
 
 
-
+//
 EXPR : EXPR_ASSIGNMENT
      | EXPR ',' EXPR_ASSIGNMENT
      
      
      
      
-     
+//     
 EXPR_CONST : EXPR_CONDITIONAL
 
 
@@ -482,9 +482,9 @@ STATEMENT_JUMP : GOTO IDENTIFIER ';'
                | RETURN EXPR ';'
 
 
-               
-TRANSL_UNIT : DECLARATION_EXTERNAL
-            | TRANSL_UNIT DECLARATION_EXTERNAL
+//               
+PROGRAM : DECLARATION_EXTERNAL
+            | PROGRAM DECLARATION_EXTERNAL
 
 
 
