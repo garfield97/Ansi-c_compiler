@@ -220,8 +220,47 @@ private:
     NodePtr const_expr;
 
 
+
 protected: 
+    statement_labeled(std::string symbol,NodePtr _arg1)
+        :statement(_arg1)
+        ,labels(symbol)
+        ,const_expr(NULL)
+    {}
     
+    statement_labeled(std::string symbol,NodePtr _arg1,NodePtr_arg2)
+        :statement(_arg2)
+        ,labels(symbol)
+        ,const_expr(_arg1)
+    {}
+    
+
+public:
+    
+        std::string name = "statement_labeled";
+    
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            if(const_expr != NULL){
+                labels->PrettyPrint(dst);
+                const_expr->PrettyPrint(dst);
+                dst<<':';    
+                statement->PrettyPrint(dst);
+            }
+            else{
+                labels->PrettyPrint(dst);
+                dst<<':';    
+                statement->PrettyPrint(dst);                
+        }
+
+        virtual void toPY(std::ostream &dst) const override{
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override{
+
+        }
+
 
 
 
