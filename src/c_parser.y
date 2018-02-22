@@ -87,7 +87,7 @@ EXPR_PRIMARY : IDENTIFIER
             
 
 EXPR_POSTFIX : EXPR_PRIMARY
-             | EXPR_POSTFIX L_SQUARE EXPR R_SQUAR
+             | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE
              | EXPR_POSTFIX L_BRACKET R_BRACKET
              | EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET
              | EXPR_POSTFIX '.' IDENTIFIER
@@ -95,18 +95,20 @@ EXPR_POSTFIX : EXPR_PRIMARY
              | EXPR_POSTFIX OP_INC
              | EXPR_POSTFIX OP_DEC
 
+ARG_EXPR_LIST : EXPR_ASSIGNMENT
+              | ARG_EXPR_LIST ',' EXPR_ASSIGNMENT
 
            
-
+//
 EXPR_UNARY : EXPR_POSTFIX 
            | OP_INC EXPR_UNARY
            | OP_DEC EXPR_UNARY
-           | EXPR_UNARY EXPR_CAST
+           | OPR_UNARY EXPR_CAST
            | SIZEOF EXPR_UNARY
            | SIZEOF L_BRACKET NAME_TYPE R_BRACKET            
 
 
-
+//
 OPR_UNARY : OP_BAND
           | OP_MUL
           | OP_PLUS
@@ -114,44 +116,44 @@ OPR_UNARY : OP_BAND
           | OP_B_ONESC
           | OP_LNOT
           
-          
+//          
 EXPR_CAST : EXPR_UNARY
           | L_BRACKET NAME_TYPE R_BRACKET EXPR_CAST
         
           
           
-          
+//          
 EXPR_MUL : EXPR_CAST
          | EXPR_MUL OP_MUL EXPR_CAST
          | EXPR_MUL OP_DIV EXPR_CAST
          | EXPR_MUL OP_MOD EXPR_CAST
          
          
-         
+//         
 EXPR_ADD : EXPR_MUL
          | EXPR_ADD OP_PLUS EXPR_MUL
          | EXPR_ADD OP_MINUS EXPR_MUL
             
          
          
-         
+//         
 EXPR_SHIFT : EXPR_ADD
-           | EXPR_SHIFT OP_LEFT EXPR_ADD
-           | EXPR_SHIFT OP_RIGHT EXPR_ADD
+           | EXPR_SHIFT OP_BLEFT EXPR_ADD
+           | EXPR_SHIFT OP_BRIGHT EXPR_ADD
         
         
         
         
-           
+//           
 EXPR_RELATIONAL : EXPR_SHIFT
-                | EXPR_RELATIONAL OP_LEFT EXPR_SHIFT
-                | EXPR_RELATIONAL OP_RIGHT EXPR_SHIFT
+                | EXPR_RELATIONAL OP_L EXPR_SHIFT
+                | EXPR_RELATIONAL OP_G EXPR_SHIFT
                 | EXPR_RELATIONAL OP_LE EXPR_SHIFT
                 | EXPR_RELATIONAL OP_GE EXPR_SHIFT
      
      
      
-                
+//                
 EXPR_EQUALITY : EXPR_RELATIONAL
               | EXPR_EQUALITY OP_EQ EXPR_RELATIONAL
               | EXPR_EQUALITY OP_NE EXPR_RELATIONAL
@@ -391,7 +393,8 @@ LIST_IDENTIFIER : IDENTIFIER
                 | LIST_IDENTIFIER ',' IDENTIFIER
 
 
-
+NAME_TYPE : LIST_SPEC_QUAL
+          | LIST_SPEC_QUAL DECLARATOR_ABSTRACT
 
 
 DECLARATOR_ABSTRACT : POINTER
