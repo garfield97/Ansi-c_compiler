@@ -27,8 +27,7 @@
 }
 
            
-%token EXPR
- 
+
 %token IDENTIFIER STRING_LITERAL SIZEOF 
  
 %token INT_C UNSIGNED_C LONG_C UNSIGNED_LONG_C
@@ -178,13 +177,13 @@ EXPR_INCLUSIVE_OR : EXPR_XOR
                   
                   
                   
-                  
+//                  
 EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR  
                | EXPR_LOGIC_AND OP_BAND EXPR_INCLUSIVE_OR
              
              
                
-               
+//               
 EXPR_LOGIC_OR : EXPR_LOGIC_AND
               | EXPR_LOGIC_OR OP_BOR
               
@@ -201,18 +200,18 @@ EXPR_ASSIGNMENT : EXPR_CONDITIONAL
                 | EXPR_UNARY OPR_ASSIGNMENT EXPR_ASSIGNMENT
 
 
-                 
-OPR_ASSIGNMENT : ASSIGN
-               | MUL_ASSIGN
-               | DIV_ASSIGN
-               | MOD_ASSIGN
-               | ADD_ASSIGN
-               | SUB_ASSIGN
-               | LEFT_ASSIGN
-               | RIGHT_ASSIGN
-               | AND_ASSIGN
-               | XOR_ASSIGN
-               | OR_ASSIGN
+//             
+OPR_ASSIGNMENT : ASSIGN           { $$ = new opr_assignment("=");   }
+               | MUL_ASSIGN       { $$ = new opr_assignment("*=");  }
+               | DIV_ASSIGN       { $$ = new opr_assignment("/=");  }
+               | MOD_ASSIGN       { $$ = new opr_assignment("%=");  }
+               | ADD_ASSIGN       { $$ = new opr_assignment("+=");  }
+               | SUB_ASSIGN       { $$ = new opr_assignment("-=");  }
+               | LEFT_ASSIGN      { $$ = new opr_assignment("<<="); }
+               | RIGHT_ASSIGN     { $$ = new opr_assignment(">>="); }
+               | AND_ASSIGN       { $$ = new opr_assignment("&=");  }
+               | XOR_ASSIGN       { $$ = new opr_assignment("^=");  }
+               | OR_ASSIGN        { $$ = new opr_assignment("|=");  }
 
 
 //
@@ -223,7 +222,7 @@ EXPR : EXPR_ASSIGNMENT
      
      
 //     
-EXPR_CONST : EXPR_CONDITIONAL
+EXPR_CONST : EXPR_CONDITIONAL   { $$ = $1; }
 
 
 

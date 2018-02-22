@@ -19,13 +19,23 @@ int main(int argc, char* argv[])
     const Node* ast = parseAST(fp);
     fclose(fp);
 
+    // Print AST
+    // bin/c_compiler -P [source-file.c] -o [dest-file.txt]
+    if( argv[0] == "-P" ){
+        ast->PrettyPrint(cout);
+    } 
 
     // Compile to Assembly
     // bin/c_compiler -S [source-file.c] -o [dest-file.s]
-   
+    if( argv[0] == "-S" ){
+        
+    } 
 
     // Translate to Python
     // bin/c_compiler --translate [source-file.c] -o [dest-file.py]
+    if( argv[0] == "--translate" ){
+        
+    }
 
     return 0;
 }

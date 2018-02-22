@@ -5,12 +5,14 @@
 
 
 class program : public Node {
+    // PROGRAM : DECLARATION_EXTERNAL
+    //         | PROGRAM DECLARATION_EXTERNAL
     private:
         NodePtr next;
         NodePtr declaration;
     protected:
         program(NodePtr _arg1)
-            : next(null)
+            : next(NULL)
             , declaration(_arg1)
         {}
         program(NodePtr _arg1, NodePtr _arg2)
@@ -21,8 +23,8 @@ class program : public Node {
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(next != null) next->print();
-            declaration->print();
+            if(next != NULL) next->PrettyPrint(dst);
+            declaration->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override{

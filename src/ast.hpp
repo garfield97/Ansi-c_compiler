@@ -9,7 +9,7 @@
 #include "ast/ast_specifier_qualifier.hpp"
 #include "ast/ast_statement.hpp"
 #include "ast/ast_expression.hpp"
-#include "ast/ast_constant.hpp"
+#include "ast/ast_terminal.hpp"
 
 
 
