@@ -818,4 +818,111 @@ class expr_postfix : public Node {
 
         }
 };
+
+class expr_primary : public Node {
+    //EXPR_PRIMARY : IDENTIFIER
+    //             | INT_C 
+    //             | UNSIGNED_C 
+    //             | LONG_C 
+    //             | UNSIGNED_LONG_C
+    //             | CHARACTER_C
+    //             | STRING_LITERAL
+    //             | L_BRACKET EXPR R_BRACKET
+    private:
+        NodePtr exp;
+        std:string str;                 //id or string literal
+        int intValue;                   //int_c
+        unsigned int uintValue;         //unsigned_C
+        long int longintValue;          //long_c
+        unsigned long longuintValue;    //unsigned_long_c
+        char characterValue;            //character_c 
+        
+    protected:
+        expr_primary(std:string _str)
+            : exp(NULL)
+            , str(_str)
+            , intValue(NULL)
+            , uintValue(NULL)
+            , longintValue(NULL)
+            , longuintValue(NULL)
+            , characterValue(NULL)
+        {}
+
+        expr_primary(int _intValue)
+            : exp(NULL)
+            , str(NULL)
+            , intValue(_intValue)
+            , uintValue(NULL)
+            , longintValue(NULL)
+            , longuintValue(NULL)
+            , characterValue(NULL)
+        {}
+
+        expr_primary(unsigned int _uintValue)
+            : exp(NULL)
+            , str(NULL)
+            , intValue(NULL)
+            , uintValue(_uintValue)
+            , longintValue(NULL)
+            , longuintValue(NULL)
+            , characterValue(NULL)
+        {}
+
+        expr_primary(long int _longintValue)
+            : exp(NULL)
+            , str(NULL)
+            , intValue(NULL)
+            , uintValue(NULL)
+            , longintValue(_longintValue)
+            , longuintValue(NULL)
+            , characterValue(NULL)
+        {}
+
+        expr_primary(unsigned long _longuintValue)
+            : exp(NULL)
+            , str(NULL)
+            , intValue(NULL)
+            , uintValue(NULL)
+            , longintValue(NULL)
+            , longuintValue(_longuintValue)
+            , characterValue(NULL)
+        {}
+
+        expr_primary(char _characterValue)
+            : exp(NULL)
+            , str(NULL)
+            , intValue(NULL)
+            , uintValue(NULL)
+            , longintValue(NULL)
+            , longuintValue(NULL)
+            , characterValue(_characterValue)
+        {}
+
+        expr_primary(NodePtr _exp)
+            : exp(_exp)
+            , str(NULL)
+            , intValue(NULL)
+            , uintValue(NULL)
+            , longintValue(NULL)
+            , longuintValue(NULL)
+            , characterValue(NULL)
+        {}
+
+    public:
+    
+        std::string name = "expr_primary";
+
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+
+        }
+
+        virtual void toPY(std::ostream &dst) const override{
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override{
+
+        }
+};
 #endif
