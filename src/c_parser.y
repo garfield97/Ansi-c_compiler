@@ -233,7 +233,7 @@ DECLARATION : SPECIFIER_DECLARATION ';'
 
 
 
-
+//
 SPECIFIER_DECLARATION : SPECIFIER_STORE_CLASS
                        | SPECIFIER_STORE_CLASS SPECIFIER_DECLARATION
                        | SPECIFIER_TYPE
@@ -243,12 +243,12 @@ SPECIFIER_DECLARATION : SPECIFIER_STORE_CLASS
  
  
                        
-
+//
 DECLARATOR_INIT_LIST : DECLARATOR_INIT
                      | DECLARATOR_INIT_LIST ',' DECLARATOR_INIT
    
                      
-                     
+//                     
 DECLARATOR_INIT : DECLARATOR
                 | DECLARATOR ASSIGN INITIALIZER
                 
@@ -444,7 +444,7 @@ STATEMENT_COMPOUND : L_BRACE R_BRACE
                    | L_BRACE LIST_DECLARATION R_BRACE
                    | L_BRACE LIST_DECLARATION LIST_STATEMENT R_BRACE
                    
-
+//
 LIST_DECLARATION : DECLARATION
                  | LIST_DECLARATION DECLARATION
                  

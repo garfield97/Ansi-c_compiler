@@ -128,16 +128,16 @@ class declaration : public Node{
 
 class specifier_declaration : public Node{
     private:
-        NodePtr spec_qali;
+        NodePtr present;
         NodePtr next;
         
     protected:
         specifier_declaration(NodePtr _arg1)
-            :spec_qali(_arg1)
+            :present(_arg1)
             ,next(NULL)
         {}
         specifier_declaration(NodePtr _arg1,NodePtr _arg2)
-            :spec_qali(_arg1)
+            :present(_arg1)
             ,next(_arg2)
         {}    
         
@@ -160,6 +160,8 @@ class specifier_declaration : public Node{
 
 
 class list_declaration : public Node{
+//LIST_DECLARATION : DECLARATION
+  //               | LIST_DECLARATION DECLARATION    
     
 private:  
     
@@ -186,7 +188,9 @@ public:
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
-        declaration->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERE
+        dst<<'(';
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -196,6 +200,72 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }
+};
+
+
+
+class declarator_init_list : public Node{
+
+
+//init_declarator_list
+//  : init_declarator
+//  | init_declarator_list ',' init_declarator
+//  ;
+
+
+private:
+
+    NodePtr declarator_init_list;
+    NodePtr declarator_init;
+
+
+protected:
+    
+    declarator_init_list(NodePtr _arg1)
+        :declarator_init_list(_arg1)
+        ,declarator_init(NULL)
+    {}
+    
+    declarator_init_list(NodePtr _arg1,NodePtr _arg2)
+        :declarator_init_list(_arg1)
+        ,declarator_init(_arg2)
+    {}
+    
+
+
+public:
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERE
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }
+
+
+};
+
+
+class declarator_init : public node{
+
+private:
+
+
+protected:
+
+
+public:
+
+};
 
 
 
