@@ -351,7 +351,7 @@ ENUMERATOR : IDENTIFIER
 QUALIFIER_TYPE : CONST
                | VOLATILE
                
-               
+//               
 DECLARATOR : DECLARATOR_POINTER_DIRECT
            : DECLARATOR_DIRECT
            
