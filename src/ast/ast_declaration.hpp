@@ -257,7 +257,7 @@ public:
 };
 
 
-class declarator_init : public node{
+class declarator_init : public Node{
 
 private:
     
@@ -299,7 +299,7 @@ public:
 };
 
 
-class initializer : public node{
+class initializer : public Node{
 //INITIALIZER : EXPR_ASSIGNMENT    
 //           | L_BRACKET LIST_INITIALIZER R_BRACKET
 //           | L_BRACKET LIST_INITIALIZER ',' R_BRACKET 
@@ -341,7 +341,7 @@ public:
 };
 
 
-class list_initializer : public node{
+class list_initializer : public Node{
 //LIST_INITIALIZER : INITIALIZER
  //                | LIST_INITIALIZER ',' INITIALIZER
                  
