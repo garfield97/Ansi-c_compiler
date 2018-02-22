@@ -415,13 +415,13 @@ DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET
                            | DECLARATOR_DIRECT_ABSTRACT L_BRACKET LIST_PARAM_TYPE R_BRACKET
                            
                                          
-
+//
 INITIALIZER : EXPR_ASSIGNMENT    
             | L_BRACKET LIST_INITIALIZER R_BRACKET
             | L_BRACKET LIST_INITIALIZER ',' R_BRACKET 
             
 
-
+//
 LIST_INITIALIZER : INITIALIZER
                  | LIST_INITIALIZER ',' INITIALIZER
                  

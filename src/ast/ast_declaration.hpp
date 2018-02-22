@@ -235,6 +235,8 @@ protected:
 
 public:
 
+    std::string name = "declarator_init_list"; 
+
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -258,16 +260,134 @@ public:
 class declarator_init : public node{
 
 private:
-
-
+    
+    NodePtr declarator;
+    NodePtr initializer;
+    
 protected:
-
-
+    
+    declarator_init(NodePtr _arg1) 
+        :declarator(_arg1)
+    {}
+    
+    declarator_init(NodePtr _arg1,NodePtr _arg2)
+        :declarator(_arg1)
+        ,initializer(_arg2)
+    {}
+    
 public:
+    
+    std::string name = "declarator_init"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERE
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }
+
 
 };
 
 
+class initializer : public node{
+//INITIALIZER : EXPR_ASSIGNMENT    
+//           | L_BRACKET LIST_INITIALIZER R_BRACKET
+//           | L_BRACKET LIST_INITIALIZER ',' R_BRACKET 
+            
+private:
+    NodePtr list_initializer;
+
+protected:
+    
+    initializer(NodePtr _arg1) 
+        : list_initializer(_arg1)
+    {}
+
+
+public:
+
+
+    std::string name = "initializer"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERE
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }
+
+
+
+
+};
+
+
+class list_initializer : public node{
+//LIST_INITIALIZER : INITIALIZER
+ //                | LIST_INITIALIZER ',' INITIALIZER
+                 
+
+private:
+    NodePtr initializer 
+    NodePtr list_initializer
+
+protected:
+
+    list_initializer(NodePtr _arg1)
+        :initializer(_arg1)
+        ,list_initializer(NULL)
+    {}
+    
+
+    list_initializer(NodePtr _arg1,NodePtr _arg2)
+        :initializer(_arg1)
+        ,list_initializer(_arg2)
+    {}
+    
+
+
+public:
+
+    std::string name = "list_initializer"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERE
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }
+
+
+
+};
 
 
 #endif
