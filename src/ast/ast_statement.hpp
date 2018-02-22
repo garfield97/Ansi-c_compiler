@@ -189,11 +189,8 @@ public:
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(rec != NULL){
-                rec->PrettyPrint(dst);
-                dst<<'^ ';
-            }
-            exp->PrettyPrint(dst);
+           next_statement->PrettyPrint(dst);
+    
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -206,6 +203,27 @@ public:
 
 
 };
+
+
+
+
+class statement_labeled : public Node{
+
+//STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
+//                  | CASE EXPR_CONST ':' STATEMENT
+//                  | DEFAULT ':' STATEMENT
+                  
+private:
+
+    NodePtr statement;
+    std::string labels;
+    NodePtr const_expr;
+
+
+protected: 
+    
+
+
 
 
 
