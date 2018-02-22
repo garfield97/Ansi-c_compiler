@@ -20,6 +20,8 @@ class program : public Node {
             , declaration(_arg2)
         {}
     public:
+
+        std::string name = "program";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {

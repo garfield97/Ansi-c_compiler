@@ -3,7 +3,6 @@
 
 #include "ast_node.hpp"
 
-
 class expr : public Node {
     // EXPR : EXPR_ASSIGNMENT
     //      | EXPR ',' EXPR_ASSIGNMENT
@@ -21,6 +20,8 @@ class expr : public Node {
         {}
     public:
     
+        std::string name = "expr";
+
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(rec != NULL) {
@@ -59,6 +60,8 @@ class expr_conditional : public Node {
         {}
     public:
     
+        std::string name = "expr_conditional";
+
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             eLOR->PrettyPrint(dst);
@@ -99,6 +102,8 @@ class expr_assignment : public Node {
             , exp(_arg3)
         {}
     public:
+
+        std::string name = "expr_assignment";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -108,6 +113,35 @@ class expr_assignment : public Node {
                 opr->PrettyPrint(dst);
             }
             exp->PrettyPrint(dst);
+        }
+
+        virtual void toPY(std::ostream &dst) const override{
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override{
+
+        }
+};
+
+class opr_assignment: public Node {
+    private:
+        std::string opr;
+    protected:
+        assign(std::string _opr)
+            : opr(_opr)
+        {}
+        
+    public:
+        std::string name = "opr_assignment";
+
+        std::string getOpr(){
+            return opr;
+        }
+    
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            dst<<opr<<' ';
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -139,6 +173,8 @@ class expr_logic_or : public Node {
         
     public:
     
+        std::string name = "expr_logic_or";
+
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(rec != NULL){
@@ -176,6 +212,8 @@ class expr_logic_and : public Node {
         {}
         
     public:
+
+        std::string name = "expr_logic_and";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -215,6 +253,8 @@ class expr_inclusive_or : public Node {
         
     public:
     
+        std::string name = "expr_inclusive_or";
+
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(rec != NULL){
@@ -252,6 +292,8 @@ class expr_xor : public Node {
         {}
         
     public:
+
+         std::string name = "expr_xor";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -290,6 +332,8 @@ class expr_and : public Node {
         {}
         
     public:
+
+         std::string name = "expr_and";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -333,6 +377,8 @@ class expr_equality : public Node {
         
     public:
     
+        std::string name = "expr_equality";
+
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(rec != NULL){
@@ -353,10 +399,10 @@ class expr_equality : public Node {
 
 class expr_relational : public Node {
     //EXPR_RELATIONAL : EXPR_SHIFT
-    //                | EXPR_RELATIONAL OP_LEFT EXPR_SHIFT
-    //                | EXPR_RELATIONAL OP_RIGHT EXPR_SHIFT
-    //                | EXPR_RELATIONAL OP_LE EXPR_SHIFT
-    //                | EXPR_RELATIONAL OP_GE EXPR_SHIFT
+    //            | EXPR_RELATIONAL OP_L EXPR_SHIFT
+    //            | EXPR_RELATIONAL OP_G EXPR_SHIFT
+    //            | EXPR_RELATIONAL OP_LE EXPR_SHIFT
+    //            | EXPR_RELATIONAL OP_GE EXPR_SHIFT
     private:
         NodePtr rec;
         std::string op;
@@ -376,6 +422,8 @@ class expr_relational : public Node {
         {}
         
     public:
+
+         std::string name = "expr_relational";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -397,8 +445,8 @@ class expr_relational : public Node {
 
 class expr_shift : public Node {
     //EXPR_SHIFT : EXPR_ADD
-    //           | EXPR_SHIFT OP_LEFT EXPR_ADD
-    //           | EXPR_SHIFT OP_RIGHT EXPR_ADD
+    //       | EXPR_SHIFT OP_BLEFT EXPR_ADD
+    //       | EXPR_SHIFT OP_BRIGHT EXPR_ADD
     private:
         NodePtr rec;
         std::string op;
@@ -418,6 +466,8 @@ class expr_shift : public Node {
         {}
         
     public:
+
+         std::string name = "expr_shift";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -460,6 +510,8 @@ class expr_add : public Node {
         {}
         
     public:
+
+         std::string name = "expr_add";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -503,6 +555,8 @@ class expr_mul : public Node {
         {}
         
     public:
+
+         std::string name = "expr_mul";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -541,6 +595,8 @@ class expr_cast : public Node {
         {}
         
     public:
+
+         std::string name = "expr_cast";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -573,34 +629,32 @@ class expr_unary : public Node {
     //           | SIZEOF EXPR_UNARY
     //           | SIZEOF L_BRACKET NAME_TYPE R_BRACKET  
     private:
-        NodePtr rec;
+        NodePtr terminal;
         NodePtr exp;
         
     protected:
-        expr_cast(NodePtr _exp, NodePtr _rec)
-            : rec(_rec)
+        expr_cast(NodePtr _terminal, NodePtr _exp)
+            : terminal(_terminal)
             , exp(_exp)
         {}
 
         expr_cast(NodePtr _exp)
-            : rec(NULL)
+            : terminal(NULL)
             , exp(_exp)
         {}
-        
+
     public:
     
+        std::string name = "expr_unary";
+
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(rec != NULL){
-                // L_BRACKET NAME_TYPE R_BRACKET EXPR_CAST
-                dst<<op<<"(";
-                exp->PrettyPrint(dst);
-                dst<<op<<")";
-                rec->PrettyPrint(dst);
+            if(terminal != NULL){
+                terminal->PrettyPrint();
+                if(terminal->name = "name_type") dst<<' ( ';
             }
-            else {
-                exp->PrettyPrint(dst);
-            }
+            exp->PrettyPrint();
+            if(terminal != NULL && terminal->name = "name_type") dst<<' ) ';
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -612,4 +666,156 @@ class expr_unary : public Node {
         }
 };
 
+class opr_unary: public Node {
+    private:
+        std::string opr;
+    protected:
+        assign(std::string _opr)
+            : opr(_opr)
+        {}
+        
+    public:
+
+        std::string name = "opr_unary";
+
+        std::string getOpr(){
+            return opr;
+        }
+    
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            dst<<opr<<' ';
+        }
+
+        virtual void toPY(std::ostream &dst) const override{
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override{
+
+        }
+};
+
+class arg_expr_list : public Node {
+    //ARG_EXPR_LIST : EXPR_ASSIGNMENT
+    //              | ARG_EXPR_LIST ',' EXPR_ASSIGNMENT
+    private:
+        NodePtr next;
+        NodePtr exp;
+        
+    protected:
+        expr_cast(NodePtr _next, NodePtr _exp)
+            : next(_next)
+            , exp(_exp)
+        {}
+
+        expr_cast(NodePtr _exp)
+            : next(NULL)
+            , exp(_exp)
+        {}
+
+    public:
+    
+        std::string name = "arg_expr_list";
+
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            if(next != NULL){
+                next->PrettyPrint();
+                dst<<' , ';
+            }
+            exp->PrettyPrint();
+        }
+
+        virtual void toPY(std::ostream &dst) const override{
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override{
+
+        }
+};
+
+class expr_postfix : public Node {
+    //EXPR_POSTFIX : EXPR_PRIMARY
+    //             | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE
+    //             | EXPR_POSTFIX L_BRACKET R_BRACKET
+    //             | EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET
+    //             | EXPR_POSTFIX '.' IDENTIFIER
+    //             | EXPR_POSTFIX OP_PTR IDENTIFIER
+    //             | EXPR_POSTFIX OP_INC
+    //             | EXPR_POSTFIX OP_DEC
+    private:
+        NodePtr next;
+        std::string opr;
+        std::string id;
+        bool bracket;
+        NodePtr exp;
+        
+    protected:
+        expr_postfix(NodePtr _exp)// expr_primary
+            : next()
+            , opr()
+            , id()
+            , bracket()
+            , exp()
+        {}
+
+        expr_postfix(NodePtr _next, NodePtr _exp)// LS exp RS
+            : next()
+            , opr()
+            , id()
+            , bracket()
+            , exp()
+        {}
+
+        expr_postfix(NodePtr _next, bool _bracket)// L R
+            : next()
+            , opr()
+            , id()
+            , bracket()
+            , exp()
+        {}
+
+        expr_postfix(NodePtr _next, bool _bracket, NodePtr _exp)// L AEL R
+            : next()
+            , opr()
+            , id()
+            , bracket()
+            , exp()
+        {}
+
+        expr_postfix(NodePtr _next, std::string _opr, std::string _id) // OP_PTR '.'
+            : next()
+            , opr()
+            , id()
+            , bracket()
+            , exp()
+        {}
+
+        expr_postfix(NodePtr _next, std::string _opr) // OP_INC OP_DEC
+            : next()
+            , opr()
+            , id()
+            , bracket()
+            , exp()
+        {}   
+
+    public:
+    
+        std::string name = "expr_postfix";
+
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+           
+        }
+
+        virtual void toPY(std::ostream &dst) const override{
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override{
+
+        }
+};
 #endif
