@@ -6,48 +6,32 @@
 
 
 class declaration_external : public Node {
-    
-    
-private:
+    private:
 
-    NodePtr declaration_external;
-    NodePtr definition_function;
-    NodePtr declaration;
+        NodePtr arg; // could either be a function defition or a declaration - cannot tell
 
-
-protected:
-    
-    declaration_external(NodePtr _arg1)
-        :declaration_external(NULL)
-        ,definition_function(_arg1)
-        ,declaration(NULL)
-    {}
+    protected:
+        
+        declaration_external(NodePtr _arg)
+            : arg(_arg)
+        {}
+        
+    public:
 
 
-    declaration_external(NodePtr _arg2)
-        :declaration_external(NULL)
-        ,definition_function(NULL)
-        ,declaration(_arg2)
-    {}
-    
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            if(next != null) next->print();
+            declaration->print();
+        }
 
+        virtual void toPYPY(std::ostream &dst) const override{
 
-public:
+        }
 
+        virtual void renderASM(std::ostream &dst) const override{
 
-    virtual void PrettyPrint(std::ostream &dst) const override
-    {
-        if(next != null) next->print();
-        declaration->print();
-    }
-
-    virtual void toPYPY(std::ostream &dst) const override{
-
-    }
-
-    virtual void renderASM(std::ostream &dst) const override{
-
-    }
+        }
 };
 
 
