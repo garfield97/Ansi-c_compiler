@@ -89,8 +89,8 @@ class expr_assignment : public Node {
         NodePtr exp;
     protected:
         expr_assignment(NodePtr _arg1)
-            : unary(null)
-            , opr(null)
+            : unary(NULL)
+            , opr(NULL)
             , exp(_arg1)
         {}
         expr_assignment(NodePtr _arg1, NodePtr _arg2, NodePtr _arg3)
@@ -102,7 +102,7 @@ class expr_assignment : public Node {
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(unary != null) {
+            if(unary != NULL) {
                 // EXPR_UNARY OPR_ASSIGNMENT EXPR_ASSIGNMENT
                 unary->PrettyPrint(dst);
                 opr->PrettyPrint(dst);
@@ -121,30 +121,31 @@ class expr_assignment : public Node {
 
 class expr_logic_or : public Node {
     // EXPR_LOGIC_OR : EXPR_LOGIC_AND
-    //               | EXPR_LOGIC_OR OP_BOR
+    //               | EXPR_LOGIC_OR OP_LOR EXPR_LOGIC_AND
     private:
+        NodePtr rec;
         NodePtr exp;
-        char bOR;
-
+        
     protected:
-        expr_logic_or(NodePtr _exp, char _bOR;)
-            : exp(_exp)
-            , bOR('|')
+        expr_logic_or(NodePtr _rec, NodePtr _exp)
+            : rec(_rec)
+            , exp(_exp)
         {}
 
         expr_logic_or(NodePtr _exp)
-            : exp(_exp)
-            , bOR('')
+            : rec(NULL)
+            , exp(_exp)
         {}
         
     public:
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            exp->PrettyPrint(dst);
-            if(bOR == '|'){
-                dst<<'|';
+            if(rec != NULL){
+                rec->PrettyPrint(dst);
+                dst<<'&& ';
             }
+            exp->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -158,33 +159,29 @@ class expr_logic_or : public Node {
 
 class expr_logic_and : public Node {
     //EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR  
-    //               | EXPR_LOGIC_AND OP_BAND EXPR_INCLUSIVE_OR
+    //               | EXPR_LOGIC_AND OP_LAND EXPR_INCLUSIVE_OR
     private:
         NodePtr rec;
-        char bAND;
         NodePtr exp;
         
     protected:
         expr_logic_and(NodePtr _rec, NodePtr _exp)
             : rec(_rec)
             , exp(_exp)
-            , bAND('&')
         {}
 
         expr_logic_and(NodePtr _exp)
             : rec(NULL)
             , exp(_exp)
-            , bAND('')
         {}
         
     public:
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            exp->PrettyPrint(dst);
-            if(bAND == '&'){
+            if(rec != NULL){
                 rec->PrettyPrint(dst);
-                dst<<'&';
+                dst<<'&& ';
             }
             exp->PrettyPrint(dst);
         }
@@ -198,12 +195,119 @@ class expr_logic_and : public Node {
         }
 };
 
-/// EXPR_INCLUSIVE_OR
+class expr_inclusive_or : public Node {
+    //EXPR_INCLUSIVE_OR : EXPR_XOR 
+    //                  | EXPR_INCLUSIVE_OR OP_BOR EXPR_XOR
+    private:
+        NodePtr rec;
+        NodePtr exp;
+        
+    protected:
+        expr_inclusive_or(NodePtr _rec, NodePtr _exp)
+            : rec(_rec)
+            , exp(_exp)
+        {}
 
-// EXPR_AND
+        expr_inclusive_or(NodePtr _exp)
+            : rec(NULL)
+            , exp(_exp)
+        {}
+        
+    public:
+    
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            if(rec != NULL){
+                rec->PrettyPrint(dst);
+                dst<<'| ';
+            }
+            exp->PrettyPrint(dst);
+        }
 
-// EXPR_XOR
+        virtual void toPY(std::ostream &dst) const override{
 
+        }
+
+        virtual void renderASM(std::ostream &dst) const override{
+
+        }
+};
+
+class expr_xor : public Node {
+    //EXPR_XOR : EXPR_AND
+    //         | EXPR_XOR OP_BXOR EXPR_AND
+    private:
+        NodePtr rec;
+        NodePtr exp;
+        
+    protected:
+        expr_xor(NodePtr _rec, NodePtr _exp)
+            : rec(_rec)
+            , exp(_exp)
+        {}
+
+        expr_xor(NodePtr _exp)
+            : rec(NULL)
+            , exp(_exp)
+        {}
+        
+    public:
+    
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            if(rec != NULL){
+                rec->PrettyPrint(dst);
+                dst<<'^ ';
+            }
+            exp->PrettyPrint(dst);
+        }
+
+        virtual void toPY(std::ostream &dst) const override{
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override{
+
+        }
+};
+
+class expr_and : public Node {
+    //EXPR_AND : EXPR_EQUALITY
+    //         | EXPR_AND OP_BAND EXPR_EQUALITY
+    private:
+        NodePtr rec;
+        NodePtr exp;
+        
+    protected:
+        expr_and(NodePtr _rec, NodePtr _exp)
+            : rec(_rec)
+            , exp(_exp)
+        {}
+
+        expr_and(NodePtr _exp)
+            : rec(NULL)
+            , exp(_exp)
+        {}
+        
+    public:
+    
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            if(rec != NULL){
+                rec->PrettyPrint(dst);
+                dst<<'& ';
+            }
+            exp->PrettyPrint(dst);
+        }
+
+        virtual void toPY(std::ostream &dst) const override{
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override{
+
+        }
+};
 // EXPR_EQUALITY
 
 // EXPR_RELATIONAL

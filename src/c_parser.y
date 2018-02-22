@@ -158,20 +158,20 @@ EXPR_EQUALITY : EXPR_RELATIONAL
 
 
 
-
+///
 EXPR_AND : EXPR_EQUALITY
          | EXPR_AND OP_BAND EXPR_EQUALITY
          
 
 
 
-
+///
 EXPR_XOR : EXPR_AND
          | EXPR_XOR OP_BXOR EXPR_AND
          
 
 
-
+//
 EXPR_INCLUSIVE_OR : EXPR_XOR 
                   | EXPR_INCLUSIVE_OR OP_BOR EXPR_XOR
                   
@@ -179,13 +179,13 @@ EXPR_INCLUSIVE_OR : EXPR_XOR
                   
 //                  
 EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR  
-               | EXPR_LOGIC_AND OP_BAND EXPR_INCLUSIVE_OR
+               | EXPR_LOGIC_AND OP_LAND EXPR_INCLUSIVE_OR
              
              
                
 //               
 EXPR_LOGIC_OR : EXPR_LOGIC_AND
-              | EXPR_LOGIC_OR OP_BOR
+              | EXPR_LOGIC_OR OP_LOR EXPR_LOGIC_AND
               
               
               
