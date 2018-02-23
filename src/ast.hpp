@@ -1,7 +1,7 @@
 #ifndef ast_hpp
 #define ast_hpp
 
-#include "ast/ast_Node.hpp"
+#include "ast/ast_node.hpp"
 
 #include "ast/ast_program.hpp"
 #include "ast/ast_declaration.hpp"
