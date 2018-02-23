@@ -754,51 +754,51 @@ class expr_postfix : public Node {
         
     protected:
         expr_postfix(NodePtr _exp)// expr_primary
-            : next()
-            , opr()
-            , id()
-            , bracket()
-            , exp()
+            : next(NULL)
+            , opr(NULL)
+            , id(NULL)
+            , bracket(false)
+            , exp(_exp)
         {}
 
         expr_postfix(NodePtr _next, NodePtr _exp)// LS exp RS
-            : next()
-            , opr()
-            , id()
-            , bracket()
-            , exp()
+            : next(_next)
+            , opr(NULL)
+            , id(NULL)
+            , bracket(false)
+            , exp(_exp)
         {}
 
         expr_postfix(NodePtr _next, bool _bracket)// L R
-            : next()
-            , opr()
-            , id()
-            , bracket()
-            , exp()
+            : next(_next)
+            , opr(NULL)
+            , id(NULL)
+            , bracket(true)
+            , exp(NULL)
         {}
 
         expr_postfix(NodePtr _next, bool _bracket, NodePtr _exp)// L AEL R
-            : next()
-            , opr()
-            , id()
-            , bracket()
-            , exp()
+            : next(_next)
+            , opr(NULL)
+            , id(NULL)
+            , bracket(true)
+            , exp(_exp)
         {}
 
-        expr_postfix(NodePtr _next, std::string _opr, std::string _id) // OP_PTR '.'
-            : next()
-            , opr()
-            , id()
-            , bracket()
-            , exp()
+        expr_postfix(NodePtr _next, std::string _opr, std::string _id) // OP_PTR(->) '.'
+            : next(_next)
+            , opr(NULL)
+            , id(_id)
+            , bracket(false)
+            , exp(NULL)
         {}
 
         expr_postfix(NodePtr _next, std::string _opr) // OP_INC OP_DEC
-            : next()
-            , opr()
-            , id()
-            , bracket()
-            , exp()
+            : next(_next)
+            , opr(_opr)
+            , id(NULL)
+            , bracket(false)
+            , exp(NULL)
         {}   
 
     public:
@@ -807,7 +807,33 @@ class expr_postfix : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-           
+           if(next == NULL) exp->PrettyPrint(); // EXPR_PRIMARY
+           else{
+                next->PrettyPrint();
+                if(exp != NULL && !bracket){
+                    // EXPR_POSTFIX L_SQUARE EXPR R_SQUARE
+                    dst<<" [ ";
+                    exp->PrettyPrint();
+                    dst<<" ] ";
+                }
+                else if(bracket){
+                    // EXPR_POSTFIX L_BRACKET R_BRACKET
+                    // EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET
+                    dst<<" ( ";
+                    if(exp != NULL) exp->PrettyPrint();
+                    dst<<" ) ";
+                }
+                else if(id != NULL){
+                    //             | EXPR_POSTFIX '.' IDENTIFIER
+                    //             | EXPR_POSTFIX OP_PTR IDENTIFIER // OP_PTR == ->
+                    dst<<opr<<" "<<id;
+                }
+                else{
+                    //             | EXPR_POSTFIX OP_INC
+                    //             | EXPR_POSTFIX OP_DEC
+                    dst<<opr<<" ";
+                }
+           }
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -914,7 +940,18 @@ class expr_primary : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-
+            if(exp != NULL){
+                dst<<" ( ";
+                exp->PrettyPrint();
+                dst<<" ) ";
+            }
+            else if(str != NULL) dst<<str<<" ";
+            else if(intValue != NULL) dst<<intValue<<" ";
+            else if(uintValue != NULL) dst<<uintValue<<" ";
+            else if(longintValue != NULL) dst<<longintValue<<" ";
+            else if(longuintValue != NULL) dst<<longuintValue<<" ";
+            else if(characterValue != NULL) dst<<characterValue<<" ";
+            
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -925,4 +962,5 @@ class expr_primary : public Node {
 
         }
 };
+
 #endif
