@@ -530,7 +530,43 @@ class declaration_parameter : public Node{
 //DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR        
 //                    | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT
 //                    | SPECIFIER_DECLARATION
+private:
+    
+    NodePtr current;
+    NodePtr recur;
 
+
+protected:
+
+    declaration_parameter(NodePtr _arg1, NodePtr _arg2)
+        :current(_arg1)
+        ,recur(_arg2)
+    {}
+    
+    declaration_parameter(NodePtr _arg1)
+        :current(_arg1)
+        ,recur(NULL)
+    {}
+
+public:
+
+    std::string name = "declaration_parameter"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERED 
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }    
 
 };
 
@@ -538,12 +574,64 @@ class declaration_parameter : public Node{
 class declarator_direct : public Node{
 
 //          DECLARATOR_DIRECT : IDENTIFIER
-//                | L_BRACKET DECLARATOR R_BRACKET
-//                | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE
-//                | DECLARATOR_DIRECT L_SQUARE R_SQUARE
-//                | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET
-//                | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET
-//                | DECLARATOR_DIRECT L_BRACKET R_BRACKET
+//                | L_BRACKET DECLARATOR R_BRACKET                              (declarator)
+//                | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE              declarator_direct [exprconst]
+//                | DECLARATOR_DIRECT L_SQUARE R_SQUARE                         declarator_direct []
+//                | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET       declarator_direct (list_param_type)
+//                | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET       declarator_direct (list_identifier)
+//                | DECLARATOR_DIRECT L_BRACKET R_BRACKET                       declarator ()
+private:
+
+    NodePtr  current;
+    NodePtr  next;
+    bool brackets;
+    std::string symbol;
+
+
+protected:
+
+    declarator_direct(std::string name)
+        :symbol(name)
+        ,current(NULL)
+        ,next(NULL)
+        ,brackets(FALSE) //MEHEDI really wants false
+    {}
+    
+    declarator_direct(NodePtr _arg1,NodePtr _arg2)
+        :symbol(NULL)
+        ,current(_arg1)
+        ,next(_arg2)
+        ,brackets(false)
+    {}
+     
+    declarator_direct(NodePtr _arg1)
+        :symbol(NULL)
+        ,current(_arg1)
+        ,next(NULL)
+        ,brackets(false)    
+    {}
+
+public:
+
+    std::string name = "declarator_direct"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERED 
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }    
+
+
 
 };
 
@@ -554,13 +642,91 @@ class struct_declarator : public Node{
 //                | ':' EXPR_CONST
 //                | DECLARATOR ':' EXPR_CONST
 
+private:
+
+    NodePtr current;
+    NodePtr next;
+
+protected:
+    
+    struct_declarator(NodePtr _arg1)
+        :current(_arg1)
+        ,next(NULL)
+    {}
+
+    struct_declarator(NodePtr _arg1,NodePtr _arg2)
+        :current(_arg1)
+        ,next(_arg2)
+    {}
+
+public:
+
+    std::string name = "struct_declarator"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERED 
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }    
+
+
 };
 
 
-class list_struct_declaraotr : public Node{
+class list_struct_declarator : public Node{
 
 //LIST_STRUCT_DECLARATOR : STRUCT_DECLARATOR
 //                       | LIST_STRUCT_DECLARATOR ',' STRUCT_DECLARATOR
+private:
+    NodePtr current;
+    NodePtr next;
+
+protected:
+    
+    list_struct_declarator(NodePtr _arg1)
+        :current(_arg1)
+        ,next(NULL)
+    {}
+
+    list_struct_declarator(NodePtr _arg1,NodePtr_arg2)
+        :current(_arg1)
+        ,next(_arg2)
+    {}
+    
+    
+public:
+
+    std::string name = "list_struct_declarator"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERED 
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }    
+
+
+
+
 };
 
 
@@ -569,6 +735,37 @@ class list_struct_declaraotr : public Node{
 class declaration_struct : public Node{
 
 //DECLARATION_STRUCT : LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR ';'
+private:
+
+    NodePtr current;
+    NodePtr next;
+    
+protected:
+    
+    declaration_struct(NodePtr _arg1,NodePtr _arg2)
+        :current(_arg1)
+        ,next(_arg2)
+    {}
+
+public:    
+    
+    std::string name = "declaration_struct"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERED 
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }    
 
 };
 
@@ -576,6 +773,45 @@ class declaration_list_struct : public Node{
 
 //DECLARATION_LIST_STRUCT : DECLARATION_STRUCT
 //                        | DECLARATION_LIST_STRUCT DECLARATION_STRUCT
+private:
+    NodePtr current;
+    NodePtr rec;
+
+protected:
+
+    declaration_list_struct(NodePtr _arg1)
+        :current(_arg1)
+        ,rec(NULL)
+    {}
+
+    
+    declaration_list_struct(NodePtr _arg1,NodePtr _arg2)
+        :current(_arg1)
+        ,rec(_arg2)
+    {}
+    
+    
+public:
+
+    std::string name = "declaration_list_struct"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERED 
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }    
+
+
 
 };
 
