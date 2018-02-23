@@ -360,7 +360,7 @@ QUALIFIER_TYPE : CONST
                
 //               
 DECLARATOR : POINTER DECLARATOR_DIRECT        { $$ = new declarator($1, $2); }
-           : DECLARATOR_DIRECT                { $$ = new declarator($1); }
+           | DECLARATOR_DIRECT                { $$ = new declarator($1); }
 //          
 DECLARATOR_DIRECT : IDENTIFIER                                              { $$ = new declarator_direct(*$1); }
                   | L_BRACKET DECLARATOR R_BRACKET                          { $$ = new declarator_direct($1); }
