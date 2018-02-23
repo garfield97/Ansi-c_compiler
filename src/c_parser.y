@@ -330,7 +330,7 @@ STRUCT_DECLARATOR : DECLARATOR
 
 
                          
-                          
+//                          
 SPECIFIER_ENUM : ENUM L_BRACE LIST_ENUMERATOR R_BRACE
                | ENUM IDENTIFIER L_BRACE LIST_ENUMERATOR R_BRACE
                | ENUM IDENTIFIER
@@ -339,11 +339,11 @@ SPECIFIER_ENUM : ENUM L_BRACE LIST_ENUMERATOR R_BRACE
 
 
 
-
+//
 LIST_ENUMERATOR : ENUMERATOR
                 | LIST_ENUMERATOR ',' ENUMERATOR
                 
-                
+//                
 ENUMERATOR : IDENTIFIER 
            | IDENTIFIER ASSIGN EXPR_CONST
            
