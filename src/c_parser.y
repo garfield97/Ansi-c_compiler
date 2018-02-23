@@ -54,10 +54,10 @@
 %token RIGHT_ASSIGN LEFT_ASSIGN ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
 
 
-%type <node> EXPR,EXPR_PRIMARY,EXPR_POSTFIX,EXPR_UNARY,NAME_TYPE,OPR_UNARY,EXPR_CAST,EXPR_MUL,EXPR_ADD,
-             EXPR_SHIFT,EXPR_RELATIONAL,EXPR_EQUALITY,EXPR_AND,EXPR_XOR,EXPR_INCLUSIVE_OR,
-             EXPR_LOGIC_AND,EXPR_LOGIC_OR,EXPR_CONDITIONAL,OPR_ASSIGNMENT,EXPR_CONST,DECLARATION,SPECIFIER_DECLARATION
-             DECLARATOR_INIT_LIST,DECLARATOR_INIT,SPECIFIER_STORE_CLASS,SPECIFIER_TYPE,SPECIFIER_UNION_OR_STRUCT,UNION_OR_STRUCT
+%type <node> PROGRAM EXPR EXPR_PRIMARY EXPR_POSTFIX EXPR_UNARY NAME_TYPE OPR_UNARY EXPR_CAST EXPR_MUL EXPR_ADD 
+             EXPR_SHIFT EXPR_RELATIONAL EXPR_EQUALITY EXPR_AND EXPR_XOR EXPR_INCLUSIVE_OR 
+             EXPR_LOGIC_AND EXPR_LOGIC_OR EXPR_CONDITIONAL OPR_ASSIGNMENT EXPR_CONST DECLARATION SPECIFIER_DECLARATION
+             DECLARATOR_INIT_LIST DECLARATOR_INIT SPECIFIER_STORE_CLASS SPECIFIER_TYPE SPECIFIER_UNION_OR_STRUCT UNION_OR_STRUCT
                              
                                        // for grammar production rules
 %type <string> IDENTIFIER STRING_LITERAL
@@ -257,7 +257,7 @@ DECLARATOR_INIT : DECLARATOR
                 
                 
                 
-
+//
 SPECIFIER_STORE_CLASS : TYPEDEF
                       | EXTERN
                       | STATIC
@@ -266,7 +266,7 @@ SPECIFIER_STORE_CLASS : TYPEDEF
               
               
               
-                      
+//                      
 SPECIFIER_TYPE : VOID
                | CHAR
                | SHORT
@@ -283,15 +283,15 @@ SPECIFIER_TYPE : VOID
                
                
                
-               
+//               
 SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_STRUCT R_BRACE
-                          | UNION_OR_STRUCT L_BRACE DECLAR_LIST_STRUCT R_BRACE
+                          | UNION_OR_STRUCT L_BRACE DECLARATION_LIST_STRUCT R_BRACE
                           | UNION_OR_STRUCT IDENTIFIER
                           
                           
                           
                           
-                          
+//                          
 UNION_OR_STRUCT : STRUCT
                 | UNION
                 
@@ -306,11 +306,11 @@ DECLARATION_LIST_STRUCT : DECLARATION_STRUCT
 DECLARATION_STRUCT : LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR ';'
 
 
-
+//
 LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL
                | SPECIFIER_TYPE 
-               | SPEICIFER_TYPE LIST_SPEC_QUAL
-               | SPECIFIER_TYPE
+               | QUALIFIER_TYPE LIST_SPEC_QUAL
+               | QUALIFIER_TYPE
                
                
                              
@@ -376,7 +376,7 @@ LIST_QUALIFIER_TYPE : QUALIFIER_TYPE
 
 //
 LIST_PARAM_TYPE : LIST_PARAMETER
-                | LIST_PARAMETER ',' ELLIPSIS
+                | LIST_PARAMETER ',' ELIPSIS
 
 
 //
@@ -487,8 +487,8 @@ STATEMENT_JUMP : GOTO IDENTIFIER ';'
 
 
 //               
-PROGRAM : DECLARATION_EXTERNAL
-            | PROGRAM DECLARATION_EXTERNAL
+PROGRAM : DECLARATION_EXTERNAL            { $$ = new program($1); }
+        | PROGRAM DECLARATION_EXTERNAL    { $$ = new program($1, $2); }
 
 
 //
