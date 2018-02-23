@@ -244,12 +244,12 @@ DECLARATION : SPECIFIER_DECLARATION ';'                       { $$ = new declara
 
 
 //
-SPECIFIER_DECLARATION : SPECIFIER_STORE_CLASS
-                       | SPECIFIER_STORE_CLASS SPECIFIER_DECLARATION
-                       | SPECIFIER_TYPE
-                       | SPECIFIER_TYPE SPECIFIER_DECLARATION
-                       | QUALIFIER_TYPE
-                       | QUALIFIER_TYPE SPECIFIER_DECLARATION
+SPECIFIER_DECLARATION : SPECIFIER_STORE_CLASS                         { $$ = new specifier_declaration($1); }
+                       | SPECIFIER_STORE_CLASS SPECIFIER_DECLARATION  { $$ = new specifier_declaration($1, $2); }
+                       | SPECIFIER_TYPE                               { $$ = new specifier_declaration($1); }
+                       | SPECIFIER_TYPE SPECIFIER_DECLARATION         { $$ = new specifier_declaration($1, $2); }
+                       | QUALIFIER_TYPE                               { $$ = new specifier_declaration($1); }
+                       | QUALIFIER_TYPE SPECIFIER_DECLARATION         { $$ = new specifier_declaration($1, $2); }
  
  
                        
@@ -274,18 +274,18 @@ SPECIFIER_STORE_CLASS : TYPEDEF
               
               
 //                      
-SPECIFIER_TYPE : VOID
-               | CHAR
-               | SHORT
-               | INT
-               | LONG
-               | FLOAT
-               | DOUBLE
-               | SIGNED
-               | UNSIGNED
-               | SPECIFIER_UNION_OR_STRUCT
-               | SPECIFIER_ENUM 
-               | NAME_TYPE
+SPECIFIER_TYPE : VOID                         { $$ = new specifier_type("void"); }
+               | CHAR                         { $$ = new specifier_type("char"); }
+               | SHORT                        { $$ = new specifier_type("short"); }
+               | INT                          { $$ = new specifier_type("int"); }
+               | LONG                         { $$ = new specifier_type("long"); }
+               | FLOAT                        { $$ = new specifier_type("float"); }
+               | DOUBLE                       { $$ = new specifier_type("double"); }
+               | SIGNED                       { $$ = new specifier_type("signed"); }
+               | UNSIGNED                     { $$ = new specifier_type("unsigned"); }
+               | SPECIFIER_UNION_OR_STRUCT    { $$ = new specifier_type($1); }
+               | SPECIFIER_ENUM               { $$ = new specifier_type($1); }
+               | NAME_TYPE                    { $$ = new specifier_type($1); }
                
                
                
@@ -359,16 +359,16 @@ QUALIFIER_TYPE : CONST
                | VOLATILE
                
 //               
-DECLARATOR : DECLARATOR_POINTER_DIRECT
-           : DECLARATOR_DIRECT
+DECLARATOR : POINTER DECLARATOR_DIRECT        { $$ = new declarator($1, $2); }
+           : DECLARATOR_DIRECT                { $$ = new declarator($1); }
 //          
-DECLARATOR_DIRECT : IDENTIFIER
-                  | L_BRACKET DECLARATOR R_BRACKET
-                  | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE
-                  | DECLARATOR_DIRECT L_SQUARE R_SQUARE
-                  | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET
-                  | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET
-                  | DECLARATOR_DIRECT L_BRACKET R_BRACKET
+DECLARATOR_DIRECT : IDENTIFIER                                              { $$ = new declarator_direct(*$1); }
+                  | L_BRACKET DECLARATOR R_BRACKET                          { $$ = new declarator_direct($1); }
+                  | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE          { $$ = new declarator_direct($1, $2); }
+                  | DECLARATOR_DIRECT L_SQUARE R_SQUARE                     { $$ = new declarator_direct($1); }
+                  | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET   { $$ = new declarator_direct($1, $2); }
+                  | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET   { $$ = new declarator_direct($1, $2); }
+                  | DECLARATOR_DIRECT L_BRACKET R_BRACKET                   { $$ = new declarator_direct($1); }
 
 //
 POINTER : OP_MUL
@@ -451,10 +451,10 @@ STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
 
 
 //
-STATEMENT_COMPOUND : L_BRACE R_BRACE
-                   | L_BRACE LIST_STATEMENT R_BRACE
-                   | L_BRACE LIST_DECLARATION R_BRACE
-                   | L_BRACE LIST_DECLARATION LIST_STATEMENT R_BRACE
+STATEMENT_COMPOUND : L_BRACE R_BRACE                                  { $$ = new statement_compound(); }
+                   | L_BRACE LIST_STATEMENT R_BRACE                   { $$ = new statement_compound($1); }
+                   | L_BRACE LIST_DECLARATION R_BRACE                 { $$ = new statement_compound($1); }
+                   | L_BRACE LIST_DECLARATION LIST_STATEMENT R_BRACE  { $$ = new statement_compound($1, $2); }
                    
 //
 LIST_DECLARATION : DECLARATION
