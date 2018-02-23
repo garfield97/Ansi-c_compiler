@@ -128,7 +128,7 @@ class opr_assignment: public Node {
     private:
         std::string opr;
     protected:
-        assign(std::string _opr)
+        opr_assignment(std::string _opr)
             : opr(_opr)
         {}
         
@@ -179,7 +179,7 @@ class expr_logic_or : public Node {
         {
             if(rec != NULL){
                 rec->PrettyPrint(dst);
-                dst<<'&& ';
+                dst<<"|| ";
             }
             exp->PrettyPrint(dst);
         }
@@ -219,7 +219,7 @@ class expr_logic_and : public Node {
         {
             if(rec != NULL){
                 rec->PrettyPrint(dst);
-                dst<<'&& ';
+                dst<<"&& ";
             }
             exp->PrettyPrint(dst);
         }
@@ -259,7 +259,7 @@ class expr_inclusive_or : public Node {
         {
             if(rec != NULL){
                 rec->PrettyPrint(dst);
-                dst<<'| ';
+                dst<<"| ";
             }
             exp->PrettyPrint(dst);
         }
@@ -299,7 +299,7 @@ class expr_xor : public Node {
         {
             if(rec != NULL){
                 rec->PrettyPrint(dst);
-                dst<<'^ ';
+                dst<<"^ ";
             }
             exp->PrettyPrint(dst);
         }
@@ -339,7 +339,7 @@ class expr_and : public Node {
         {
             if(rec != NULL){
                 rec->PrettyPrint(dst);
-                dst<<'& ';
+                dst<<"& ";
             }
             exp->PrettyPrint(dst);
         }
@@ -371,7 +371,7 @@ class expr_equality : public Node {
 
         expr_equality(NodePtr _exp)
             : rec(NULL)
-            , op(NULL)
+            , op(" ")
             , exp(_exp)
         {}
         
@@ -417,7 +417,7 @@ class expr_relational : public Node {
 
         expr_relational(NodePtr _exp)
             : rec(NULL)
-            , op(NULL)
+            , op(" ")
             , exp(_exp)
         {}
         
@@ -461,7 +461,7 @@ class expr_shift : public Node {
 
         expr_shift(NodePtr _exp)
             : rec(NULL)
-            , op(NULL)
+            , op(" ")
             , exp(_exp)
         {}
         
@@ -505,7 +505,7 @@ class expr_add : public Node {
 
        expr_add(NodePtr _exp)
             : rec(NULL)
-            , op(NULL)
+            , op(" ")
             , exp(_exp)
         {}
         
@@ -550,7 +550,7 @@ class expr_mul : public Node {
 
         expr_mul(NodePtr _exp)
             : rec(NULL)
-            , op(NULL)
+            , op(" ")
             , exp(_exp)
         {}
         
@@ -633,12 +633,12 @@ class expr_unary : public Node {
         NodePtr exp;
         
     protected:
-        expr_cast(NodePtr _terminal, NodePtr _exp)
+        expr_unary(NodePtr _terminal, NodePtr _exp)
             : terminal(_terminal)
             , exp(_exp)
         {}
 
-        expr_cast(NodePtr _exp)
+        expr_unary(NodePtr _exp)
             : terminal(NULL)
             , exp(_exp)
         {}
@@ -651,10 +651,10 @@ class expr_unary : public Node {
         {
             if(terminal != NULL){
                 terminal->PrettyPrint();
-                if(terminal->name = "name_type") dst<<' ( ';
+                if(terminal->name = "name_type") dst<<" ( ";
             }
             exp->PrettyPrint();
-            if(terminal != NULL && terminal->name = "name_type") dst<<' ) ';
+            if(terminal != NULL && terminal->name = "name_type") dst<<" ) ";
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -670,7 +670,7 @@ class opr_unary: public Node {
     private:
         std::string opr;
     protected:
-        assign(std::string _opr)
+        opr_unary(std::string _opr)
             : opr(_opr)
         {}
         
@@ -704,12 +704,12 @@ class arg_expr_list : public Node {
         NodePtr exp;
         
     protected:
-        expr_cast(NodePtr _next, NodePtr _exp)
+        arg_expr_list(NodePtr _next, NodePtr _exp)
             : next(_next)
             , exp(_exp)
         {}
 
-        expr_cast(NodePtr _exp)
+        arg_expr_list(NodePtr _exp)
             : next(NULL)
             , exp(_exp)
         {}
@@ -722,7 +722,7 @@ class arg_expr_list : public Node {
         {
             if(next != NULL){
                 next->PrettyPrint();
-                dst<<' , ';
+                dst<<" , ";
             }
             exp->PrettyPrint();
         }
@@ -755,39 +755,39 @@ class expr_postfix : public Node {
     protected:
         expr_postfix(NodePtr _exp)// expr_primary
             : next(NULL)
-            , opr(NULL)
-            , id(NULL)
+            , opr(" ")
+            , id(" ")
             , bracket(false)
             , exp(_exp)
         {}
 
         expr_postfix(NodePtr _next, NodePtr _exp)// LS exp RS
             : next(_next)
-            , opr(NULL)
-            , id(NULL)
+            , opr(" ")
+            , id(" ")
             , bracket(false)
             , exp(_exp)
         {}
 
         expr_postfix(NodePtr _next, bool _bracket)// L R
             : next(_next)
-            , opr(NULL)
-            , id(NULL)
+            , opr(" ")
+            , id(" ")
             , bracket(true)
             , exp(NULL)
         {}
 
         expr_postfix(NodePtr _next, bool _bracket, NodePtr _exp)// L AEL R
             : next(_next)
-            , opr(NULL)
-            , id(NULL)
+            , opr(" ")
+            , id(" ")
             , bracket(true)
             , exp(_exp)
         {}
 
         expr_postfix(NodePtr _next, std::string _opr, std::string _id) // OP_PTR(->) '.'
             : next(_next)
-            , opr(NULL)
+            , opr(_opr)
             , id(_id)
             , bracket(false)
             , exp(NULL)
@@ -796,7 +796,7 @@ class expr_postfix : public Node {
         expr_postfix(NodePtr _next, std::string _opr) // OP_INC OP_DEC
             : next(_next)
             , opr(_opr)
-            , id(NULL)
+            , id(" ")
             , bracket(false)
             , exp(NULL)
         {}   
@@ -823,7 +823,7 @@ class expr_postfix : public Node {
                     if(exp != NULL) exp->PrettyPrint();
                     dst<<" ) ";
                 }
-                else if(id != NULL){
+                else if(id != " "){
                     //             | EXPR_POSTFIX '.' IDENTIFIER
                     //             | EXPR_POSTFIX OP_PTR IDENTIFIER // OP_PTR == ->
                     dst<<opr<<" "<<id;
@@ -876,7 +876,7 @@ class expr_primary : public Node {
 
         expr_primary(int _intValue)
             : exp(NULL)
-            , str(NULL)
+            , str(" ")
             , intValue(_intValue)
             , uintValue(NULL)
             , longintValue(NULL)
@@ -886,7 +886,7 @@ class expr_primary : public Node {
 
         expr_primary(unsigned int _uintValue)
             : exp(NULL)
-            , str(NULL)
+            , str(" ")
             , intValue(NULL)
             , uintValue(_uintValue)
             , longintValue(NULL)
@@ -896,7 +896,7 @@ class expr_primary : public Node {
 
         expr_primary(long int _longintValue)
             : exp(NULL)
-            , str(NULL)
+            , str(" ")
             , intValue(NULL)
             , uintValue(NULL)
             , longintValue(_longintValue)
@@ -906,7 +906,7 @@ class expr_primary : public Node {
 
         expr_primary(unsigned long _longuintValue)
             : exp(NULL)
-            , str(NULL)
+            , str(" ")
             , intValue(NULL)
             , uintValue(NULL)
             , longintValue(NULL)
@@ -916,7 +916,7 @@ class expr_primary : public Node {
 
         expr_primary(char _characterValue)
             : exp(NULL)
-            , str(NULL)
+            , str(" ")
             , intValue(NULL)
             , uintValue(NULL)
             , longintValue(NULL)
@@ -926,7 +926,7 @@ class expr_primary : public Node {
 
         expr_primary(NodePtr _exp)
             : exp(_exp)
-            , str(NULL)
+            , str(" ")
             , intValue(NULL)
             , uintValue(NULL)
             , longintValue(NULL)
@@ -945,7 +945,7 @@ class expr_primary : public Node {
                 exp->PrettyPrint();
                 dst<<" ) ";
             }
-            else if(str != NULL) dst<<str<<" ";
+            else if(str != " ") dst<<str<<" ";
             else if(intValue != NULL) dst<<intValue<<" ";
             else if(uintValue != NULL) dst<<uintValue<<" ";
             else if(longintValue != NULL) dst<<longintValue<<" ";

@@ -59,7 +59,7 @@ class specifier_type : public Node {
         {}
 
         specifier_type(NodePtr _arg1)
-            : ter(NULL)
+            : ter(" ")
             , nonT(_arg1)
         {}
         
@@ -69,8 +69,8 @@ class specifier_type : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(ter != NULL) dst<<ter<<" ";
-            if(nonT != NULL) nonT->PrettyPrint();
+            if(ter != " ") dst<<ter<<" ";
+            if(nonT != NULL) nonT->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override
@@ -101,7 +101,7 @@ class specifier_union_or_struct : public Node {
 
         specifier_union_or_struct(NodePtr _arg1, NodePtr _arg2)
             : us(_arg1)
-            , id(NULL)
+            , id( " ")
             , list(_arg2)
         {}
 
@@ -117,11 +117,11 @@ class specifier_union_or_struct : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            us->PrettyPrint();
-            if(id != NULL) dst<<id<<" ";
+            us->PrettyPrint(dst);
+            if(id != " ") dst<<id<<" ";
             if(list != NULL){
                 dst<<"{ ";
-                list->PrettyPrint();
+                list->PrettyPrint(dst);
                 dst<<" } ";
             }
         }
@@ -191,8 +191,8 @@ class list_spec_qual : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            sq->PrettyPrint();
-            if(rec != NULL) rec->PrettyPrint();
+            sq->PrettyPrint(dst);
+            if(rec != NULL) rec->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override
@@ -217,7 +217,7 @@ class specifier_enum : public Node {
     protected:
         specifier_enum(NodePtr _arg2) // ENUM L_BRACE LIST_ENUMERATOR R_BRACE
             : list(_arg2)
-            , id(NULL)
+            , id(" ")
         {}
         specifier_enum(std::string _arg2, NodePtr _arg3) // ENUM IDENTIFIER L_BRACE LIST_ENUMERATOR R_BRACE
             : list(_arg3)
@@ -233,10 +233,11 @@ class specifier_enum : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            dst<<"enum "<<id<<" ";
+            dst<<"enum "<<;
+            if(id != " ") dst<<id<<" ";
             if(list != NULL){
                 dst<<" { ";
-                list->PrettyPrint();
+                list->PrettyPrint(dst);
                 dst<<" } ";
             }
         }
@@ -274,10 +275,10 @@ class list_enumerator : public Node {
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(rec != NULL){
-                rec->PrettyPrint();
+                rec->PrettyPrint(dst);
                 dst<<" , ";
             }
-            en->PrettyPrint();
+            en->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override
@@ -315,7 +316,7 @@ class enumerator : public Node {
             dst<<id<<" ";
             if(exp != NULL){
                 dst<<"= ";
-                exp->PrettyPrint();
+                exp->PrettyPrint(dst);
             }
         }
 
@@ -387,8 +388,8 @@ class pointer : public Node {
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             dst<<'*';
-            if(arg1 != NULL) arg1->PrettyPrint();
-            if(arg2 != NULL) arg2->PrettyPrint();
+            if(arg1 != NULL) arg1->PrettyPrint(dst);
+            if(arg2 != NULL) arg2->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override
@@ -424,9 +425,9 @@ class list_qualifier_type : public Node {
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(rec != NULL){
-                rec->PrettyPrint();
+                rec->PrettyPrint(dst);
             }
-            qt->PrettyPrint();
+            qt->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override
@@ -457,7 +458,7 @@ class lsit_param_type : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            list->PrettyPrint();
+            list->PrettyPrint(dst);
             if(elip){
                 dst", ...";
             }
@@ -496,10 +497,10 @@ class list_parameter : public Node {
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(rec != NULL){
-                rec->PrettyPrint();
+                rec->PrettyPrint(dst);
                 dst<<',';
             }
-            dp->PrettyPrint();
+            dp->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override
@@ -535,7 +536,7 @@ class list_identifier : public Node {
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(rec != NULL){
-                rec->PrettyPrint();
+                rec->PrettyPrint(dst);
                 dst<<',';
             }
             dst<<id<<" ";
@@ -573,8 +574,8 @@ class name_type : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            list->PrettyPrint();
-            if(da != NULL) da->PrettyPrint();
+            list->PrettyPrint(dst);
+            if(da != NULL) da->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override

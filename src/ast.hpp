@@ -11,6 +11,6 @@
 
 
 
-extern const Node *parseAST();
+extern const Node *parseAST(FILE* fp);
 
 #endif
