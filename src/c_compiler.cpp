@@ -17,13 +17,12 @@ int main(int argc, char* argv[])
 
     // Build AST (FE)
     // 2nd argument is source C file to compile
-    FILE* fp = fopen(argv[1], "r");
-    const Node* ast = parseAST(fp);
-    fclose(fp);
+    std::ifstream srcStream(argv[1]);
+    const Node* ast = parseAST(srcStream);
+    srcStream.close();
 
     // dest file
-    FILE* dst = fopen(argv[3], "w+");
-    std::fstream dstStream(dst);
+    std::ofstream dstStream(argv[3]);
 
     // Print AST
     // bin/c_compiler -P [source-file.c] -o [dest-file.txt]
@@ -44,7 +43,7 @@ int main(int argc, char* argv[])
     }
 
     // close output file
-    fclose(dst);
+    dstStream.close();
 
     return 0;
 }

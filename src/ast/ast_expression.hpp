@@ -651,10 +651,10 @@ class expr_unary : public Node {
         {
             if(terminal != NULL){
                 terminal->PrettyPrint(dst);
-                if(terminal->name = "name_type") dst<<" ( ";
+                if(terminal->name == "name_type") dst<<" ( ";
             }
             exp->PrettyPrint(dst);
-            if(terminal != NULL && terminal->name = "name_type") dst<<" ) ";
+            if(terminal != NULL && terminal->name == "name_type") dst<<" ) ";
         }
 
         virtual void toPY(std::ostream &dst) const override{

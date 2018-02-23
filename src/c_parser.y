@@ -516,7 +516,7 @@ DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMEN
 
 const Node *g_root; // Definition of variable (to match declaration earlier)
 
-const Node *parseAST(FILE* fp)
+const Node *parseAST(std::ifstream srcStream)
 {
   g_root=0;
   yyparse(fp);

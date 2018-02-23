@@ -1,6 +1,8 @@
 #ifndef ast_hpp
 #define ast_hpp
 
+#include <fstream>
+
 #include "ast/ast_node.hpp"
 #include "ast/ast_program.hpp"
 #include "ast/ast_declaration.hpp"
@@ -10,7 +12,7 @@
 #include "ast/ast_expression.hpp"
 
 
-extern const Node *parseAST(FILE* fp);
+extern const Node *parseAST(std::ifstream srcStream);
 
 
 #endif
