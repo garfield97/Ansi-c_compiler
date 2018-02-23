@@ -19,23 +19,30 @@ int main(int argc, char* argv[])
     const Node* ast = parseAST(fp);
     fclose(fp);
 
+    // dest file
+    FILE* dst = fopen(argv[3], "w+");
+    std::fstream dstStream(dst);
+
     // Print AST
     // bin/c_compiler -P [source-file.c] -o [dest-file.txt]
     if( argv[0] == "-P" ){
-        ast->PrettyPrint(cout);
+        ast->PrettyPrint(dstStream);
     } 
 
     // Compile to Assembly
     // bin/c_compiler -S [source-file.c] -o [dest-file.s]
     if( argv[0] == "-S" ){
-        
+        ast->renderASM(dstStream);
     } 
 
     // Translate to Python
     // bin/c_compiler --translate [source-file.c] -o [dest-file.py]
     if( argv[0] == "--translate" ){
-        
+        ast->toPY(dstStream);
     }
+
+    // close output file
+    fclose(dst);
 
     return 0;
 }
