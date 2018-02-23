@@ -420,22 +420,73 @@ public:
 class statement_selection : public Node{
 
 //STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT
-//                   | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT
+//                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT
 //                    | SWITCH L_BRACKET EXPR R_BRACKET STATEMENT
 
 
 private:
 
+    NodePtr expr;
+    NodePtr statement;
+    NodePtr statement_rep;
+    std::string symbol_1;
+    std::string symbol_2;
+    
+    
+
+protected:
+    
+    statement_selection(std::string name,NodePtr _arg,NodePtr _arg1)
+        :expr(_arg)
+        ,statement(_arg1)
+        ,symbol_1(name)
+        ,statement_rep(NULL)
+        ,symbol_2(NULL)
+    {}
+    
+    statement_selection(std::string name,NodePtr _arg,NodePtr _arg1,std::string name1 , NodePtr _arg2)
+        :expr(_arg)
+        ,statement(_arg1)
+        ,symbol_1(name)
+        ,statement_rep(_arg2)
+        ,symbol_2(name1)
+    {}
 
 
 
+public:
 
-protected
+    std::string name = "statement_selection";
+    
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            if(symbol_2 == NULL){
+                symbol_1->PrettyPrint(dst);
+                dst<<'(';
+                expr->PrettyPrint(dst);
+                dst<<')';
+                statement->PrettyPrint(dst);
+            }
+            else{
+                symbol_1->PrettyPrint(dst);
+                dst<<'(';
+                expr->PrettyPrint(dst);
+                dst<<')';
+                statement->PrettyPrint(dst);
+                symbol_2->PrettyPrint(dst);
+                statement_rep--PrettyPrint(dst);
+            }           
+  
+        }
 
+        virtual void toPY(std::ostream &dst) const override{
 
+        }
 
+        virtual void renderASM(std::ostream &dst) const override{
 
-public
+        }
+};
 
 
 
