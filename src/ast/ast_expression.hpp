@@ -856,7 +856,7 @@ class expr_primary : public Node {
     //             | L_BRACKET EXPR R_BRACKET
     private:
         NodePtr exp;
-        std:string str;                 //id or string literal
+        std::string str;                 //id or string literal
         int intValue;                   //int_c
         unsigned int uintValue;         //unsigned_C
         long int longintValue;          //long_c
@@ -864,7 +864,7 @@ class expr_primary : public Node {
         char characterValue;            //character_c 
         
     protected:
-        expr_primary(std:string _str)
+        expr_primary(std::string _str)
             : exp(NULL)
             , str(_str)
             , intValue(NULL)

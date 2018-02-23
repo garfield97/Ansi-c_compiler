@@ -2,6 +2,8 @@
 
 #include "ast.hpp"
 
+FILE* fp;
+
 int main(int argc, char* argv[])
 {
     if(argc < 4){
@@ -15,7 +17,7 @@ int main(int argc, char* argv[])
 
     // Build AST (FE)
     // 2nd argument is source C file to compile
-    FILE* fp = fopen(argv[1], "r");
+    fp = fopen(argv[1], "r");
     const Node* ast = parseAST(fp);
     fclose(fp);
 
