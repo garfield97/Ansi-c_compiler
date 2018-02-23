@@ -291,7 +291,7 @@ SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_
                           
                           
                           
-                          
+//                          
 UNION_OR_STRUCT : STRUCT
                 | UNION
                 
@@ -306,11 +306,11 @@ DECLARATION_LIST_STRUCT : DECLARATION_STRUCT
 DECLARATION_STRUCT : LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR ';'
 
 
-
+//
 LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL
                | SPECIFIER_TYPE 
-               | SPEICIFER_TYPE LIST_SPEC_QUAL
-               | SPECIFIER_TYPE
+               | QUALIFIER_TYPE LIST_SPEC_QUAL
+               | QUALIFIER_TYPE
                
                
                              

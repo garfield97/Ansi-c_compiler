@@ -7,12 +7,123 @@
 
 // SPECIFIER_TYPE
 
-// SPECIFIER_UNION_OR_STRUCT
 
-// UNION_OR_STRUCT
 
-// LIST_SPEC_QUAL
+class specifier_union_or_struct : public Node {
+    //SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_STRUCT R_BRACE
+    //                          | UNION_OR_STRUCT L_BRACE DECLAR_LIST_STRUCT R_BRACE
+    //                          | UNION_OR_STRUCT IDENTIFIER
+    private:
+        NodePtr us;
+        std::string id;
+        NodePtr list;
+    protected:
+        specifier_union_or_struct(NodePtr _arg1, std::string _arg2)
+            : us(_arg1)
+            , id(_arg2)
+            , list(NULL)
+        {}
 
+        specifier_union_or_struct(NodePtr _arg1, NodePtr _arg2)
+            : us(_arg1)
+            , id(NULL)
+            , list(_arg2)
+        {}
+
+        specifier_union_or_struct(NodePtr _arg1, std::string _arg2, NodePtr _arg3)
+            : us(_arg1)
+            , id(_arg2)
+            , list(_arg3)
+        {}
+        
+    public:
+    
+        std::string name = "specifier_union_or_struct";
+
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            us->PrettyPrint();
+        }
+
+        virtual void toPY(std::ostream &dst) const override
+        {
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override
+        {
+
+        }
+};
+
+class union_or_struct : public Node {
+    //UNION_OR_STRUCT : STRUCT
+    //                | UNION
+    private:
+        std::string val;
+    protected:
+        union_or_struct(std::string _arg1)
+            : val(_arg1)
+        {}
+        
+    public:
+    
+        std::string name = "union_or_struct";
+
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            dst<<val<<" ";
+        }
+
+        virtual void toPY(std::ostream &dst) const override
+        {
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override
+        {
+
+        }
+};
+
+class list_spec_qual : public Node {
+    //LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL
+    //               | SPECIFIER_TYPE 
+    //               | QUALIFIER_TYPE LIST_SPEC_QUAL
+    //               | QUALIFIER_TYPE
+    private:
+        NodePtr sq;
+        NodePtr rec;
+    protected:
+        list_spec_qual(NodePtr _arg1)
+            : sq(_arg1)
+            , rec(NULL)
+        {}
+        list_spec_qual(NodePtr _arg1, NodePtr _arg2)
+            : sq(_arg1)
+            , rec(_arg2)
+        {}
+        
+    public:
+    
+        std::string name = "list_spec_qual";
+
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            sq->PrettyPrint();
+            if(rec != NULL) rec->PrettyPrint();
+        }
+
+        virtual void toPY(std::ostream &dst) const override
+        {
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override
+        {
+
+        }
+};
 
 class specifier_enum : public Node {
     // ENUM - keyword
