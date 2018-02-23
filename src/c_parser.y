@@ -231,8 +231,8 @@ EXPR_CONST : EXPR_CONDITIONAL   { $$ = $1; }
 
 
 //
-DECLARATION : SPECIFIER_DECLARATION ';'
-            | SPECIFIER_DECLARATION DECLARATOR_INIT_LIST ';'
+DECLARATION : SPECIFIER_DECLARATION ';'                       { $$ = new declaration($1); }
+            | SPECIFIER_DECLARATION DECLARATOR_INIT_LIST ';'  { $$ = new declaration($1, $2); }
             
 
 
@@ -493,14 +493,14 @@ PROGRAM : DECLARATION_EXTERNAL            { $$ = new program($1); }
 
 
 //
-DECLARATION_EXTERNAL : DEFINITION_FUNCTION
-                     | DECLARATION
+DECLARATION_EXTERNAL : DEFINITION_FUNCTION { $$ = new declaration_external($1); }
+                     | DECLARATION         { $$ = new declaration_external($1); }
 
 //
-DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND
-                    | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND
-                    | DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND
-                    | DECLARATOR STATEMENT_COMPOUND
+DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND { $$ = new definition_function($1, $2, $3, $4); }
+                    | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
+                    | DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND                       { $$ = new definition_function('$', $1, $2, $3); }
+                    | DECLARATOR STATEMENT_COMPOUND                                        { $$ = new definition_function($1, $2); }
          
             
 
