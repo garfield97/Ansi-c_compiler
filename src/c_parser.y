@@ -285,7 +285,7 @@ SPECIFIER_TYPE : VOID
                
 //               
 SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_STRUCT R_BRACE
-                          | UNION_OR_STRUCT L_BRACE DECLARE_LIST_STRUCT R_BRACE
+                          | UNION_OR_STRUCT L_BRACE DECLARATION_LIST_STRUCT R_BRACE
                           | UNION_OR_STRUCT IDENTIFIER
                           
                           
