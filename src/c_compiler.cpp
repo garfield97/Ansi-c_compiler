@@ -1,8 +1,8 @@
 #include <stdio.h>
+#include <fstream>
 
 #include "ast.hpp"
 
-FILE* fp;
 
 int main(int argc, char* argv[])
 {
@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 
     // Build AST (FE)
     // 2nd argument is source C file to compile
-    fp = fopen(argv[1], "r");
+    FILE* fp = fopen(argv[1], "r");
     const Node* ast = parseAST(fp);
     fclose(fp);
 

@@ -3,8 +3,6 @@
 
   #include <cassert>
 
-  extern FILE* fp;
-
   extern const Node *g_root; // A way of getting the AST out
 
   //! This is to fix problems when generating C++

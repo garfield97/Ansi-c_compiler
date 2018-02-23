@@ -233,7 +233,7 @@ class specifier_enum : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            dst<<"enum "<<;
+            dst<<"enum ";
             if(id != " ") dst<<id<<" ";
             if(list != NULL){
                 dst<<" { ";
@@ -460,7 +460,7 @@ class lsit_param_type : public Node {
         {
             list->PrettyPrint(dst);
             if(elip){
-                dst", ...";
+                dst<<", ...";
             }
         }
 

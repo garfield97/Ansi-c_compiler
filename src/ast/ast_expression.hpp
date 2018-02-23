@@ -602,9 +602,9 @@ class expr_cast : public Node {
         {
             if(rec != NULL){
                 // L_BRACKET NAME_TYPE R_BRACKET EXPR_CAST
-                dst<<op<<"(";
+                dst<<" ( ";
                 exp->PrettyPrint(dst);
-                dst<<op<<")";
+                dst<<" ) ";
                 rec->PrettyPrint(dst);
             }
             else {
@@ -650,10 +650,10 @@ class expr_unary : public Node {
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(terminal != NULL){
-                terminal->PrettyPrint();
+                terminal->PrettyPrint(dst);
                 if(terminal->name = "name_type") dst<<" ( ";
             }
-            exp->PrettyPrint();
+            exp->PrettyPrint(dst);
             if(terminal != NULL && terminal->name = "name_type") dst<<" ) ";
         }
 
@@ -721,10 +721,10 @@ class arg_expr_list : public Node {
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(next != NULL){
-                next->PrettyPrint();
+                next->PrettyPrint(dst);
                 dst<<" , ";
             }
-            exp->PrettyPrint();
+            exp->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -807,20 +807,20 @@ class expr_postfix : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-           if(next == NULL) exp->PrettyPrint(); // EXPR_PRIMARY
+           if(next == NULL) exp->PrettyPrint(dst); // EXPR_PRIMARY
            else{
-                next->PrettyPrint();
+                next->PrettyPrint(dst);
                 if(exp != NULL && !bracket){
                     // EXPR_POSTFIX L_SQUARE EXPR R_SQUARE
                     dst<<" [ ";
-                    exp->PrettyPrint();
+                    exp->PrettyPrint(dst);
                     dst<<" ] ";
                 }
                 else if(bracket){
                     // EXPR_POSTFIX L_BRACKET R_BRACKET
                     // EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET
                     dst<<" ( ";
-                    if(exp != NULL) exp->PrettyPrint();
+                    if(exp != NULL) exp->PrettyPrint(dst);
                     dst<<" ) ";
                 }
                 else if(id != " "){
@@ -856,82 +856,18 @@ class expr_primary : public Node {
     //             | L_BRACKET EXPR R_BRACKET
     private:
         NodePtr exp;
-        std::string str;                 //id or string literal
-        int intValue;                   //int_c
-        unsigned int uintValue;         //unsigned_C
-        long int longintValue;          //long_c
-        unsigned long longuintValue;    //unsigned_long_c
-        char characterValue;            //character_c 
+        auto val;
         
     protected:
-        expr_primary(std::string _str)
+        expr_primary(auto _val)
             : exp(NULL)
-            , str(_str)
-            , intValue(NULL)
-            , uintValue(NULL)
-            , longintValue(NULL)
-            , longuintValue(NULL)
-            , characterValue(NULL)
-        {}
+            , val(_val)
 
-        expr_primary(int _intValue)
-            : exp(NULL)
-            , str(" ")
-            , intValue(_intValue)
-            , uintValue(NULL)
-            , longintValue(NULL)
-            , longuintValue(NULL)
-            , characterValue(NULL)
-        {}
-
-        expr_primary(unsigned int _uintValue)
-            : exp(NULL)
-            , str(" ")
-            , intValue(NULL)
-            , uintValue(_uintValue)
-            , longintValue(NULL)
-            , longuintValue(NULL)
-            , characterValue(NULL)
-        {}
-
-        expr_primary(long int _longintValue)
-            : exp(NULL)
-            , str(" ")
-            , intValue(NULL)
-            , uintValue(NULL)
-            , longintValue(_longintValue)
-            , longuintValue(NULL)
-            , characterValue(NULL)
-        {}
-
-        expr_primary(unsigned long _longuintValue)
-            : exp(NULL)
-            , str(" ")
-            , intValue(NULL)
-            , uintValue(NULL)
-            , longintValue(NULL)
-            , longuintValue(_longuintValue)
-            , characterValue(NULL)
-        {}
-
-        expr_primary(char _characterValue)
-            : exp(NULL)
-            , str(" ")
-            , intValue(NULL)
-            , uintValue(NULL)
-            , longintValue(NULL)
-            , longuintValue(NULL)
-            , characterValue(_characterValue)
         {}
 
         expr_primary(NodePtr _exp)
             : exp(_exp)
-            , str(" ")
-            , intValue(NULL)
-            , uintValue(NULL)
-            , longintValue(NULL)
-            , longuintValue(NULL)
-            , characterValue(NULL)
+            , val()
         {}
 
     public:
@@ -942,15 +878,11 @@ class expr_primary : public Node {
         {
             if(exp != NULL){
                 dst<<" ( ";
-                exp->PrettyPrint();
+                exp->PrettyPrint(dst);
                 dst<<" ) ";
             }
-            else if(str != " ") dst<<str<<" ";
-            else if(intValue != NULL) dst<<intValue<<" ";
-            else if(uintValue != NULL) dst<<uintValue<<" ";
-            else if(longintValue != NULL) dst<<longintValue<<" ";
-            else if(longuintValue != NULL) dst<<longuintValue<<" ";
-            else if(characterValue != NULL) dst<<characterValue<<" ";
+            else dst<<val<<" ";
+            
             
         }
 

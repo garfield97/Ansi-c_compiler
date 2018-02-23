@@ -15,6 +15,8 @@ typedef const Node* NodePtr;
 class Node
 {
 public:
+    std::string name;
+
     virtual ~Node()
     {}
 

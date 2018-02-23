@@ -10,8 +10,6 @@
 #include "ast/ast_expression.hpp"
 
 
-extern FILE* fp;
-
 extern const Node *parseAST(FILE* fp);
 
 
