@@ -13,10 +13,91 @@
 
 // LIST_SPEC_QUAL
 
-// SPECIFIER_ENUM
 
-// LIST_ENUMERATOR
+class specifier_enum : public Node {
+    // ENUM - keyword
+    //SPECIFIER_ENUM : ENUM L_BRACE LIST_ENUMERATOR R_BRACE
+    //               | ENUM IDENTIFIER L_BRACE LIST_ENUMERATOR R_BRACE
+    //               | ENUM IDENTIFIER
+    private:
+        NodePtr list;
+        std::string id;
+    protected:
+        specifier_enum(NodePtr _arg2) // ENUM L_BRACE LIST_ENUMERATOR R_BRACE
+            : list(_arg2)
+            , id(NULL)
+        {}
+        specifier_enum(std::string _arg2, NodePtr _arg3) // ENUM IDENTIFIER L_BRACE LIST_ENUMERATOR R_BRACE
+            : list(_arg3)
+            , id(_arg2)
+        {}
+        specifier_enum(std::string _arg2) // ENUM IDENTIFIER
+            : list(NULL)
+            , id(_arg2)
+        {}
+    public:
+    
+        std::string name = "specifier_enum";
 
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            dst<<"enum "<<id<<" ";
+            if(list != NULL){
+                dst<<" { ";
+                list->PrettyPrint();
+                dst<<" } ";
+            }
+        }
+
+        virtual void toPY(std::ostream &dst) const override
+        {
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override
+        {
+
+        }
+};
+
+class list_enumerator : public Node {
+    //LIST_ENUMERATOR : ENUMERATOR
+    //                | LIST_ENUMERATOR ',' ENUMERATOR
+    private:
+        NodePtr en;
+        NodePtr rec;
+    protected:
+        list_enumerator(NodePtr _arg1)
+            : en(_arg1)
+            , rec(NULL)
+        {}
+        list_enumerator(NodePtr _arg1, NodePtr _arg2)
+            : en(_arg2)
+            , rec(_arg1)
+        {}
+    public:
+    
+        std::string name = "list_enumerator";
+
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            if(rec != NULL){
+                rec->PrettyPrint();
+                dst<<" , ";
+            }
+            en->PrettyPrint();
+        }
+
+        virtual void toPY(std::ostream &dst) const override
+        {
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override
+        {
+
+        }
+};
 
 class enumerator : public Node {
     //ENUMERATOR : IDENTIFIER 
