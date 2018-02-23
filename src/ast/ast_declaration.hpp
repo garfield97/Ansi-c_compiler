@@ -443,36 +443,65 @@ public:
 
 class declarator_direct_abstract : public Node{
 
-//                   DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET
-//                           | L_SQUARE R_SQUARE
-//                           | L_SQUARE EXPR_CONST R_SQUARE
-//                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE R_SQUARE
-//                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE EXPR_CONST R_SQUARE
-//                           | L_BRACKET R_BRACKET
-//                           | L_BRACKET LIST_PARAM_TYPE R_BRACKET
-//                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET R_BRACKET
-//                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET LIST_PARAM_TYPE R_BRACKET
+//                   DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET           1 pointer needed
+//                           | L_SQUARE R_SQUARE                                                         0 needed
+//                           | L_SQUARE EXPR_CONST R_SQUARE                                       1 pointer needed
+//                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE R_SQUARE                         1 pointer
+//                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE EXPR_CONST R_SQUARE              2 pointer
+//                           | L_BRACKET R_BRACKET                                                      0
+//                           | L_BRACKET LIST_PARAM_TYPE R_BRACKET                                      1 
+//                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET R_BRACKET                                   1
+//                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET LIST_PARAM_TYPE R_BRACKET                       2 pointer
 
 private:
-    NodePtr pointer
-    NodePtr declarator_direct_abstract
+    NodePtr now;
+    NodePtr next;
+    bool bracket;
+    
 protected:
 
-    declarator_abstract(NodePtr _arg1)
-        :pointer(_arg1)
-        ,declarator_direct_abstract(NULL)
+// LOOK AT THE DIFFERENTIATION LATER
+
+    declarator_direct_abstract(NodePtr _arg1)
+        :now(_arg1)
+        ,next(NULL)
+        ,bracket(true)
     {}
     
     
-    declarator_abstract(NodePtr _arg1,NodePtr _arg2)
-        :pointer(_arg1)
-        ,declarator_direct_abstract(_arg2)
+    declarator_direct_abstract()
+        :now(NULL)
+        ,next(NULL)
+        ,bracket(false)
     {}
     
+    declarator_direct_abstract(NodePtr _arg1)
+        :now(_arg1)
+        ,next(NULL)
+        ,bracket(false)
+    {}
+
+    declarator_direct_abstract(NodePtr _arg1,NodePtr _arg2)
+        :now(_arg1)
+        ,next(_arg2)
+        ,bracket(false)
+    {}
+    
+    declarator_direct_abstract()
+        :now(NULL)
+        ,next(NULL)
+        ,bracket(true)
+    {}   
+    
+    declarator_direct_abstract(NodePtr _arg1,NodePtr _arg2)
+        :now(_arg1)
+        ,next(_arg2)
+        ,bracket(true)
+    {} 
 public:
 
 
-    std::string name = "declarator_abstract"
+    std::string name = "declarator_direct_abstract"
 
     virtual void PrettyPrint(std::ostream &dst) const override
     {
@@ -495,10 +524,60 @@ public:
 };
 
 
+class declaration_parameter : public Node{
+
+
+//DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR        
+//                    | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT
+//                    | SPECIFIER_DECLARATION
+
+
+};
+
+
+class declarator_direct : public Node{
+
+//          DECLARATOR_DIRECT : IDENTIFIER
+//                | L_BRACKET DECLARATOR R_BRACKET
+//                | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE
+//                | DECLARATOR_DIRECT L_SQUARE R_SQUARE
+//                | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET
+//                | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET
+//                | DECLARATOR_DIRECT L_BRACKET R_BRACKET
+
+};
+
+
+class struct_declarator : public Node{
+
+//STRUCT_DECLARATOR : DECLARATOR
+//                | ':' EXPR_CONST
+//                | DECLARATOR ':' EXPR_CONST
+
+};
+
+
+class list_struct_declaraotr : public Node{
+
+//LIST_STRUCT_DECLARATOR : STRUCT_DECLARATOR
+//                       | LIST_STRUCT_DECLARATOR ',' STRUCT_DECLARATOR
+};
 
 
 
 
+class declaration_struct : public Node{
+
+//DECLARATION_STRUCT : LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR ';'
+
+};
+
+class declaration_list_struct : public Node{
+
+//DECLARATION_LIST_STRUCT : DECLARATION_STRUCT
+//                        | DECLARATION_LIST_STRUCT DECLARATION_STRUCT
+
+};
 
 
 #endif

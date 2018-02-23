@@ -297,12 +297,12 @@ UNION_OR_STRUCT : STRUCT
                 
                 
                 
-                
+//                
 DECLARATION_LIST_STRUCT : DECLARATION_STRUCT
                         | DECLARATION_LIST_STRUCT DECLARATION_STRUCT
                         
 
-
+//
 DECLARATION_STRUCT : LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR ';'
 
 
@@ -313,7 +313,7 @@ LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL
                | QUALIFIER_TYPE
                
                
-                             
+//                             
 LIST_STRUCT_DECLARATOR : STRUCT_DECLARATOR
                        | LIST_STRUCT_DECLARATOR ',' STRUCT_DECLARATOR
                        
@@ -321,7 +321,7 @@ LIST_STRUCT_DECLARATOR : STRUCT_DECLARATOR
 
 
 
-
+//
 STRUCT_DECLARATOR : DECLARATOR
                   | ':' EXPR_CONST
                   | DECLARATOR ':' EXPR_CONST
@@ -354,7 +354,7 @@ QUALIFIER_TYPE : CONST
 //               
 DECLARATOR : DECLARATOR_POINTER_DIRECT
            : DECLARATOR_DIRECT
-           
+//          
 DECLARATOR_DIRECT : IDENTIFIER
                   | L_BRACKET DECLARATOR R_BRACKET
                   | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE
@@ -384,7 +384,7 @@ LIST_PARAMETER : DECLARATION_PARAMETER
                | LIST_PARAMETER ',' DECLARATION_PARAMETER
                
 
-
+//
 DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR        
                       | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT
                       | SPECIFIER_DECLARATION
