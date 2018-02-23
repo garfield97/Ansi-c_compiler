@@ -3,11 +3,86 @@
 
 #include "ast_node.hpp"
 
-// SPECIFIER_STORE_CLASS
+class specifier_store_class : public Node {
+    //SPECIFIER_STORE_CLASS : TYPEDEF
+    //                      | EXTERN
+    //                      | STATIC
+    //                      | AUTO
+    //                      | REGISTER
+    private:
+        std::string val;
+    protected:
+        specifier_store_class(std::string _arg1)
+            : val(_arg1)
+        {}
+        
+    public:
+    
+        std::string name = "specifier_store_class";
 
-// SPECIFIER_TYPE
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            dst<<val<<" ";
+        }
 
+        virtual void toPY(std::ostream &dst) const override
+        {
 
+        }
+
+        virtual void renderASM(std::ostream &dst) const override
+        {
+
+        }
+};
+
+class specifier_type : public Node {
+    //SPECIFIER_TYPE : VOID
+    //               | CHAR
+    //               | SHORT
+    //               | INT
+    //               | LONG
+    //               | FLOAT
+    //               | DOUBLE
+    //               | SIGNED
+    //               | UNSIGNED
+    //               | SPECIFIER_UNION_OR_STRUCT
+    //               | SPECIFIER_ENUM 
+    //               | NAME_TYPE
+    private:
+        std::string ter;
+        NodePtr nonT;
+    protected:
+        specifier_type(std::string _arg1)
+            : ter(_arg1)
+            , nonT(NULL)
+        {}
+
+        specifier_type(NodePtr _arg1)
+            : ter(NULL)
+            , nonT(_arg1)
+        {}
+        
+    public:
+    
+        std::string name = "specifier_type";
+
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            if(ter != NULL) dst<<ter<<" ";
+            if(nonT != NULL) nonT->PrettyPrint();
+        }
+
+        virtual void toPY(std::ostream &dst) const override
+        {
+
+        }
+
+        virtual void renderASM(std::ostream &dst) const override
+        {
+
+        }
+};
 
 class specifier_union_or_struct : public Node {
     //SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_STRUCT R_BRACE
@@ -43,6 +118,12 @@ class specifier_union_or_struct : public Node {
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             us->PrettyPrint();
+            if(id != NULL) dst<<id<<" ";
+            if(list != NULL){
+                dst<<"{ ";
+                list->PrettyPrint();
+                dst<<" } ";
+            }
         }
 
         virtual void toPY(std::ostream &dst) const override
