@@ -389,5 +389,116 @@ public:
 
 };
 
+class declarator_abstract : public Node{
+    
+
+//DECLARATOR_ABSTRACT : POINTER
+//                    | DECLARATOR_DIRECT_ABSTRACT
+//                    | POINTER DECLARATOR_DIRECT_ABSTRACT
+
+private:
+    
+    NodePtr pointer
+    NodePtr declarator_direct_abstract
+    
+
+protected:
+
+    declarator_abstract(NodePtr _arg1)
+        :pointer(_arg1)
+        ,declarator_direct_abstract(NULL)
+    {}
+    
+    
+    declarator_abstract(NodePtr _arg1,NodePtr _arg2)
+        :pointer(_arg1)
+        ,declarator_direct_abstract(_arg2)
+    {}
+    
+public:
+
+
+    std::string name = "declarator_abstract"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERED 
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }
+
+
+
+};
+
+
+class declarator_direct_abstract : public Node{
+
+//                   DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET
+//                           | L_SQUARE R_SQUARE
+//                           | L_SQUARE EXPR_CONST R_SQUARE
+//                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE R_SQUARE
+//                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE EXPR_CONST R_SQUARE
+//                           | L_BRACKET R_BRACKET
+//                           | L_BRACKET LIST_PARAM_TYPE R_BRACKET
+//                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET R_BRACKET
+//                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET LIST_PARAM_TYPE R_BRACKET
+
+private:
+    NodePtr pointer
+    NodePtr declarator_direct_abstract
+protected:
+
+    declarator_abstract(NodePtr _arg1)
+        :pointer(_arg1)
+        ,declarator_direct_abstract(NULL)
+    {}
+    
+    
+    declarator_abstract(NodePtr _arg1,NodePtr _arg2)
+        :pointer(_arg1)
+        ,declarator_direct_abstract(_arg2)
+    {}
+    
+public:
+
+
+    std::string name = "declarator_abstract"
+
+    virtual void PrettyPrint(std::ostream &dst) const override
+    {
+        if(next != null) next->print();
+        declaration->PrettyPrintp();
+        //MEHEDI IS TRIGGERED 
+        dst<<'(';
+    }
+
+    virtual void toPYPY(std::ostream &dst) const override{
+
+    }
+
+    virtual void renderASM(std::ostream &dst) const override{
+
+    }
+
+
+
+};
+
+
+
+
+
+
+
 
 #endif

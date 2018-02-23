@@ -468,7 +468,7 @@ public:
                 statement->PrettyPrint(dst);
             }
             else{
-                symbol_1->PrettyPrint(dst);
+                dst<<"if ";
                 dst<<'(';
                 expr->PrettyPrint(dst);
                 dst<<')';
