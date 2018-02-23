@@ -363,11 +363,11 @@ DECLARATOR : POINTER DECLARATOR_DIRECT        { $$ = new declarator($1, $2); }
            | DECLARATOR_DIRECT                { $$ = new declarator($1); }
 //          
 DECLARATOR_DIRECT : IDENTIFIER                                              { $$ = new declarator_direct(*$1); }
-                  | L_BRACKET DECLARATOR R_BRACKET                          { $$ = new declarator_direct($1); }
-                  | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE          { $$ = new declarator_direct($1, $2); }
+                  | L_BRACKET DECLARATOR R_BRACKET                          { $$ = new declarator_direct($2); }
+                  | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE          { $$ = new declarator_direct($1, $3); }
                   | DECLARATOR_DIRECT L_SQUARE R_SQUARE                     { $$ = new declarator_direct($1); }
-                  | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET   { $$ = new declarator_direct($1, $2); }
-                  | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET   { $$ = new declarator_direct($1, $2); }
+                  | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET   { $$ = new declarator_direct($1, $3); }
+                  | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET   { $$ = new declarator_direct($1, $3); }
                   | DECLARATOR_DIRECT L_BRACKET R_BRACKET                   { $$ = new declarator_direct($1); }
 
 //
