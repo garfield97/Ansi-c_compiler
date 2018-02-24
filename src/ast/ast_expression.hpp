@@ -889,7 +889,7 @@ class expr_primary : public Node {
             , UIbool(false)
             , LIbool(false)
             , ULbool(false)
-            , Cbool(false
+            , Cbool(false)
         {}
 
         expr_primary(unsigned int _val)
@@ -900,7 +900,7 @@ class expr_primary : public Node {
             , UIbool(true)
             , LIbool(false)
             , ULbool(false)
-            , Cbool(false
+            , Cbool(false)
         {}
 
         expr_primary(long int _val)
@@ -911,7 +911,7 @@ class expr_primary : public Node {
             , UIbool(false)
             , LIbool(true)
             , ULbool(false)
-            , Cbool(false
+            , Cbool(false)
         {}
 
         expr_primary(unsigned long _val)
@@ -922,7 +922,7 @@ class expr_primary : public Node {
             , UIbool(false)
             , LIbool(false)
             , ULbool(true)
-            , Cbool(false
+            , Cbool(false)
         {}
 
         expr_primary(char _val)
