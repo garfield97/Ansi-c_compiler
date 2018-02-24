@@ -856,35 +856,94 @@ class expr_primary : public Node {
     //             | L_BRACKET EXPR R_BRACKET
     private:
         NodePtr exp;
-        static auto val = 0;
+        std::string Sval;
+        bool Sbool;
+        int Ival;
+        bool Ibool;
+        unsigned int UIval;
+        bool UIbool;
+        long int LIval;
+        bool LIbool;
+        unsigned long ULval;
+        bool ULbool;
+        char Cval;
+        bool Cbool;
         
     protected:
         expr_primary(std::string _val)
             : exp(NULL)
-        { val = _val; }
+            , Sval(_val)
+            , Sbool(true)
+            , Ibool(false)
+            , UIbool(false)
+            , LIbool(false)
+            , ULbool(false)
+            , Cbool(false)
+        {}
 
         expr_primary(int _val)
             : exp(NULL)
-        { val = _val; }
+            , Sval(_val)
+            , Sbool(false)
+            , Ibool(true)
+            , UIbool(false)
+            , LIbool(false)
+            , ULbool(false)
+            , Cbool(false
+        {}
 
         expr_primary(unsigned int _val)
             : exp(NULL)
-        { val = _val; }
+            , Sval(_val)
+            , Sbool(false)
+            , Ibool(false)
+            , UIbool(true)
+            , LIbool(false)
+            , ULbool(false)
+            , Cbool(false
+        {}
 
         expr_primary(long int _val)
             : exp(NULL)
-        { val = _val; }
+            , Sval(_val)
+            , Sbool(false)
+            , Ibool(false)
+            , UIbool(false)
+            , LIbool(true)
+            , ULbool(false)
+            , Cbool(false
+        {}
 
         expr_primary(unsigned long _val)
             : exp(NULL)
-        { val = _val; }
+            , Sval(_val)
+            , Sbool(false)
+            , Ibool(false)
+            , UIbool(false)
+            , LIbool(false)
+            , ULbool(true)
+            , Cbool(false
+        {}
 
         expr_primary(char _val)
            : exp(NULL)
-        { val = _val; }
+            , Cval(_val)
+            , Sbool(false)
+            , Ibool(false)
+            , UIbool(false)
+            , LIbool(false)
+            , ULbool(false)
+            , Cbool(true)
+        {}
 
         expr_primary(NodePtr _exp)
-            : exp(_exp)
+            : exp(NULL)
+            , Sbool(false)
+            , Ibool(false)
+            , UIbool(false)
+            , LIbool(false)
+            , ULbool(false)
+            , Cbool(false)
         {}
 
     public:
@@ -898,9 +957,13 @@ class expr_primary : public Node {
                 exp->PrettyPrint(dst);
                 dst<<" ) ";
             }
-            else dst<<val<<" ";
-            
-            
+            else if(Sbool)  dst<<Sval<<" ";
+            else if(Ibool)  dst<<Ival<<" ";
+            else if(UIbool) dst<<UIval<<" ";
+            else if(LIbool) dst<<LIval<<" ";
+            else if(ULbool) dst<<ULval<<" ";
+            else if(Cbool)  dst<<Cval<<" ";
+                        
         }
 
         virtual void toPY(std::ostream &dst) const override{
