@@ -169,8 +169,8 @@ EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR                          { $$ = $1;          
                | EXPR_LOGIC_AND OP_LAND EXPR_INCLUSIVE_OR   { $$ = new expr_logic_and($1, $3); }
              
                           
-EXPR_LOGIC_OR : EXPR_LOGIC_AND                        { ££ = 1;                         }
-              | EXPR_LOGIC_OR OP_LOR EXPR_LOGIC_AND   { ££ = new expr_logic_or($1, $3); }
+EXPR_LOGIC_OR : EXPR_LOGIC_AND                        { $$ = $1;                         }
+              | EXPR_LOGIC_OR OP_LOR EXPR_LOGIC_AND   { $$ = new expr_logic_or($1, $3); }
               
           
 EXPR_CONDITIONAL : EXPR_LOGIC_OR                                { $$ = $1;                               }
