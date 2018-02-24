@@ -10,10 +10,6 @@ class program : public Node {
         NodePtr next;
         NodePtr declaration;
     public:
-        program(NodePtr _arg1)
-            : next(NULL)
-            , declaration(_arg1)
-        {}
         program(NodePtr _arg1, NodePtr _arg2)
             : next(_arg1)
             , declaration(_arg2)
@@ -24,7 +20,7 @@ class program : public Node {
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(next != NULL) next->PrettyPrint(dst);
+            next->PrettyPrint(dst);
             declaration->PrettyPrint(dst);
         }
 
