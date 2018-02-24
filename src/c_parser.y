@@ -100,27 +100,25 @@ EXPR_POSTFIX : EXPR_PRIMARY                                     { $$ = new expr_
              | EXPR_POSTFIX OP_INC                              { $$ = new expr_postfix($1, "++");     }
              | EXPR_POSTFIX OP_DEC                              { $$ = new expr_postfix($1, "--");     }
 
-//
+
 ARG_EXPR_LIST : EXPR_ASSIGNMENT                       { $$ = new arg_expr_list($1);     }
               | ARG_EXPR_LIST ',' EXPR_ASSIGNMENT     { $$ = new arg_expr_list($1, $3); }
 
            
-//
-EXPR_UNARY : EXPR_POSTFIX 
-           | OP_INC EXPR_UNARY
-           | OP_DEC EXPR_UNARY
-           | OPR_UNARY EXPR_CAST
-           | SIZEOF EXPR_UNARY
-           | SIZEOF L_BRACKET NAME_TYPE R_BRACKET            
+EXPR_UNARY : EXPR_POSTFIX                           { $$ = new expr_unary($1);           } 
+           | OP_INC EXPR_UNARY                      { $$ = new expr_unary("++", $2);     } 
+           | OP_DEC EXPR_UNARY                      { $$ = new expr_unary("--", $2);     } 
+           | OPR_UNARY EXPR_CAST                    { $$ = new expr_unary($1, $2);       } 
+           | SIZEOF EXPR_UNARY                      { $$ = new expr_unary("sizeof", $2); }  
+           | SIZEOF L_BRACKET NAME_TYPE R_BRACKET   { $$ = new expr_unary("sizeof", $3); }          
 
 
-//
-OPR_UNARY : OP_BAND
-          | OP_MUL
-          | OP_PLUS
-          | OP_MINUS
-          | OP_B_ONESC
-          | OP_LNOT
+OPR_UNARY : OP_BAND     { $$ = new opr_unary("&"); }
+          | OP_MUL      { $$ = new opr_unary("*"); }
+          | OP_PLUS     { $$ = new opr_unary("+"); }
+          | OP_MINUS    { $$ = new opr_unary("-"); }
+          | OP_B_ONESC  { $$ = new opr_unary("~"); }
+          | OP_LNOT     { $$ = new opr_unary("!"); }
           
 //          
 EXPR_CAST : EXPR_UNARY

@@ -629,18 +629,27 @@ class expr_unary : public Node {
     //           | SIZEOF EXPR_UNARY
     //           | SIZEOF L_BRACKET NAME_TYPE R_BRACKET  
     private:
-        NodePtr terminal;
+        std::string terminal;
+		NodePtr O_U;
         NodePtr exp;
         
     public:
-        expr_unary(NodePtr _terminal, NodePtr _exp)
+        expr_unary(std::string _terminal, NodePtr _exp)
             : terminal(_terminal)
             , exp(_exp)
+			, O_U(NULL)
+        {}
+		
+		expr_unary(NodePtr _arg1, NodePtr _exp)
+            : terminal(" ")
+            , exp(_exp)
+			, O_U(_arg1)
         {}
 
         expr_unary(NodePtr _exp)
-            : terminal(NULL)
+            : terminal(" ")
             , exp(_exp)
+			, O_U(NULL)
         {}
 
     public:
@@ -649,12 +658,19 @@ class expr_unary : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(terminal != NULL){
-                terminal->PrettyPrint(dst);
+            if(terminal != " "){
+                dst<<terminal<<" ";
                 if(terminal->name == "name_type") dst<<" ( ";
             }
-            exp->PrettyPrint(dst);
-            if(terminal != NULL && terminal->name == "name_type") dst<<" ) ";
+			
+            if(O_U != NULL) O_U->PrettyPrint(dst);
+			
+            if(exp->name == "name_type"){
+				dst<<" ( ";
+				exp->PrettyPrint();
+				dst<<" ) ";
+			}
+			else exp->PrettyPrint();
         }
 
         virtual void toPY(std::ostream &dst) const override{
