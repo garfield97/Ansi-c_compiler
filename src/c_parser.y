@@ -78,10 +78,9 @@
 
 %%
 
-
 ROOT : PROGRAM { g_root = $1; }
 
-//
+
 EXPR_PRIMARY  :IDENTIFIER                 { $$ = new expr_primary(*$1); }
               |INT_C                      { $$ = new expr_primary($1);  }
               |UNSIGNED_C                 { $$ = new expr_primary($1);  }
@@ -91,19 +90,19 @@ EXPR_PRIMARY  :IDENTIFIER                 { $$ = new expr_primary(*$1); }
               |STRING_LITERAL             { $$ = new expr_primary(*$1); }
               |L_BRACKET EXPR R_BRACKET   { $$ = new expr_primary($2);  }
             
-//
-EXPR_POSTFIX : EXPR_PRIMARY                                     { $$ = expr_postfix($1); }
-             | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE
-             | EXPR_POSTFIX L_BRACKET R_BRACKET
-             | EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET
-             | EXPR_POSTFIX '.' IDENTIFIER
-             | EXPR_POSTFIX OP_PTR IDENTIFIER
-             | EXPR_POSTFIX OP_INC
-             | EXPR_POSTFIX OP_DEC
+
+EXPR_POSTFIX : EXPR_PRIMARY                                     { $$ = new expr_postfix($1);           }
+             | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE              { $$ = new expr_postfix($1, $3);       }
+             | EXPR_POSTFIX L_BRACKET R_BRACKET                 { $$ = new expr_postfix($1, true);     }
+             | EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET   { $$ = new expr_postfix($1, true, $3); }
+             | EXPR_POSTFIX '.' IDENTIFIER                      { $$ = new expr_postfix($1, ".", *$3); }
+             | EXPR_POSTFIX OP_PTR IDENTIFIER                   { $$ = new expr_postfix($1, "->", *$3);}
+             | EXPR_POSTFIX OP_INC                              { $$ = new expr_postfix($1, "++");     }
+             | EXPR_POSTFIX OP_DEC                              { $$ = new expr_postfix($1, "--");     }
 
 //
-ARG_EXPR_LIST : EXPR_ASSIGNMENT
-              | ARG_EXPR_LIST ',' EXPR_ASSIGNMENT
+ARG_EXPR_LIST : EXPR_ASSIGNMENT                       { $$ = new arg_expr_list($1);     }
+              | ARG_EXPR_LIST ',' EXPR_ASSIGNMENT     { $$ = new arg_expr_list($1, $3); }
 
            
 //
