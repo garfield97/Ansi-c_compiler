@@ -10,10 +10,6 @@ class expr : public Node {
         NodePtr rec;
         NodePtr assignment;
     public:
-        expr(NodePtr _arg1)
-            : rec(NULL)
-            , assignment(_arg1)
-        {}
         expr(NodePtr _arg1, NodePtr _arg2)
             : rec(_arg1)
             , assignment(_arg2)
@@ -48,11 +44,6 @@ class expr_conditional : public Node {
         NodePtr expr;
         NodePtr eLOR;
     public:
-        expr_conditional(NodePtr _arg1)
-            : eConditional(NULL)
-            , expr(NULL)
-            , eLOR(_arg1)
-        {}
         expr_conditional(NodePtr _arg1, NodePtr _arg2, NodePtr _arg3)
             : eConditional(_arg3)
             , expr(_arg2)
@@ -91,11 +82,6 @@ class expr_assignment : public Node {
         NodePtr opr;
         NodePtr exp;
     public:
-        expr_assignment(NodePtr _arg1)
-            : unary(NULL)
-            , opr(NULL)
-            , exp(_arg1)
-        {}
         expr_assignment(NodePtr _arg1, NodePtr _arg2, NodePtr _arg3)
             : unary(_arg1)
             , opr(_arg2)
@@ -163,13 +149,7 @@ class expr_logic_or : public Node {
         expr_logic_or(NodePtr _rec, NodePtr _exp)
             : rec(_rec)
             , exp(_exp)
-        {}
-
-        expr_logic_or(NodePtr _exp)
-            : rec(NULL)
-            , exp(_exp)
-        {}
-        
+        {}       
     public:
     
         std::string name = "expr_logic_or";
@@ -204,12 +184,6 @@ class expr_logic_and : public Node {
             : rec(_rec)
             , exp(_exp)
         {}
-
-        expr_logic_and(NodePtr _exp)
-            : rec(NULL)
-            , exp(_exp)
-        {}
-        
     public:
 
         std::string name = "expr_logic_and";
@@ -245,11 +219,6 @@ class expr_inclusive_or : public Node {
             , exp(_exp)
         {}
 
-        expr_inclusive_or(NodePtr _exp)
-            : rec(NULL)
-            , exp(_exp)
-        {}
-        
     public:
     
         std::string name = "expr_inclusive_or";
@@ -285,11 +254,6 @@ class expr_xor : public Node {
             , exp(_exp)
         {}
 
-        expr_xor(NodePtr _exp)
-            : rec(NULL)
-            , exp(_exp)
-        {}
-        
     public:
 
          std::string name = "expr_xor";
@@ -325,11 +289,6 @@ class expr_and : public Node {
             , exp(_exp)
         {}
 
-        expr_and(NodePtr _exp)
-            : rec(NULL)
-            , exp(_exp)
-        {}
-        
     public:
 
          std::string name = "expr_and";
@@ -368,12 +327,6 @@ class expr_equality : public Node {
             , exp(_exp)
         {}
 
-        expr_equality(NodePtr _exp)
-            : rec(NULL)
-            , op(" ")
-            , exp(_exp)
-        {}
-        
     public:
     
         std::string name = "expr_equality";
@@ -414,12 +367,6 @@ class expr_relational : public Node {
             , exp(_exp)
         {}
 
-        expr_relational(NodePtr _exp)
-            : rec(NULL)
-            , op(" ")
-            , exp(_exp)
-        {}
-        
     public:
 
          std::string name = "expr_relational";
@@ -458,12 +405,6 @@ class expr_shift : public Node {
             , exp(_exp)
         {}
 
-        expr_shift(NodePtr _exp)
-            : rec(NULL)
-            , op(" ")
-            , exp(_exp)
-        {}
-        
     public:
 
          std::string name = "expr_shift";
@@ -499,12 +440,6 @@ class expr_add : public Node {
         expr_add(NodePtr _rec, std::string _op, NodePtr _exp)
             : rec(_rec)
             , op(_op)
-            , exp(_exp)
-        {}
-
-       expr_add(NodePtr _exp)
-            : rec(NULL)
-            , op(" ")
             , exp(_exp)
         {}
         
@@ -547,12 +482,6 @@ class expr_mul : public Node {
             , exp(_exp)
         {}
 
-        expr_mul(NodePtr _exp)
-            : rec(NULL)
-            , op(" ")
-            , exp(_exp)
-        {}
-        
     public:
 
          std::string name = "expr_mul";
@@ -588,11 +517,6 @@ class expr_cast : public Node {
             , exp(_exp)
         {}
 
-        expr_cast(NodePtr _exp)
-            : rec(NULL)
-            , exp(_exp)
-        {}
-        
     public:
 
          std::string name = "expr_cast";
@@ -644,12 +568,6 @@ class expr_unary : public Node {
             , O_U(_arg1)
 			, exp(_exp)
         {}
-
-        expr_unary(NodePtr _exp)
-            : terminal(" ")
-            , O_U(NULL)
-			, exp(_exp)
-		{}
 
     public:
     
@@ -723,11 +641,6 @@ class arg_expr_list : public Node {
             , exp(_exp)
         {}
 
-        arg_expr_list(NodePtr _exp)
-            : next(NULL)
-            , exp(_exp)
-        {}
-
     public:
     
         std::string name = "arg_expr_list";
@@ -767,14 +680,6 @@ class expr_postfix : public Node {
         NodePtr exp;
         
     public:
-        expr_postfix(NodePtr _exp)// expr_primary
-            : next(NULL)
-            , opr(" ")
-            , id(" ")
-            , bracket(false)
-            , exp(_exp)
-        {}
-
         expr_postfix(NodePtr _next, NodePtr _exp)// LS exp RS
             : next(_next)
             , opr(" ")
