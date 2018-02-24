@@ -10,18 +10,15 @@ class declaration_external : public Node {
 
         NodePtr arg; // could either be a function defition or a declaration - cannot tell
 
-    public:        
+    public:    
+       
         declaration_external(NodePtr _arg)
             : arg(_arg)
         {}
 
 
-        virtual void PrettyPrint(std::ostream &dst) const override
-        {
-         /*
-            if(next != null) next->print();
-            declaration->print();
-        */
+        virtual void PrettyPrint(std::ostream &dst) const override{
+
         }
 
         virtual void toPYPY(std::ostream &dst) const override{
@@ -29,9 +26,8 @@ class declaration_external : public Node {
         }
 
         virtual void renderASM(std::ostream &dst) const override{
-
         }
-
+        
 };
 
 
@@ -74,13 +70,11 @@ class definition_function : public Node{
         virtual void PrettyPrint(std::ostream &dst) const override
         {
         /*
-
             if(next != null) next->print();
             declaration->print();
         */
-
         }
-
+        
         virtual void toPYPY(std::ostream &dst) const override{
 
         }
@@ -111,7 +105,6 @@ class declaration : public Node{
         virtual void PrettyPrint(std::ostream &dst) const override
         {
         /*
-        
             if(next != null) {next->print();
                 // SPECIFIER_DECLARATION DECLARATOR_INIT_LIST ';'
             }
