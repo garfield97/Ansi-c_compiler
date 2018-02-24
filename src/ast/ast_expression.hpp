@@ -856,17 +856,17 @@ class expr_primary : public Node {
     //             | L_BRACKET EXPR R_BRACKET
     private:
         NodePtr exp;
-        std::string Sval;
-        bool Sbool;
+        std::string Sval;        
         int Ival;
-        bool Ibool;
         unsigned int UIval;
-        bool UIbool;
         long int LIval;
-        bool LIbool;
         unsigned long ULval;
-        bool ULbool;
         char Cval;
+        bool Sbool;
+        bool Ibool;
+        bool UIbool;
+        bool LIbool;
+        bool ULbool;
         bool Cbool;
         
     protected:

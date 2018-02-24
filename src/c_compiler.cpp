@@ -6,11 +6,12 @@
 
 int main(int argc, char* argv[])
 {
-    if(argc < 6){
+    if(argc != 5){
         fprintf(stderr, "incorrect argument amount\n");
         exit(1);
     }
-    if(argv[3] != "-o"){
+    std::string reqO = argv[3];
+    if(reqO!= "-o"){
         fprintf(stderr, "third argument is not '-o'\n");
         exit(1);
     }
@@ -24,21 +25,23 @@ int main(int argc, char* argv[])
     // dest file
     std::ofstream dstStream(argv[4]);
 
+    std::string mode = argv[1];
+    
     // Print AST
     // bin/c_compiler -P [source-file.c] -o [dest-file.txt]
-    if( argv[1] == "-P" ){
+    if( mode == "-P" ){
         ast->PrettyPrint(dstStream);
     } 
 
     // Compile to Assembly
     // bin/c_compiler -S [source-file.c] -o [dest-file.s]
-    if( argv[1] == "-S" ){
+    if( mode == "-S" ){
         ast->renderASM(dstStream);
     } 
 
     // Translate to Python
     // bin/c_compiler --translate [source-file.c] -o [dest-file.py]
-    if( argv[1] == "--translate" ){
+    if( mode == "--translate" ){
         ast->toPY(dstStream);
     }
 
