@@ -128,7 +128,6 @@ class opr_assignment: public Node {
     private:
         std::string opr;
     public:
-    public:
         opr_assignment(std::string _opr)
             : opr(_opr)
         {}

@@ -153,47 +153,32 @@ EXPR_EQUALITY : EXPR_RELATIONAL                     { $$ = new expr_equality($1)
               | EXPR_EQUALITY OP_NE EXPR_RELATIONAL { $$ = new expr_equality($1, "!=", $3); }
 
 
-
-//
-EXPR_AND : EXPR_EQUALITY
-         | EXPR_AND OP_BAND EXPR_EQUALITY
+EXPR_AND : EXPR_EQUALITY                    { $$ = new expr_and($1);     }
+         | EXPR_AND OP_BAND EXPR_EQUALITY   { $$ = new expr_and($1, $2); }
          
 
-
-
-//
-EXPR_XOR : EXPR_AND
-         | EXPR_XOR OP_BXOR EXPR_AND
+EXPR_XOR : EXPR_AND                   { $$ = new expr_xor($1);     }
+         | EXPR_XOR OP_BXOR EXPR_AND  { $$ = new expr_xor($1, $2); }
          
 
-
-//
-EXPR_INCLUSIVE_OR : EXPR_XOR 
-                  | EXPR_INCLUSIVE_OR OP_BOR EXPR_XOR
+EXPR_INCLUSIVE_OR : EXPR_XOR                            { $$ = new expr_inclusive_or($1);     }
+                  | EXPR_INCLUSIVE_OR OP_BOR EXPR_XOR   { $$ = new expr_inclusive_or($1, $2); }
                   
-                  
-                  
-//                  
-EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR  
-               | EXPR_LOGIC_AND OP_LAND EXPR_INCLUSIVE_OR
+                
+EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR                          { $$ = new expr_logic_and($1);     }
+               | EXPR_LOGIC_AND OP_LAND EXPR_INCLUSIVE_OR   { $$ = new expr_logic_and($1, $2); }
              
-             
-               
-//               
-EXPR_LOGIC_OR : EXPR_LOGIC_AND
-              | EXPR_LOGIC_OR OP_LOR EXPR_LOGIC_AND
+                          
+EXPR_LOGIC_OR : EXPR_LOGIC_AND                        { ££ = new expr_logic_or($1);     }
+              | EXPR_LOGIC_OR OP_LOR EXPR_LOGIC_AND   { ££ = new expr_logic_or($1, $2); }
               
-              
-              
-     
-//             
-EXPR_CONDITIONAL : EXPR_LOGIC_OR
-                 | EXPR_LOGIC_OR '?' EXPR ':' EXPR_CONDITIONAL
+          
+EXPR_CONDITIONAL : EXPR_LOGIC_OR                                { $$ = new expr_conditional($1);         }
+                 | EXPR_LOGIC_OR '?' EXPR ':' EXPR_CONDITIONAL  { $$ = new expr_conditional($1, $3, $5); }
          
-         
-//        
-EXPR_ASSIGNMENT : EXPR_CONDITIONAL
-                | EXPR_UNARY OPR_ASSIGNMENT EXPR_ASSIGNMENT
+       
+EXPR_ASSIGNMENT : EXPR_CONDITIONAL                            {$$ = new expr_assignment($1);         }
+                | EXPR_UNARY OPR_ASSIGNMENT EXPR_ASSIGNMENT   {$$ = new expr_assignment($1, $2, $3); }
 
            
 OPR_ASSIGNMENT : ASSIGN           { $$ = new opr_assignment("=");   }
@@ -210,8 +195,8 @@ OPR_ASSIGNMENT : ASSIGN           { $$ = new opr_assignment("=");   }
 
 
 //
-EXPR : EXPR_ASSIGNMENT
-     | EXPR ',' EXPR_ASSIGNMENT
+EXPR : EXPR_ASSIGNMENT            { $$ = new expr($1);     }
+     | EXPR ',' EXPR_ASSIGNMENT   { $$ = new expr($1, $3); }
      
      
      
