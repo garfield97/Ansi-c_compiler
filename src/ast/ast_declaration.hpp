@@ -15,6 +15,7 @@ class declaration_external : public Node {
             : arg(_arg)
         {}
 
+
         virtual void PrettyPrint(std::ostream &dst) const override
         {
          /*
@@ -431,12 +432,11 @@ public:
     
 public:
 
-    std::string name = "declarator_abstract"
+    std::string name = "declarator_abstract";
 
     virtual void PrettyPrint(std::ostream &dst) const override
     {
     /*
-
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERED 
@@ -723,7 +723,7 @@ public:
     {}
     
     
-    std::string name = "list_struct_declarator"
+    std::string name = "list_struct_declarator";
 
     virtual void PrettyPrint(std::ostream &dst) const override
     {
