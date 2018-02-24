@@ -856,7 +856,7 @@ class expr_primary : public Node {
     //             | L_BRACKET EXPR R_BRACKET
     private:
         NodePtr exp;
-        static auto val;
+        static auto val = 0;
         
     protected:
         expr_primary(std::string _val)
