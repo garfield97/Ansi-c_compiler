@@ -59,7 +59,7 @@
              DECLARATOR_INIT_LIST DECLARATOR_INIT SPECIFIER_STORE_CLASS SPECIFIER_TYPE SPECIFIER_UNION_OR_STRUCT UNION_OR_STRUCT
              DECLARATION_LIST_STRUCT DECLARATION_STRUCT LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR STRUCT_DECLARATOR SPECIFIER_ENUM
              LIST_ENUMERATOR ENUMERATOR QUALIFIER_TYPE DECLARATOR DECLARATOR_DIRECT POINTER LIST_QUALIFIER_TYPE LIST_PARAM_TYPE
-             LIST_PARAMETER DECLARATION_PARAMETER LIST_IDENTIFIER NAME_TYPE DECLARATOR_ABSTRACT 
+             LIST_PARAMETER DECLARATION_PARAMETER LIST_IDENTIFIER TYPE_NAME DECLARATOR_ABSTRACT 
              DECLARATOR_DIRECT_ABSTRACT INITIALIZER LIST_INITIALIZER ARG_EXPR_LIST
              STATEMENT STATEMENT_LABELED STATEMENT_COMPOUND LIST_DECLARATION LIST_STATEMENT STATEMENT_EXPR STATEMENT_SELECTION
              STATEMENT_ITERATION STATEMENT_JUMP
@@ -110,7 +110,7 @@ EXPR_UNARY : EXPR_POSTFIX                           { $$ = $1;                  
            | OP_DEC EXPR_UNARY                      { $$ = new expr_unary("--", $2);     } 
            | OPR_UNARY EXPR_CAST                    { $$ = new expr_unary($1, $2);       } 
            | SIZEOF EXPR_UNARY                      { $$ = new expr_unary("sizeof", $2); }  
-           | SIZEOF L_BRACKET NAME_TYPE R_BRACKET   { $$ = new expr_unary("sizeof", $3); }          
+           | SIZEOF L_BRACKET TYPE_NAME R_BRACKET   { $$ = new expr_unary("sizeof", $3); }          
 
 
 OPR_UNARY : OP_BAND     { $$ = new opr_unary("&"); }
@@ -122,7 +122,7 @@ OPR_UNARY : OP_BAND     { $$ = new opr_unary("&"); }
 
 
 EXPR_CAST : EXPR_UNARY                                { $$ = $1;                    }
-          | L_BRACKET NAME_TYPE R_BRACKET EXPR_CAST   { $$ = new expr_cast($2, $4); }
+          | L_BRACKET TYPE_NAME R_BRACKET EXPR_CAST   { $$ = new expr_cast($2, $4); }
         
                 
 EXPR_MUL : EXPR_CAST                  { $$ = $1;                        }
@@ -202,6 +202,11 @@ EXPR_CONST : EXPR_CONDITIONAL   { $$ = $1; }
 
 
 
+
+
+
+
+
 //
 DECLARATION : SPECIFIER_DECLARATION ';'                       { $$ = new declaration($1); }
             | SPECIFIER_DECLARATION DECLARATOR_INIT_LIST ';'  { $$ = new declaration($1, $2); }
@@ -227,47 +232,52 @@ DECLARATOR_INIT_LIST : DECLARATOR_INIT
 //                     
 DECLARATOR_INIT : DECLARATOR
                 | DECLARATOR ASSIGN INITIALIZER
+
+
+
+
+
+
+
+
+
+
+
                 
-                
-                
-//
-SPECIFIER_STORE_CLASS : TYPEDEF
-                      | EXTERN
-                      | STATIC
-                      | AUTO
-                      | REGISTER
+SPECIFIER_STORE_CLASS : TYPEDEF   { $$ = new specifier_store_class("typedef");  }
+                      | EXTERN    { $$ = new specifier_store_class("extern");   }
+                      | STATIC    { $$ = new specifier_store_class("static");   }
+                      | AUTO      { $$ = new specifier_store_class("auto");     }
+                      | REGISTER  { $$ = new specifier_store_class("register"); }
               
-              
-              
-//                      
-SPECIFIER_TYPE : VOID                         { $$ = new specifier_type("void"); }
-               | CHAR                         { $$ = new specifier_type("char"); }
-               | SHORT                        { $$ = new specifier_type("short"); }
-               | INT                          { $$ = new specifier_type("int"); }
-               | LONG                         { $$ = new specifier_type("long"); }
-               | FLOAT                        { $$ = new specifier_type("float"); }
-               | DOUBLE                       { $$ = new specifier_type("double"); }
-               | SIGNED                       { $$ = new specifier_type("signed"); }
+                    
+SPECIFIER_TYPE : VOID                         { $$ = new specifier_type("void");     }
+               | CHAR                         { $$ = new specifier_type("char");     }
+               | SHORT                        { $$ = new specifier_type("short");    }
+               | INT                          { $$ = new specifier_type("int");      }
+               | LONG                         { $$ = new specifier_type("long");     }
+               | FLOAT                        { $$ = new specifier_type("float");    }
+               | DOUBLE                       { $$ = new specifier_type("double");   }
+               | SIGNED                       { $$ = new specifier_type("signed");   }
                | UNSIGNED                     { $$ = new specifier_type("unsigned"); }
-               | SPECIFIER_UNION_OR_STRUCT    { $$ = new specifier_type($1); }
-               | SPECIFIER_ENUM               { $$ = new specifier_type($1); }
-               | NAME_TYPE                    { $$ = new specifier_type($1); }
+               | SPECIFIER_UNION_OR_STRUCT    { $$ = $1                              }
+               | SPECIFIER_ENUM               { $$ = $1                              }
+               // | TYPE_NAME                    { $$ = $1                              } // is this valid???
                
-               
-               
-               
-//               
-SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_STRUCT R_BRACE
-                          | UNION_OR_STRUCT L_BRACE DECLARATION_LIST_STRUCT R_BRACE
-                          | UNION_OR_STRUCT IDENTIFIER
+             
+SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_STRUCT R_BRACE  { $$ = new specifier_union_or_struct($1, *$2, $4); }
+                          | UNION_OR_STRUCT L_BRACE DECLARATION_LIST_STRUCT R_BRACE             { $$ = new specifier_union_or_struct($1, $3);      }
+                          | UNION_OR_STRUCT IDENTIFIER                                          { $$ = new specifier_union_or_struct($1, *$2,);    }
                           
-                          
-                          
-                          
-//                          
-UNION_OR_STRUCT : STRUCT
-                | UNION
+                                                 
+UNION_OR_STRUCT : STRUCT    { $$ = new union_or_struct("struct"); }
+                | UNION     { $$ = new union_or_struct("union" ); }
                 
+
+
+
+
+
                 
                 
 //                
@@ -279,19 +289,30 @@ DECLARATION_LIST_STRUCT : DECLARATION_STRUCT
 DECLARATION_STRUCT : LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR ';'
 
 
-//
-LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL
-               | SPECIFIER_TYPE 
-               | QUALIFIER_TYPE LIST_SPEC_QUAL
-               | QUALIFIER_TYPE
+
+
+
+
+
+
+
+
+LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL    { $$ = new list_spec_qual($1, $2); }
+               | SPECIFIER_TYPE                   { $$ = $1;                         }
+               | QUALIFIER_TYPE LIST_SPEC_QUAL    { $$ = new list_spec_qual($1, $2); }
+               | QUALIFIER_TYPE                   { $$ = $1;                         }
                
-               
+
+
+
+
+
+
+
 //                             
 LIST_STRUCT_DECLARATOR : STRUCT_DECLARATOR
                        | LIST_STRUCT_DECLARATOR ',' STRUCT_DECLARATOR
-                       
-
-
+                      
 
 
 //
@@ -302,28 +323,32 @@ STRUCT_DECLARATOR : DECLARATOR
 
 
 
-                         
-//                          
-SPECIFIER_ENUM : ENUM L_BRACE LIST_ENUMERATOR R_BRACE
-               | ENUM IDENTIFIER L_BRACE LIST_ENUMERATOR R_BRACE
-               | ENUM IDENTIFIER
+
+
+
+
+
+SPECIFIER_ENUM : ENUM L_BRACE LIST_ENUMERATOR R_BRACE               { $$ = new specifier_enum($3);      }
+               | ENUM IDENTIFIER L_BRACE LIST_ENUMERATOR R_BRACE    { $$ = new specifier_enum(*$2, $4); }
+               | ENUM IDENTIFIER                                    { $$ = new specifier_enum(*$2);     }
                
 
-
-
-
-//
-LIST_ENUMERATOR : ENUMERATOR
-                | LIST_ENUMERATOR ',' ENUMERATOR
+LIST_ENUMERATOR : ENUMERATOR                        { $$ = $1;                          }
+                | LIST_ENUMERATOR ',' ENUMERATOR    { $$ = new list_enumerator($1, $3); }
                 
-//                
-ENUMERATOR : IDENTIFIER 
-           | IDENTIFIER ASSIGN EXPR_CONST
+            
+ENUMERATOR : IDENTIFIER                      { $$ = new enumerator(*$1);     }
+           | IDENTIFIER ASSIGN EXPR_CONST    { $$ = new enumerator(*$1, $3); }
            
-//
-QUALIFIER_TYPE : CONST
-               | VOLATILE
+
+QUALIFIER_TYPE : CONST      { $$ = new qualifier_type("const"); }
+               | VOLATILE   { $$ = new qualifier_type("volatile"); }
                
+
+
+
+
+
 //               
 DECLARATOR : POINTER DECLARATOR_DIRECT        { $$ = new declarator($1, $2); }
            | DECLARATOR_DIRECT                { $$ = new declarator($1); }
@@ -336,40 +361,54 @@ DECLARATOR_DIRECT : IDENTIFIER                                              { $$
                   | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET   { $$ = new declarator_direct($1, $3); }
                   | DECLARATOR_DIRECT L_BRACKET R_BRACKET                   { $$ = new declarator_direct($1); }
 
-//
-POINTER : OP_MUL
-        | OP_MUL LIST_QUALIFIER_TYPE
-        | OP_MUL POINTER
-        | OP_MUL LIST_QUALIFIER_TYPE POINTER
-
-//
-LIST_QUALIFIER_TYPE : QUALIFIER_TYPE
-                    | LIST_QUALIFIER_TYPE QUALIFIER_TYPE
 
 
-//
-LIST_PARAM_TYPE : LIST_PARAMETER
-                | LIST_PARAMETER ',' ELIPSIS
 
 
-//
-LIST_PARAMETER : DECLARATION_PARAMETER
-               | LIST_PARAMETER ',' DECLARATION_PARAMETER
-               
+
+
+POINTER : OP_MUL                                { $$ = new pointer(); }
+        | OP_MUL LIST_QUALIFIER_TYPE            { $$ = new pointer($2); }
+        | OP_MUL POINTER                        { $$ = new pointer($2); }
+        | OP_MUL LIST_QUALIFIER_TYPE POINTER    { $$ = new pointer($2, $3); }
+
+
+LIST_QUALIFIER_TYPE : QUALIFIER_TYPE                        { $$ = $1;                              }
+                    | LIST_QUALIFIER_TYPE QUALIFIER_TYPE    { $$ = new list_qualifier_type($1, $2); }
+
+
+LIST_PARAM_TYPE : LIST_PARAMETER                { $$ = $1;                      }
+                | LIST_PARAMETER ',' ELIPSIS    { $$ = new list_param_type($1); }
+
+
+LIST_PARAMETER : DECLARATION_PARAMETER                      { $$ = $1;                         }
+               | LIST_PARAMETER ',' DECLARATION_PARAMETER   { $$ = new list_parameter($1, $3); }
+
+
+
+
 
 //
 DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR        
                       | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT
                       | SPECIFIER_DECLARATION
-                      
-                      
-//
-LIST_IDENTIFIER : IDENTIFIER 
-                | LIST_IDENTIFIER ',' IDENTIFIER
 
-//
-NAME_TYPE : LIST_SPEC_QUAL
-          | LIST_SPEC_QUAL DECLARATOR_ABSTRACT
+
+
+
+                      
+
+LIST_IDENTIFIER : IDENTIFIER                        { $$ = new list_identifier(*$1);     }
+                | LIST_IDENTIFIER ',' IDENTIFIER    { $$ = new list_identifier($1, *$3); }
+
+
+TYPE_NAME : LIST_SPEC_QUAL                        { $$ = $1;                    }
+          | LIST_SPEC_QUAL DECLARATOR_ABSTRACT    { $$ = new type_name($1, $2); }
+
+
+
+
+
 
 //
 DECLARATOR_ABSTRACT : POINTER

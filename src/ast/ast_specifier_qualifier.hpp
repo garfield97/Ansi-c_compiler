@@ -51,26 +51,17 @@ class specifier_type : public Node {
     //               | NAME_TYPE
     private:
         std::string ter;
-        NodePtr nonT;
     public:
     public:
 
         specifier_type(std::string _arg1)
             : ter(_arg1)
-            , nonT(NULL)
         {}
-
-        specifier_type(NodePtr _arg1)
-            : ter(" ")
-            , nonT(_arg1)
-        {}
-    
         std::string name = "specifier_type";
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(ter != " ") dst<<ter<<" ";
-            if(nonT != NULL) nonT->PrettyPrint(dst);
+            dst<<ter<<" ";
         }
 
         virtual void toPY(std::ostream &dst) const override
@@ -101,7 +92,7 @@ class specifier_union_or_struct : public Node {
 
         specifier_union_or_struct(NodePtr _arg1, NodePtr _arg2)
             : us(_arg1)
-            , id( " ")
+            , id(" ")
             , list(_arg2)
         {}
 
@@ -176,10 +167,6 @@ class list_spec_qual : public Node {
         NodePtr sq;
         NodePtr rec;
     public:
-        list_spec_qual(NodePtr _arg1)
-            : sq(_arg1)
-            , rec(NULL)
-        {}
         list_spec_qual(NodePtr _arg1, NodePtr _arg2)
             : sq(_arg1)
             , rec(_arg2)
@@ -192,7 +179,7 @@ class list_spec_qual : public Node {
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             sq->PrettyPrint(dst);
-            if(rec != NULL) rec->PrettyPrint(dst);
+            rec->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override
@@ -260,24 +247,19 @@ class list_enumerator : public Node {
         NodePtr en;
         NodePtr rec;
     public:
-        list_enumerator(NodePtr _arg1)
-            : en(_arg1)
-            , rec(NULL)
-        {}
         list_enumerator(NodePtr _arg1, NodePtr _arg2)
             : en(_arg2)
             , rec(_arg1)
         {}
+
     public:
     
         std::string name = "list_enumerator";
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(rec != NULL){
-                rec->PrettyPrint(dst);
-                dst<<" , ";
-            }
+            rec->PrettyPrint(dst);
+            dst<<" , ";
             en->PrettyPrint(dst);
         }
 
@@ -410,10 +392,6 @@ class list_qualifier_type : public Node {
         NodePtr qt;
         NodePtr rec;
     public:
-        list_qualifier_type(NodePtr _qt)
-            : qt(_qt)
-            , rec(NULL)
-        {}
         list_qualifier_type(NodePtr _arg1, NodePtr _qt)
             : qt(_qt)
             , rec(_arg1)
@@ -424,9 +402,7 @@ class list_qualifier_type : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(rec != NULL){
-                rec->PrettyPrint(dst);
-            }
+            rec->PrettyPrint(dst);
             qt->PrettyPrint(dst);
         }
 
@@ -446,11 +422,9 @@ class lsit_param_type : public Node {
     //                | LIST_PARAMETER ',' ELLIPSIS  // ELIPSIS = ...
     private:
         NodePtr list;
-        bool elip;
     public:
-        lsit_param_type(NodePtr _arg1, bool _arg2)
+        lsit_param_type(NodePtr _arg1)
             : list(_arg1)
-            , elip(_arg2)
         {}
     public:
     
@@ -459,9 +433,8 @@ class lsit_param_type : public Node {
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             list->PrettyPrint(dst);
-            if(elip){
-                dst<<", ...";
-            }
+            dst<<", ...";
+
         }
 
         virtual void toPY(std::ostream &dst) const override
@@ -482,13 +455,9 @@ class list_parameter : public Node {
         NodePtr dp;
         NodePtr rec;
     public:
-        list_parameter(NodePtr _dp)
-            : dp(_dp)
-            , rec(NULL)
-        {}
-        list_parameter(NodePtr _arg1, NodePtr _dp)
-            : dp(_dp)
-            , rec(_arg1)
+        list_parameter(NodePtr _arg1, NodePtr _arg2)
+            :  rec(_arg1)
+            ,  dp(_arg2)
         {}
     public:
     
@@ -496,10 +465,8 @@ class list_parameter : public Node {
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            if(rec != NULL){
-                rec->PrettyPrint(dst);
-                dst<<',';
-            }
+            rec->PrettyPrint(dst);
+            dst<<',';
             dp->PrettyPrint(dst);
         }
 
@@ -553,29 +520,25 @@ class list_identifier : public Node {
         }
 };
 
-class name_type : public Node {
-    // NAME_TYPE : LIST_SPEC_QUAL
+class type_name : public Node {
+    // TYPE_NAME : LIST_SPEC_QUAL
     //           | LIST_SPEC_QUAL DECLARATOR_ABSTRACT
     private:
         NodePtr list;
         NodePtr da;
     public:
-        name_type(NodePtr _arg1)
-            : list(_arg1)
-            , da(NULL)
-        {}
-        name_type(NodePtr _arg1, NodePtr _arg2)
+        type_name(NodePtr _arg1, NodePtr _arg2)
             : list(_arg1)
             , da(_arg2)
         {}
     public:
     
-        std::string name = "name_type";
+        std::string name = "type_name";
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             list->PrettyPrint(dst);
-            if(da != NULL) da->PrettyPrint(dst);
+            da->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override
