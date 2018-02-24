@@ -636,21 +636,21 @@ class expr_unary : public Node {
     public:
         expr_unary(std::string _terminal, NodePtr _exp)
             : terminal(_terminal)
-            , exp(_exp)
 			, O_U(NULL)
+			, exp(_exp)
         {}
 		
 		expr_unary(NodePtr _arg1, NodePtr _exp)
             : terminal(" ")
-            , exp(_exp)
-			, O_U(_arg1)
+            , O_U(_arg1)
+			, exp(_exp)
         {}
 
         expr_unary(NodePtr _exp)
             : terminal(" ")
-            , exp(_exp)
-			, O_U(NULL)
-        {}
+            , O_U(NULL)
+			, exp(_exp)
+		{}
 
     public:
     
