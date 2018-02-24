@@ -660,17 +660,16 @@ class expr_unary : public Node {
         {
             if(terminal != " "){
                 dst<<terminal<<" ";
-                if(terminal->name == "name_type") dst<<" ( ";
             }
 			
             if(O_U != NULL) O_U->PrettyPrint(dst);
 			
             if(exp->name == "name_type"){
 				dst<<" ( ";
-				exp->PrettyPrint();
+				exp->PrettyPrint(dst);
 				dst<<" ) ";
 			}
-			else exp->PrettyPrint();
+			else exp->PrettyPrint(dst);
         }
 
         virtual void toPY(std::ostream &dst) const override{
