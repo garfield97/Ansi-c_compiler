@@ -154,23 +154,23 @@ EXPR_EQUALITY : EXPR_RELATIONAL                     { $$ = $1;                  
 
 
 EXPR_AND : EXPR_EQUALITY                    { $$ = $1;                   }
-         | EXPR_AND OP_BAND EXPR_EQUALITY   { $$ = new expr_and($1, $2); }
+         | EXPR_AND OP_BAND EXPR_EQUALITY   { $$ = new expr_and($1, $3); }
          
 
 EXPR_XOR : EXPR_AND                   { $$ = $1;                   }
-         | EXPR_XOR OP_BXOR EXPR_AND  { $$ = new expr_xor($1, $2); }
+         | EXPR_XOR OP_BXOR EXPR_AND  { $$ = new expr_xor($1, $3); }
          
 
 EXPR_INCLUSIVE_OR : EXPR_XOR                            { $$ = $1;                            }
-                  | EXPR_INCLUSIVE_OR OP_BOR EXPR_XOR   { $$ = new expr_inclusive_or($1, $2); }
+                  | EXPR_INCLUSIVE_OR OP_BOR EXPR_XOR   { $$ = new expr_inclusive_or($1, $3); }
                   
                 
 EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR                          { $$ = $1;                         }
-               | EXPR_LOGIC_AND OP_LAND EXPR_INCLUSIVE_OR   { $$ = new expr_logic_and($1, $2); }
+               | EXPR_LOGIC_AND OP_LAND EXPR_INCLUSIVE_OR   { $$ = new expr_logic_and($1, $3); }
              
                           
 EXPR_LOGIC_OR : EXPR_LOGIC_AND                        { ££ = 1;                         }
-              | EXPR_LOGIC_OR OP_LOR EXPR_LOGIC_AND   { ££ = new expr_logic_or($1, $2); }
+              | EXPR_LOGIC_OR OP_LOR EXPR_LOGIC_AND   { ££ = new expr_logic_or($1, $3); }
               
           
 EXPR_CONDITIONAL : EXPR_LOGIC_OR                                { $$ = $1;                               }
