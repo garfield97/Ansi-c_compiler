@@ -3,7 +3,6 @@
 
 #include "ast_node.hpp"
 
-
 class program : public Node {
     // PROGRAM : DECLARATION_EXTERNAL
     //         | PROGRAM DECLARATION_EXTERNAL

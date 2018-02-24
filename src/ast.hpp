@@ -12,7 +12,7 @@
 #include "ast/ast_expression.hpp"
 
 
-extern const Node *parseAST(std::ifstream srcStream);
+extern const Node *parseAST(char* in);
 
 
 #endif

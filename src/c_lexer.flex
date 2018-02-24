@@ -10,6 +10,7 @@
 #include "c_parser.tab.hpp"
 #include "c_lexer_helper.hpp"
 
+extern FILE* yyin;
 
 // This is to work around an irritating bug in Flex
 // https://stackoverflow.com/questions/46213840/get-rid-of-warning-implicit-declaration-of-function-fileno-in-flex
@@ -458,7 +459,7 @@ void get_CHARACTER(){
 
 
 /* Error handler. This will get called if none of the rules match. */
-void yyerror (FILE* fp, char const *s)
+void yyerror (char const *s)
 {
   fprintf (stderr, "Flex Error: %s\n", s); /* s is the text that wasn't matched */
 }
