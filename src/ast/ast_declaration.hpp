@@ -18,10 +18,14 @@ class declaration_external : public Node {
 
 
         virtual void PrettyPrint(std::ostream &dst) const override{
-
+        
+         /*
+            if(next != null) next->print();
+            declaration->print();
+        */
         }
 
-        virtual void toPYPY(std::ostream &dst) const override{
+        virtual void toPY(std::ostream &dst) const override{
 
         }
 
@@ -75,7 +79,7 @@ class definition_function : public Node{
         */
         }
         
-        virtual void toPYPY(std::ostream &dst) const override{
+        virtual void toPY(std::ostream &dst) const override{
 
         }
 
@@ -114,7 +118,7 @@ class declaration : public Node{
 
         }
 
-        virtual void toPYPY(std::ostream &dst) const override{
+        virtual void toPY(std::ostream &dst) const override{
 
         }
 
@@ -150,7 +154,7 @@ class specifier_declaration : public Node{
 
         }
 
-        virtual void toPYPY(std::ostream &dst) const override{
+        virtual void toPY(std::ostream &dst) const override{
 
         }
 
@@ -197,7 +201,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -251,7 +255,7 @@ public:
     */
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -295,7 +299,7 @@ public:
     */
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -335,7 +339,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -387,7 +391,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -438,7 +442,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -521,7 +525,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -571,7 +575,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -635,7 +639,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -684,7 +688,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -730,7 +734,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -775,7 +779,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
@@ -821,7 +825,7 @@ public:
 
     }
 
-    virtual void toPYPY(std::ostream &dst) const override{
+    virtual void toPY(std::ostream &dst) const override{
 
     }
 
