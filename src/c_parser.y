@@ -519,7 +519,7 @@ const Node *parseAST(char* x)
 {
   yyin = fopen(x, "r");
   g_root=0;
-  if(yyin) yyparse(yyin);
+  if(yyin) yyparse();
   fclose(yyin);
   return g_root;
 }
