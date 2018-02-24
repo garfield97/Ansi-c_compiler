@@ -9,7 +9,7 @@ class expr : public Node {
     private:
         NodePtr rec;
         NodePtr assignment;
-    protected:
+    public:
         expr(NodePtr _arg1)
             : rec(NULL)
             , assignment(_arg1)
@@ -47,7 +47,7 @@ class expr_conditional : public Node {
         NodePtr eConditional;
         NodePtr expr;
         NodePtr eLOR;
-    protected:
+    public:
         expr_conditional(NodePtr _arg1)
             : eConditional(NULL)
             , expr(NULL)
@@ -90,7 +90,7 @@ class expr_assignment : public Node {
         NodePtr unary;
         NodePtr opr;
         NodePtr exp;
-    protected:
+    public:
         expr_assignment(NodePtr _arg1)
             : unary(NULL)
             , opr(NULL)
@@ -127,7 +127,7 @@ class expr_assignment : public Node {
 class opr_assignment: public Node {
     private:
         std::string opr;
-    protected:
+    public:
     public:
         opr_assignment(std::string _opr)
             : opr(_opr)
@@ -160,7 +160,7 @@ class expr_logic_or : public Node {
         NodePtr rec;
         NodePtr exp;
         
-    protected:
+    public:
         expr_logic_or(NodePtr _rec, NodePtr _exp)
             : rec(_rec)
             , exp(_exp)
@@ -200,7 +200,7 @@ class expr_logic_and : public Node {
         NodePtr rec;
         NodePtr exp;
         
-    protected:
+    public:
         expr_logic_and(NodePtr _rec, NodePtr _exp)
             : rec(_rec)
             , exp(_exp)
@@ -240,7 +240,7 @@ class expr_inclusive_or : public Node {
         NodePtr rec;
         NodePtr exp;
         
-    protected:
+    public:
         expr_inclusive_or(NodePtr _rec, NodePtr _exp)
             : rec(_rec)
             , exp(_exp)
@@ -280,7 +280,7 @@ class expr_xor : public Node {
         NodePtr rec;
         NodePtr exp;
         
-    protected:
+    public:
         expr_xor(NodePtr _rec, NodePtr _exp)
             : rec(_rec)
             , exp(_exp)
@@ -320,7 +320,7 @@ class expr_and : public Node {
         NodePtr rec;
         NodePtr exp;
         
-    protected:
+    public:
         expr_and(NodePtr _rec, NodePtr _exp)
             : rec(_rec)
             , exp(_exp)
@@ -362,7 +362,7 @@ class expr_equality : public Node {
         std::string op;
         NodePtr exp;
         
-    protected:
+    public:
         expr_equality(NodePtr _rec, std::string _op, NodePtr _exp)
             : rec(_rec)
             , op(_op)
@@ -408,7 +408,7 @@ class expr_relational : public Node {
         std::string op;
         NodePtr exp;
         
-    protected:
+    public:
         expr_relational(NodePtr _rec, std::string _op, NodePtr _exp)
             : rec(_rec)
             , op(_op)
@@ -452,7 +452,7 @@ class expr_shift : public Node {
         std::string op;
         NodePtr exp;
         
-    protected:
+    public:
         expr_shift(NodePtr _rec, std::string _op, NodePtr _exp)
             : rec(_rec)
             , op(_op)
@@ -496,7 +496,7 @@ class expr_add : public Node {
         std::string op;
         NodePtr exp;
         
-    protected:
+    public:
         expr_add(NodePtr _rec, std::string _op, NodePtr _exp)
             : rec(_rec)
             , op(_op)
@@ -541,7 +541,7 @@ class expr_mul : public Node {
         std::string op;
         NodePtr exp;
         
-    protected:
+    public:
         expr_mul(NodePtr _rec, std::string _op, NodePtr _exp)
             : rec(_rec)
             , op(_op)
@@ -583,7 +583,7 @@ class expr_cast : public Node {
         NodePtr rec;
         NodePtr exp;
         
-    protected:
+    public:
         expr_cast(NodePtr _exp, NodePtr _rec)
             : rec(_rec)
             , exp(_exp)
@@ -632,7 +632,7 @@ class expr_unary : public Node {
         NodePtr terminal;
         NodePtr exp;
         
-    protected:
+    public:
         expr_unary(NodePtr _terminal, NodePtr _exp)
             : terminal(_terminal)
             , exp(_exp)
@@ -669,7 +669,7 @@ class expr_unary : public Node {
 class opr_unary: public Node {
     private:
         std::string opr;
-    protected:
+    public:
         opr_unary(std::string _opr)
             : opr(_opr)
         {}
@@ -703,7 +703,7 @@ class arg_expr_list : public Node {
         NodePtr next;
         NodePtr exp;
         
-    protected:
+    public:
         arg_expr_list(NodePtr _next, NodePtr _exp)
             : next(_next)
             , exp(_exp)
@@ -752,7 +752,7 @@ class expr_postfix : public Node {
         bool bracket;
         NodePtr exp;
         
-    protected:
+    public:
         expr_postfix(NodePtr _exp)// expr_primary
             : next(NULL)
             , opr(" ")
@@ -869,7 +869,7 @@ class expr_primary : public Node {
         bool ULbool;
         bool Cbool;
         
-    protected:
+    public:
         expr_primary(std::string _val)
             : exp(NULL)
             , Sval(_val)

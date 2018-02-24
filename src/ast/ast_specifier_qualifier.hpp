@@ -11,7 +11,7 @@ class specifier_store_class : public Node {
     //                      | REGISTER
     private:
         std::string val;
-    protected:
+    public:
         specifier_store_class(std::string _arg1)
             : val(_arg1)
         {}
@@ -52,7 +52,7 @@ class specifier_type : public Node {
     private:
         std::string ter;
         NodePtr nonT;
-    protected:
+    public:
     public:
 
         specifier_type(std::string _arg1)
@@ -92,7 +92,7 @@ class specifier_union_or_struct : public Node {
         NodePtr us;
         std::string id;
         NodePtr list;
-    protected:
+    public:
         specifier_union_or_struct(NodePtr _arg1, std::string _arg2)
             : us(_arg1)
             , id(_arg2)
@@ -142,7 +142,7 @@ class union_or_struct : public Node {
     //                | UNION
     private:
         std::string val;
-    protected:
+    public:
         union_or_struct(std::string _arg1)
             : val(_arg1)
         {}
@@ -175,7 +175,7 @@ class list_spec_qual : public Node {
     private:
         NodePtr sq;
         NodePtr rec;
-    protected:
+    public:
         list_spec_qual(NodePtr _arg1)
             : sq(_arg1)
             , rec(NULL)
@@ -214,7 +214,7 @@ class specifier_enum : public Node {
     private:
         NodePtr list;
         std::string id;
-    protected:
+    public:
         specifier_enum(NodePtr _arg2) // ENUM L_BRACE LIST_ENUMERATOR R_BRACE
             : list(_arg2)
             , id(" ")
@@ -259,7 +259,7 @@ class list_enumerator : public Node {
     private:
         NodePtr en;
         NodePtr rec;
-    protected:
+    public:
         list_enumerator(NodePtr _arg1)
             : en(_arg1)
             , rec(NULL)
@@ -298,7 +298,7 @@ class enumerator : public Node {
     private:
         std::string id;
         NodePtr exp;
-    protected:
+    public:
         enumerator(std::string _id)
             : id(_id)
             , exp(NULL)
@@ -336,7 +336,7 @@ class qualifier_type : public Node {
     //               | VOLATILE
     private:
         std::string val;
-    protected:
+    public:
         qualifier_type(std::string _val)
             : val(_val)
         {}
@@ -368,7 +368,7 @@ class pointer : public Node {
     private:
         NodePtr arg1;
         NodePtr arg2;
-    protected:
+    public:
         pointer()
             : arg1(NULL)
             , arg2(NULL)
@@ -409,7 +409,7 @@ class list_qualifier_type : public Node {
     private:
         NodePtr qt;
         NodePtr rec;
-    protected:
+    public:
         list_qualifier_type(NodePtr _qt)
             : qt(_qt)
             , rec(NULL)
@@ -447,7 +447,7 @@ class lsit_param_type : public Node {
     private:
         NodePtr list;
         bool elip;
-    protected:
+    public:
         lsit_param_type(NodePtr _arg1, bool _arg2)
             : list(_arg1)
             , elip(_arg2)
@@ -481,7 +481,7 @@ class list_parameter : public Node {
     private:
         NodePtr dp;
         NodePtr rec;
-    protected:
+    public:
         list_parameter(NodePtr _dp)
             : dp(_dp)
             , rec(NULL)
@@ -520,7 +520,7 @@ class list_identifier : public Node {
     private:
         std::string id;
         NodePtr rec;
-    protected:
+    public:
         list_identifier(std::string _id)
             : id(_id)
             , rec(NULL)
@@ -559,7 +559,7 @@ class name_type : public Node {
     private:
         NodePtr list;
         NodePtr da;
-    protected:
+    public:
         name_type(NodePtr _arg1)
             : list(_arg1)
             , da(NULL)

@@ -9,7 +9,7 @@ class program : public Node {
     private:
         NodePtr next;
         NodePtr declaration;
-    protected:
+    public:
         program(NodePtr _arg1)
             : next(NULL)
             , declaration(_arg1)
