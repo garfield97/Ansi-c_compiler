@@ -91,7 +91,7 @@ EXPR_PRIMARY  :IDENTIFIER                 { $$ = new expr_primary(*$1); }
               |L_BRACKET EXPR R_BRACKET   { $$ = new expr_primary($2);  }
             
 
-EXPR_POSTFIX : EXPR_PRIMARY                                     { $$ = new expr_postfix($1);           }
+EXPR_POSTFIX : EXPR_PRIMARY                                     { $$ = $1;                             }
              | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE              { $$ = new expr_postfix($1, $3);       }
              | EXPR_POSTFIX L_BRACKET R_BRACKET                 { $$ = new expr_postfix($1, true);     }
              | EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET   { $$ = new expr_postfix($1, true, $3); }
@@ -101,11 +101,11 @@ EXPR_POSTFIX : EXPR_PRIMARY                                     { $$ = new expr_
              | EXPR_POSTFIX OP_DEC                              { $$ = new expr_postfix($1, "--");     }
 
 
-ARG_EXPR_LIST : EXPR_ASSIGNMENT                       { $$ = new arg_expr_list($1);     }
+ARG_EXPR_LIST : EXPR_ASSIGNMENT                       { $$ = $1;                        }
               | ARG_EXPR_LIST ',' EXPR_ASSIGNMENT     { $$ = new arg_expr_list($1, $3); }
 
            
-EXPR_UNARY : EXPR_POSTFIX                           { $$ = new expr_unary($1);           } 
+EXPR_UNARY : EXPR_POSTFIX                           { $$ = $1;                           } 
            | OP_INC EXPR_UNARY                      { $$ = new expr_unary("++", $2);     } 
            | OP_DEC EXPR_UNARY                      { $$ = new expr_unary("--", $2);     } 
            | OPR_UNARY EXPR_CAST                    { $$ = new expr_unary($1, $2);       } 
@@ -121,64 +121,64 @@ OPR_UNARY : OP_BAND     { $$ = new opr_unary("&"); }
           | OP_LNOT     { $$ = new opr_unary("!"); }
 
 
-EXPR_CAST : EXPR_UNARY                                { $$ = new expr_cast($1);     }
+EXPR_CAST : EXPR_UNARY                                { $$ = $1;                    }
           | L_BRACKET NAME_TYPE R_BRACKET EXPR_CAST   { $$ = new expr_cast($2, $4); }
         
                 
-EXPR_MUL : EXPR_CAST                  { $$ = new expr_mul($1);          }
+EXPR_MUL : EXPR_CAST                  { $$ = $1;                        }
          | EXPR_MUL OP_MUL EXPR_CAST  { $$ = new expr_mul($1, "*", $3); }
          | EXPR_MUL OP_DIV EXPR_CAST  { $$ = new expr_mul($1, "/", $3); }
          | EXPR_MUL OP_MOD EXPR_CAST  { $$ = new expr_mul($1, "%", $3); }
          
                 
-EXPR_ADD : EXPR_MUL                   { $$ = new expr_add($1);          }
+EXPR_ADD : EXPR_MUL                   { $$ = $1;                        }
          | EXPR_ADD OP_PLUS EXPR_MUL  { $$ = new expr_add($1, "+", $3); }
          | EXPR_ADD OP_MINUS EXPR_MUL { $$ = new expr_add($1, "-", $3); }
             
              
-EXPR_SHIFT : EXPR_ADD                       { $$ = new expr_shift($1);           }
+EXPR_SHIFT : EXPR_ADD                       { $$ = $1;                           }
            | EXPR_SHIFT OP_BLEFT EXPR_ADD   { $$ = new expr_shift($1, "<<", $3); }
            | EXPR_SHIFT OP_BRIGHT EXPR_ADD  { $$ = new expr_shift($1, ">>", $3); }
         
                 
-EXPR_RELATIONAL : EXPR_SHIFT                        { $$ = new expr_relational($1);           }
+EXPR_RELATIONAL : EXPR_SHIFT                        { $$ = $1;                                }
                 | EXPR_RELATIONAL OP_L EXPR_SHIFT   { $$ = new expr_relational($1, "<", $3);  }
                 | EXPR_RELATIONAL OP_G EXPR_SHIFT   { $$ = new expr_relational($1, ">", $3);  }
                 | EXPR_RELATIONAL OP_LE EXPR_SHIFT  { $$ = new expr_relational($1, "<=", $3); }
                 | EXPR_RELATIONAL OP_GE EXPR_SHIFT  { $$ = new expr_relational($1, ">=", $3); }
      
                
-EXPR_EQUALITY : EXPR_RELATIONAL                     { $$ = new expr_equality($1);           }
+EXPR_EQUALITY : EXPR_RELATIONAL                     { $$ = $1;                              }
               | EXPR_EQUALITY OP_EQ EXPR_RELATIONAL { $$ = new expr_equality($1, "==", $3); }
               | EXPR_EQUALITY OP_NE EXPR_RELATIONAL { $$ = new expr_equality($1, "!=", $3); }
 
 
-EXPR_AND : EXPR_EQUALITY                    { $$ = new expr_and($1);     }
+EXPR_AND : EXPR_EQUALITY                    { $$ = $1;                   }
          | EXPR_AND OP_BAND EXPR_EQUALITY   { $$ = new expr_and($1, $2); }
          
 
-EXPR_XOR : EXPR_AND                   { $$ = new expr_xor($1);     }
+EXPR_XOR : EXPR_AND                   { $$ = $1;                   }
          | EXPR_XOR OP_BXOR EXPR_AND  { $$ = new expr_xor($1, $2); }
          
 
-EXPR_INCLUSIVE_OR : EXPR_XOR                            { $$ = new expr_inclusive_or($1);     }
+EXPR_INCLUSIVE_OR : EXPR_XOR                            { $$ = $1;                            }
                   | EXPR_INCLUSIVE_OR OP_BOR EXPR_XOR   { $$ = new expr_inclusive_or($1, $2); }
                   
                 
-EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR                          { $$ = new expr_logic_and($1);     }
+EXPR_LOGIC_AND : EXPR_INCLUSIVE_OR                          { $$ = $1;                         }
                | EXPR_LOGIC_AND OP_LAND EXPR_INCLUSIVE_OR   { $$ = new expr_logic_and($1, $2); }
              
                           
-EXPR_LOGIC_OR : EXPR_LOGIC_AND                        { ££ = new expr_logic_or($1);     }
+EXPR_LOGIC_OR : EXPR_LOGIC_AND                        { ££ = 1;                         }
               | EXPR_LOGIC_OR OP_LOR EXPR_LOGIC_AND   { ££ = new expr_logic_or($1, $2); }
               
           
-EXPR_CONDITIONAL : EXPR_LOGIC_OR                                { $$ = new expr_conditional($1);         }
+EXPR_CONDITIONAL : EXPR_LOGIC_OR                                { $$ = $1;                               }
                  | EXPR_LOGIC_OR '?' EXPR ':' EXPR_CONDITIONAL  { $$ = new expr_conditional($1, $3, $5); }
          
        
-EXPR_ASSIGNMENT : EXPR_CONDITIONAL                            {$$ = new expr_assignment($1);         }
-                | EXPR_UNARY OPR_ASSIGNMENT EXPR_ASSIGNMENT   {$$ = new expr_assignment($1, $2, $3); }
+EXPR_ASSIGNMENT : EXPR_CONDITIONAL                            { $$ = $1;                              }
+                | EXPR_UNARY OPR_ASSIGNMENT EXPR_ASSIGNMENT   { $$ = new expr_assignment($1, $2, $3); }
 
            
 OPR_ASSIGNMENT : ASSIGN           { $$ = new opr_assignment("=");   }
@@ -194,14 +194,10 @@ OPR_ASSIGNMENT : ASSIGN           { $$ = new opr_assignment("=");   }
                | OR_ASSIGN        { $$ = new opr_assignment("|=");  }
 
 
-//
-EXPR : EXPR_ASSIGNMENT            { $$ = new expr($1);     }
+EXPR : EXPR_ASSIGNMENT            { $$ = $1;               }
      | EXPR ',' EXPR_ASSIGNMENT   { $$ = new expr($1, $3); }
      
-     
-     
-     
-//     
+
 EXPR_CONST : EXPR_CONDITIONAL   { $$ = $1; }
 
 
