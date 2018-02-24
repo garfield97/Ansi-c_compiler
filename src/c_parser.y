@@ -460,7 +460,7 @@ STATEMENT_JUMP : GOTO IDENTIFIER ';'
 
 
 //               
-PROGRAM : DECLARATION_EXTERNAL            { $$ = new program($1); }
+PROGRAM : DECLARATION_EXTERNAL            { $$ = $1;                  }
         | PROGRAM DECLARATION_EXTERNAL    { $$ = new program($1, $2); }
 
 
