@@ -10,19 +10,17 @@ class declaration_external : public Node {
 
         NodePtr arg; // could either be a function defition or a declaration - cannot tell
 
-    protected:
-        
+    public:        
         declaration_external(NodePtr _arg)
             : arg(_arg)
         {}
-        
-    public:
 
-/*
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+         /*
             if(next != null) next->print();
             declaration->print();
+        */
         }
 
         virtual void toPYPY(std::ostream &dst) const override{
@@ -32,7 +30,7 @@ class declaration_external : public Node {
         virtual void renderASM(std::ostream &dst) const override{
 
         }
-*/
+
 };
 
 
@@ -43,7 +41,7 @@ class definition_function : public Node{
         NodePtr  list_declaration;
         NodePtr  statement_compound;
 
-    protected:
+    public:
         definition_function(NodePtr _arg1,NodePtr _arg2,NodePtr _arg3,NodePtr _arg4)
             :specifier_declaration(_arg1)
             ,declarator(_arg2)
@@ -72,12 +70,14 @@ class definition_function : public Node{
             ,statement_compound(_arg2)
         {}
 
-    public:
-/*
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+        /*
+
             if(next != null) next->print();
             declaration->print();
+        */
+
         }
 
         virtual void toPYPY(std::ostream &dst) const override{
@@ -87,7 +87,6 @@ class definition_function : public Node{
         virtual void renderASM(std::ostream &dst) const override{
 
         }
-*/
 };
 
 
@@ -96,7 +95,7 @@ class declaration : public Node{
         NodePtr  specifier_declaration;
         NodePtr  declarator_list_init;
         
-    protected:      
+    public:
         declaration(NodePtr _arg1)
             :specifier_declaration(_arg1)
             ,declarator_list_init(NULL)
@@ -107,16 +106,18 @@ class declaration : public Node{
             ,declarator_list_init(_arg2)
         {}
 
-    public:
 
-/*
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+        /*
+        
             if(next != null) {next->print();
                 // SPECIFIER_DECLARATION DECLARATOR_INIT_LIST ';'
             }
             // SPECIFIER_DECLARATION ';'
             declaration->print();
+        */
+
         }
 
         virtual void toPYPY(std::ostream &dst) const override{
@@ -126,7 +127,6 @@ class declaration : public Node{
         virtual void renderASM(std::ostream &dst) const override{
 
         }
-*/
 };
 
 
@@ -136,7 +136,7 @@ class specifier_declaration : public Node{
         NodePtr present;
         NodePtr next;
         
-    protected:
+    public:
         specifier_declaration(NodePtr _arg1)
             :present(_arg1)
             ,next(NULL)
@@ -145,12 +145,15 @@ class specifier_declaration : public Node{
             :present(_arg1)
             ,next(_arg2)
         {}    
-/*        
     public:
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+        /*        
+
             if(next != null) next->print();
             declaration->print();
+        */
+
         }
 
         virtual void toPYPY(std::ostream &dst) const override{
@@ -160,7 +163,6 @@ class specifier_declaration : public Node{
         virtual void renderASM(std::ostream &dst) const override{
 
         }
-*/
 };
 
 
@@ -174,7 +176,7 @@ private:
     NodePtr declaration;
     NodePtr list_declaration1;
     
-protected:
+public:
         
     list_declaration(NodePtr _arg1)
         :declaration(_arg1)
@@ -188,15 +190,17 @@ protected:
     {}
               
     
-public:
 
-/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERE
         dst<<'(';
+    */
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -206,7 +210,6 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }
-*/
 };
 
 
@@ -226,7 +229,7 @@ private:
     NodePtr declarator_init;
 
 
-protected:
+public:
     
     declarator_init_list(NodePtr _arg1)
         :declarator_init1(_arg1)
@@ -243,13 +246,15 @@ protected:
 public:
 
     std::string name = "declarator_init_list"; 
-/*
+
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERE
         dst<<'(';
+    */
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -259,7 +264,7 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }
-*/
+
 
 };
 
@@ -271,7 +276,7 @@ private:
     NodePtr declarator;
     NodePtr initializer;
     
-protected:
+public:
     
     declarator_init(NodePtr _arg1) 
         :declarator(_arg1)
@@ -285,13 +290,15 @@ protected:
 public:
     
     std::string name = "declarator_init";
-/*
+
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERE
         dst<<'(';
+    */
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -301,7 +308,7 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }
-*/
+
 
 
 };
@@ -315,24 +322,23 @@ class initializer : public Node{
 private:
     NodePtr list_initializer;
 
-protected:
+public:
     
     initializer(NodePtr _arg1) 
         : list_initializer(_arg1)
     {}
 
-
-public:
-
-
     std::string name = "initializer";
-/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERE
         dst<<'(';
+    */
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -345,7 +351,6 @@ public:
 
 
 
-*/
 };
 
 
@@ -358,7 +363,7 @@ private:
     NodePtr initializer ;
     NodePtr rec;
 
-protected:
+public:
 
     list_initializer(NodePtr _arg1)
         :initializer(_arg1)
@@ -376,13 +381,16 @@ protected:
 public:
 
     std::string name = "list_initializer";
-/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERE
         dst<<'(';
+    */
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -393,7 +401,6 @@ public:
 
     }
 
-*/
 };
 
 class declarator_abstract : public Node{
@@ -409,7 +416,7 @@ private:
     NodePtr declarator_direct_abstract;
     
 
-protected:
+public:
 
     declarator_abstract(NodePtr _arg1)
         :pointer(_arg1)
@@ -424,15 +431,18 @@ protected:
     
 public:
 
-/*
     std::string name = "declarator_abstract"
 
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERED 
         dst<<'(';
+    */
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -443,7 +453,6 @@ public:
 
     }
 
-*/
 
 };
 
@@ -465,7 +474,7 @@ private:
     NodePtr next;
     bool bracket;
     
-protected:
+public:
 
 // LOOK AT THE DIFFERENTIATION LATER
 
@@ -505,17 +514,18 @@ protected:
         ,next(_arg2)
         ,bracket(true)
     {} 
-public:
-
 
     std::string name = "declarator_direct_abstract";
-/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERED 
         dst<<'(';
+    */
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -525,7 +535,6 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }
-*/
 
 
 
@@ -544,7 +553,7 @@ private:
     NodePtr recur;
 
 
-protected:
+public:
 
     declaration_parameter(NodePtr _arg1, NodePtr _arg2)
         :current(_arg1)
@@ -556,16 +565,17 @@ protected:
         ,recur(NULL)
     {}
 
-public:
-
     std::string name = "declaration_parameter";
-/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERED 
         dst<<'(';
+    */
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -575,7 +585,6 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }    
-*/
 };
 
 
@@ -596,7 +605,7 @@ private:
     std::string symbol;
 
 
-protected:
+public:
 
     declarator_direct(std::string name)
         :symbol(name)
@@ -619,16 +628,18 @@ protected:
         ,brackets(false)    
     {}
 
-public:
 
     std::string name = "declarator_direct";
-/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERED 
         dst<<'(';
+    */
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -639,7 +650,6 @@ public:
 
     }    
 
-*/
 
 };
 
@@ -655,7 +665,7 @@ private:
     NodePtr current;
     NodePtr next;
 
-protected:
+public:
     
     struct_declarator(NodePtr _arg1)
         :current(_arg1)
@@ -667,16 +677,18 @@ protected:
         ,next(_arg2)
     {}
 
-public:
 
     std::string name = "struct_declarator";
-/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERED 
         dst<<'(';
+    */
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -686,7 +698,6 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }    
-*/
 
 };
 
@@ -699,7 +710,7 @@ private:
     NodePtr current;
     NodePtr next;
 
-protected:
+public:
     
     list_struct_declarator(NodePtr _arg1)
         :current(_arg1)
@@ -712,16 +723,18 @@ protected:
     {}
     
     
-public:
-/*
     std::string name = "list_struct_declarator"
 
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERED 
         dst<<'(';
+    */ 
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -731,7 +744,6 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }   
-*/ 
 
 
 
@@ -749,23 +761,25 @@ private:
     NodePtr current;
     NodePtr next;
     
-protected:
+public:
     
     declaration_struct(NodePtr _arg1,NodePtr _arg2)
         :current(_arg1)
         ,next(_arg2)
     {}
 
-public:    
     
     std::string name = "declaration_struct";
-/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERED 
         dst<<'(';
+     */ 
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -775,7 +789,6 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }   
- */ 
 
 };
 
@@ -787,7 +800,7 @@ private:
     NodePtr current;
     NodePtr rec;
 
-protected:
+public:
 
     declaration_list_struct(NodePtr _arg1)
         :current(_arg1)
@@ -801,16 +814,18 @@ protected:
     {}
     
     
-public:
 
     std::string name = "declaration_list_struct";
-/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
+    /*
+
         if(next != null) next->print();
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERED 
         dst<<'(';
+      */  
+
     }
 
     virtual void toPYPY(std::ostream &dst) const override{
@@ -820,7 +835,6 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }  
-  */  
 
 //not sure if delcaration is complete
 //lets move onto int main recursion
