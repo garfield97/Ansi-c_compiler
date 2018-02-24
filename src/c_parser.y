@@ -82,17 +82,17 @@
 ROOT : PROGRAM { g_root = $1; }
 
 //
-EXPR_PRIMARY : IDENTIFIER
-            |INT_C 
-            |UNSIGNED_C 
-            |LONG_C 
-            |UNSIGNED_LONG_C
-            |CHARACTER_C
-            |STRING_LITERAL
-            |L_BRACKET EXPR R_BRACKET
+EXPR_PRIMARY  :IDENTIFIER                 { $$ = new expr_primary(*$1); }
+              |INT_C                      { $$ = new expr_primary($1);  }
+              |UNSIGNED_C                 { $$ = new expr_primary($1);  }
+              |LONG_C                     { $$ = new expr_primary($1);  }
+              |UNSIGNED_LONG_C            { $$ = new expr_primary($1);  }
+              |CHARACTER_C                { $$ = new expr_primary($1);  }
+              |STRING_LITERAL             { $$ = new expr_primary(*$1); }
+              |L_BRACKET EXPR R_BRACKET   { $$ = new expr_primary($2);  }
             
 //
-EXPR_POSTFIX : EXPR_PRIMARY
+EXPR_POSTFIX : EXPR_PRIMARY                                     { $$ = expr_postfix($1); }
              | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE
              | EXPR_POSTFIX L_BRACKET R_BRACKET
              | EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET
