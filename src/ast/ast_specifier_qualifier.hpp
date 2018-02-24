@@ -417,18 +417,18 @@ class list_qualifier_type : public Node {
         }
 };
 
-class lsit_param_type : public Node {
+class list_param_type : public Node {
     //LIST_PARAM_TYPE : LIST_PARAMETER
     //                | LIST_PARAMETER ',' ELLIPSIS  // ELIPSIS = ...
     private:
         NodePtr list;
     public:
-        lsit_param_type(NodePtr _arg1)
+        list_param_type(NodePtr _arg1)
             : list(_arg1)
         {}
     public:
     
-        std::string name = "lsit_param_type";
+        std::string name = "list_param_type";
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {

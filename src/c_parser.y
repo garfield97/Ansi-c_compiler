@@ -260,14 +260,14 @@ SPECIFIER_TYPE : VOID                         { $$ = new specifier_type("void");
                | DOUBLE                       { $$ = new specifier_type("double");   }
                | SIGNED                       { $$ = new specifier_type("signed");   }
                | UNSIGNED                     { $$ = new specifier_type("unsigned"); }
-               | SPECIFIER_UNION_OR_STRUCT    { $$ = $1                              }
-               | SPECIFIER_ENUM               { $$ = $1                              }
-               // | TYPE_NAME                    { $$ = $1                              } // is this valid???
+               | SPECIFIER_UNION_OR_STRUCT    { $$ = $1;                             }
+               | SPECIFIER_ENUM               { $$ = $1;                             }
+               // | TYPE_NAME                    { $$ = $1;                             } // is this valid???
                
              
 SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_STRUCT R_BRACE  { $$ = new specifier_union_or_struct($1, *$2, $4); }
                           | UNION_OR_STRUCT L_BRACE DECLARATION_LIST_STRUCT R_BRACE             { $$ = new specifier_union_or_struct($1, $3);      }
-                          | UNION_OR_STRUCT IDENTIFIER                                          { $$ = new specifier_union_or_struct($1, *$2,);    }
+                          | UNION_OR_STRUCT IDENTIFIER                                          { $$ = new specifier_union_or_struct($1, *$2);    }
                           
                                                  
 UNION_OR_STRUCT : STRUCT    { $$ = new union_or_struct("struct"); }
@@ -498,7 +498,7 @@ STATEMENT_JUMP : GOTO IDENTIFIER ';'
                | RETURN EXPR ';'
 
 
-//               
+               
 PROGRAM : DECLARATION_EXTERNAL            { $$ = $1;                  }
         | PROGRAM DECLARATION_EXTERNAL    { $$ = new program($1, $2); }
 
