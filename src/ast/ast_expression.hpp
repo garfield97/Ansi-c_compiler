@@ -861,37 +861,30 @@ class expr_primary : public Node {
     protected:
         expr_primary(std::string _val)
             : exp(NULL)
-            , val(_val)
-        {}
+        { val = _val; }
 
         expr_primary(int _val)
             : exp(NULL)
-            , val(_val)
-        {}
+        { val = _val; }
 
         expr_primary(unsigned int _val)
             : exp(NULL)
-            , val(_val)
-        {}
+        { val = _val; }
 
         expr_primary(long int _val)
             : exp(NULL)
-            , val(_val)
-        {}
+        { val = _val; }
 
         expr_primary(unsigned long _val)
             : exp(NULL)
-            , val(_val)
-        {}
+        { val = _val; }
 
         expr_primary(char _val)
-            : exp(NULL)
-            , val(_val)
-        {}
+           : exp(NULL)
+        { val = _val; }
 
         expr_primary(NodePtr _exp)
             : exp(_exp)
-            , val()
         {}
 
     public:
