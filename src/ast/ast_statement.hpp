@@ -146,7 +146,7 @@ public:
 
 
         std::string name = "statement_expr";
-/*    
+   
         virtual void PrettyPrint(std::ostream &dst) const override
         {
         /*
@@ -166,7 +166,7 @@ public:
 
         }
 
-*/
+
 };
     
     
@@ -215,7 +215,7 @@ public:
 
 
 
-class statement_labeled : public: Node{
+class statement_labeled :public Node{
 
 //STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
 //                  | CASE EXPR_CONST ':' STATEMENT
@@ -388,7 +388,7 @@ public:
     {}
 
         std::string name = "statement_iteration";
- /  
+   
         virtual void PrettyPrint(std::ostream &dst) const override
         {
         /*
@@ -493,8 +493,9 @@ public:
                 statement->PrettyPrint(dst);
                 symbol_2->PrettyPrint(dst);
                 statement_rep--PrettyPrint(dst);
-            */
-            }           
+            
+            }  
+            */         
   
         }
 
