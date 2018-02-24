@@ -13,8 +13,6 @@
   void yyerror(const char *);
 }
 
-%parse-param { FILE* fp };
-
 // Represents the value associated with any kind of
 // AST node.
 %union{
@@ -521,7 +519,7 @@ const Node *parseAST(char* x)
 {
   yyin = fopen(x, "r");
   g_root=0;
-  if(yyin) yyparse(fp);
+  if(yyin) yyparse(yyin);
   fclose(yyin);
   return g_root;
 }

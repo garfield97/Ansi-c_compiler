@@ -53,6 +53,8 @@ class specifier_type : public Node {
         std::string ter;
         NodePtr nonT;
     protected:
+    public:
+
         specifier_type(std::string _arg1)
             : ter(_arg1)
             , nonT(NULL)
@@ -62,8 +64,6 @@ class specifier_type : public Node {
             : ter(" ")
             , nonT(_arg1)
         {}
-        
-    public:
     
         std::string name = "specifier_type";
 
