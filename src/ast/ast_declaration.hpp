@@ -18,7 +18,7 @@ class declaration_external : public Node {
         
     public:
 
-
+/*
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(next != null) next->print();
@@ -32,6 +32,7 @@ class declaration_external : public Node {
         virtual void renderASM(std::ostream &dst) const override{
 
         }
+*/
 };
 
 
@@ -43,14 +44,14 @@ class definition_function : public Node{
         NodePtr  statement_compound;
 
     protected:
-        definition_function(NodePtr _arg1,NodePtr _arg2,NodePtr_arg3,NodePtr _arg4)
+        definition_function(NodePtr _arg1,NodePtr _arg2,NodePtr _arg3,NodePtr _arg4)
             :specifier_declaration(_arg1)
             ,declarator(_arg2)
             ,list_declaration(_arg3)
             ,statement_compound(_arg4)
         {}
 
-        definition_function(NodePtr _arg1,NodePtr _arg2, char x, NodePtr_arg3) // char used to differentiate
+        definition_function(NodePtr _arg1,NodePtr _arg2, char x, NodePtr _arg3) // char used to differentiate
             :specifier_declaration(_arg1)
             ,declarator(_arg2)
             ,list_declaration(NULL)
@@ -72,7 +73,7 @@ class definition_function : public Node{
         {}
 
     public:
-
+/*
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(next != null) next->print();
@@ -86,6 +87,7 @@ class definition_function : public Node{
         virtual void renderASM(std::ostream &dst) const override{
 
         }
+*/
 };
 
 
@@ -96,7 +98,7 @@ class declaration : public Node{
         
     protected:      
         declaration(NodePtr _arg1)
-            :specifier_declaration
+            :specifier_declaration(_arg1)
             ,declarator_list_init(NULL)
         {}
         
@@ -106,6 +108,8 @@ class declaration : public Node{
         {}
 
     public:
+
+/*
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             if(next != null) {next->print();
@@ -122,6 +126,7 @@ class declaration : public Node{
         virtual void renderASM(std::ostream &dst) const override{
 
         }
+*/
 };
 
 
@@ -140,7 +145,7 @@ class specifier_declaration : public Node{
             :present(_arg1)
             ,next(_arg2)
         {}    
-        
+/*        
     public:
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -155,6 +160,7 @@ class specifier_declaration : public Node{
         virtual void renderASM(std::ostream &dst) const override{
 
         }
+*/
 };
 
 
@@ -166,25 +172,25 @@ class list_declaration : public Node{
 private:  
     
     NodePtr declaration;
-    NodePtr list_declaration;
+    NodePtr list_declaration1;
     
 protected:
         
     list_declaration(NodePtr _arg1)
         :declaration(_arg1)
-        ,list_declaration(NULL)
+        ,list_declaration1(NULL)
     {}
         
     
     list_declaration(NodePtr _arg1,NodePtr _arg2)
         :declaration(_arg2)
-        ,list_declaration(_arg1)
+        ,list_declaration1(_arg1)
     {}
               
     
 public:
 
-
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -200,6 +206,7 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }
+*/
 };
 
 
@@ -215,19 +222,19 @@ class declarator_init_list : public Node{
 
 private:
 
-    NodePtr declarator_init_list;
+    NodePtr declarator_init1;
     NodePtr declarator_init;
 
 
 protected:
     
     declarator_init_list(NodePtr _arg1)
-        :declarator_init_list(_arg1)
+        :declarator_init1(_arg1)
         ,declarator_init(NULL)
     {}
     
     declarator_init_list(NodePtr _arg1,NodePtr _arg2)
-        :declarator_init_list(_arg1)
+        :declarator_init1(_arg1)
         ,declarator_init(_arg2)
     {}
     
@@ -236,7 +243,7 @@ protected:
 public:
 
     std::string name = "declarator_init_list"; 
-
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -252,7 +259,7 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }
-
+*/
 
 };
 
@@ -277,8 +284,8 @@ protected:
     
 public:
     
-    std::string name = "declarator_init"
-
+    std::string name = "declarator_init";
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -294,6 +301,7 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }
+*/
 
 
 };
@@ -317,8 +325,8 @@ protected:
 public:
 
 
-    std::string name = "initializer"
-
+    std::string name = "initializer";
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -337,7 +345,7 @@ public:
 
 
 
-
+*/
 };
 
 
@@ -347,28 +355,28 @@ class list_initializer : public Node{
                  
 
 private:
-    NodePtr initializer 
-    NodePtr list_initializer
+    NodePtr initializer ;
+    NodePtr rec;
 
 protected:
 
     list_initializer(NodePtr _arg1)
         :initializer(_arg1)
-        ,list_initializer(NULL)
+        ,rec(NULL)
     {}
     
 
     list_initializer(NodePtr _arg1,NodePtr _arg2)
         :initializer(_arg1)
-        ,list_initializer(_arg2)
+        ,rec(_arg2)
     {}
     
 
 
 public:
 
-    std::string name = "list_initializer"
-
+    std::string name = "list_initializer";
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -385,8 +393,7 @@ public:
 
     }
 
-
-
+*/
 };
 
 class declarator_abstract : public Node{
@@ -398,8 +405,8 @@ class declarator_abstract : public Node{
 
 private:
     
-    NodePtr pointer
-    NodePtr declarator_direct_abstract
+    NodePtr pointer;
+    NodePtr declarator_direct_abstract;
     
 
 protected:
@@ -417,7 +424,7 @@ protected:
     
 public:
 
-
+/*
     std::string name = "declarator_abstract"
 
     virtual void PrettyPrint(std::ostream &dst) const override
@@ -436,7 +443,7 @@ public:
 
     }
 
-
+*/
 
 };
 
@@ -462,7 +469,7 @@ protected:
 
 // LOOK AT THE DIFFERENTIATION LATER
 
-    declarator_direct_abstract(NodePtr _arg1)
+    declarator_direct_abstract(NodePtr _arg1,char x)
         :now(_arg1)
         ,next(NULL)
         ,bracket(true)
@@ -481,13 +488,13 @@ protected:
         ,bracket(false)
     {}
 
-    declarator_direct_abstract(NodePtr _arg1,NodePtr _arg2)
+    declarator_direct_abstract(NodePtr _arg1,NodePtr _arg2,char x)
         :now(_arg1)
         ,next(_arg2)
         ,bracket(false)
     {}
     
-    declarator_direct_abstract()
+    declarator_direct_abstract(char x)
         :now(NULL)
         ,next(NULL)
         ,bracket(true)
@@ -501,8 +508,8 @@ protected:
 public:
 
 
-    std::string name = "declarator_direct_abstract"
-
+    std::string name = "declarator_direct_abstract";
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -518,6 +525,7 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }
+*/
 
 
 
@@ -550,8 +558,8 @@ protected:
 
 public:
 
-    std::string name = "declaration_parameter"
-
+    std::string name = "declaration_parameter";
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -567,7 +575,7 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }    
-
+*/
 };
 
 
@@ -594,7 +602,7 @@ protected:
         :symbol(name)
         ,current(NULL)
         ,next(NULL)
-        ,brackets(FALSE) //MEHEDI really wants false
+        ,brackets(false) //MEHEDI really wants false
     {}
     
     declarator_direct(NodePtr _arg1,NodePtr _arg2)
@@ -613,8 +621,8 @@ protected:
 
 public:
 
-    std::string name = "declarator_direct"
-
+    std::string name = "declarator_direct";
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -631,7 +639,7 @@ public:
 
     }    
 
-
+*/
 
 };
 
@@ -661,8 +669,8 @@ protected:
 
 public:
 
-    std::string name = "struct_declarator"
-
+    std::string name = "struct_declarator";
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -678,7 +686,7 @@ public:
     virtual void renderASM(std::ostream &dst) const override{
 
     }    
-
+*/
 
 };
 
@@ -698,14 +706,14 @@ protected:
         ,next(NULL)
     {}
 
-    list_struct_declarator(NodePtr _arg1,NodePtr_arg2)
+    list_struct_declarator(NodePtr _arg1,NodePtr _arg2)
         :current(_arg1)
         ,next(_arg2)
     {}
     
     
 public:
-
+/*
     std::string name = "list_struct_declarator"
 
     virtual void PrettyPrint(std::ostream &dst) const override
@@ -722,7 +730,8 @@ public:
 
     virtual void renderASM(std::ostream &dst) const override{
 
-    }    
+    }   
+*/ 
 
 
 
@@ -749,8 +758,8 @@ protected:
 
 public:    
     
-    std::string name = "declaration_struct"
-
+    std::string name = "declaration_struct";
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -765,7 +774,8 @@ public:
 
     virtual void renderASM(std::ostream &dst) const override{
 
-    }    
+    }   
+ */ 
 
 };
 
@@ -793,8 +803,8 @@ protected:
     
 public:
 
-    std::string name = "declaration_list_struct"
-
+    std::string name = "declaration_list_struct";
+/*
     virtual void PrettyPrint(std::ostream &dst) const override
     {
         if(next != null) next->print();
@@ -809,7 +819,8 @@ public:
 
     virtual void renderASM(std::ostream &dst) const override{
 
-    }    
+    }  
+  */  
 
 //not sure if delcaration is complete
 //lets move onto int main recursion
