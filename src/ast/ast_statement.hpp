@@ -9,9 +9,10 @@
 
 
 class statement_compound : public Node{
-//LIST_STATEMENT : STATEMENT
-//               | LIST_STATEMENT STATEMENT
-                  
+//STATEMENT_COMPOUND : L_BRACE R_BRACE                                  { $$ = new statement_compound(); }
+//                   | L_BRACE LIST_STATEMENT R_BRACE                   { $$ = new statement_compound($2); }
+//                   | L_BRACE LIST_DECLARATION R_BRACE                 { $$ = new statement_compound($2); }
+//                   | L_BRACE LIST_DECLARATION LIST_STATEMENT R_BRACE 
 
 private:
 
@@ -20,7 +21,7 @@ private:
 
 
 
-protected:
+public:
 
     statement_compound()
         :current(NULL)
@@ -40,18 +41,21 @@ protected:
     {}
     
 
-public:
+
     
     
         std::string name = "statement_compound";
         
- /*       virtual void PrettyPrint(std::ostream &dst) const override{
+      virtual void PrettyPrint(std::ostream &dst) const override{
+    /*  
           
               if(rec != NULL){
                     rec->PrettyPrint(dst);
                     dst<<'^ ';
               }
               exp->PrettyPrint(dst);
+              */
+
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -61,7 +65,6 @@ public:
         virtual void renderASM(std::ostream &dst) const override{
 
         }
-*/
 };
 
 
@@ -77,7 +80,7 @@ private:
     NodePtr next;
 
 
-protected:
+public:
     
     list_statement(NodePtr _arg1)
         :current(_arg1)
@@ -89,17 +92,20 @@ protected:
         ,next(_arg2)
     {}
 
-public:
+
 
         std::string name = "list_statement";
-    /*
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+            /*
+
             if(rec != NULL){
                 rec->PrettyPrint(dst);
                 dst<<'^ ';
             }
             exp->PrettyPrint(dst);
+            */
+
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -109,7 +115,6 @@ public:
         virtual void renderASM(std::ostream &dst) const override{
 
         }
-*/
 
 };
 
@@ -126,7 +131,7 @@ private:
 
     NodePtr current;
 
-protected:
+public:
         //since first line its no non terminal matched, terminal symbol only so maybe empty set?
 
     statement_expr()
@@ -137,18 +142,20 @@ protected:
         :current(_arg1)
     {}
     
-public:
+
 
 
         std::string name = "statement_expr";
 /*    
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+        /*
             if(rec != NULL){
                 rec->PrettyPrint(dst);
                 dst<<'^ ';
             }
             exp->PrettyPrint(dst);
+            */
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -177,18 +184,20 @@ private:
     
     NodePtr next_statement;
     
-protected:
+public:
 
     statement(NodePtr _arg1)
         :next_statement(_arg1)
     {}
 
-public:
+
         std::string name = "statement";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+        /*
            next_statement->PrettyPrint(dst);
+           */
     
         }
 
@@ -206,7 +215,7 @@ public:
 
 
 
-class statement_labeled : public Node{
+class statement_labeled : public: Node{
 
 //STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
 //                  | CASE EXPR_CONST ':' STATEMENT
@@ -220,7 +229,7 @@ private:
 
 
 
-protected: 
+public: 
     statement_labeled(std::string symbol,NodePtr _arg1)
         :statement(_arg1)
         ,labels(symbol)
@@ -234,12 +243,13 @@ protected:
     {}
     
 
-public:
+
     
         std::string name = "statement_labeled";
-  /*  
+    
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+        /*
             if(const_expr != NULL){
                 labels->PrettyPrint(dst);
                 const_expr->PrettyPrint(dst);
@@ -250,7 +260,8 @@ public:
                 labels->PrettyPrint(dst);
                 dst<<':';    
                 statement->PrettyPrint(dst);     
-            }           
+            }   
+            */        
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -260,7 +271,7 @@ public:
         virtual void renderASM(std::ostream &dst) const override{
 
         }
-*/
+
 };
 
 
@@ -277,7 +288,7 @@ private:
     NodePtr expr;
     std::string symbol;
     std::string symbol_2;
-protected:
+public:
     
     statement_jump(std::string name_1,std::string name_2)
         :symbol(name_1)
@@ -294,12 +305,13 @@ protected:
         ,symbol_2(NULL)
         ,expr(_arg)
     {}
-public:
+
 
         std::string name = "statement_jump";
-/*    
+    
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+        /*
             if(expr != NULL){
                 symbol->PrettyPrint(dst);
                 expr->PrettyPrint(dst);
@@ -313,6 +325,7 @@ public:
             else{
                 symbol->PrettyPrint(dst);
                 dst<<';';
+                 */
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -322,7 +335,7 @@ public:
         virtual void renderASM(std::ostream &dst) const override{
 
         }
- */
+
 };
 
 
@@ -339,7 +352,7 @@ private:
     std::string symbol;
     std::string symbol_1;
     NodePtr statement_expr_rep;
-protected:
+public:
     statement_iteration(std::string name,NodePtr _arg1,NodePtr _arg2)
         :symbol(name)
         ,expr(_arg1)
@@ -373,11 +386,12 @@ protected:
         ,statement_expr(_arg)
         ,statement_expr_rep(_arg1)
     {}
-public:
+
         std::string name = "statement_iteration";
- /*   
+ /  
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+        /*
             if(symbol_1!= NULL){
                 symbol->PrettyPrint(dst);
                 statement->PrettyPrint(dst);
@@ -407,6 +421,7 @@ public:
                 dst<<')';
                 statement->PrettyPrint(dst);
             }
+            */
         }
 
         virtual void toPY(std::ostream &dst) const override{
@@ -436,7 +451,7 @@ private:
     
     
 
-protected:
+public:
     
     statement_selection(std::string name,NodePtr _arg,NodePtr _arg1)
         :expr(_arg)
@@ -456,12 +471,13 @@ protected:
 
 
 
-public:
+
 
     std::string name = "statement_selection";
- /*   
+    
         virtual void PrettyPrint(std::ostream &dst) const override
         {
+            /*
             if(symbol_2 == NULL){
                 symbol_1->PrettyPrint(dst);
                 dst<<'(';
@@ -477,6 +493,7 @@ public:
                 statement->PrettyPrint(dst);
                 symbol_2->PrettyPrint(dst);
                 statement_rep--PrettyPrint(dst);
+            */
             }           
   
         }
@@ -488,7 +505,7 @@ public:
         virtual void renderASM(std::ostream &dst) const override{
 
         }
-   */
+   
 };
 
 
