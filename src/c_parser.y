@@ -201,49 +201,26 @@ EXPR : EXPR_ASSIGNMENT            { $$ = $1;               }
 EXPR_CONST : EXPR_CONDITIONAL   { $$ = $1; }
 
 
-
-
-
-
-
-
-//
 DECLARATION : SPECIFIER_DECLARATION ';'                       { $$ = new declaration($1); }
             | SPECIFIER_DECLARATION DECLARATOR_INIT_LIST ';'  { $$ = new declaration($1, $2); }
             
 
-
-
-//
-SPECIFIER_DECLARATION : SPECIFIER_STORE_CLASS                         { $$ = new specifier_declaration($1); }
+SPECIFIER_DECLARATION : SPECIFIER_STORE_CLASS                         { $$ = $1; }
                        | SPECIFIER_STORE_CLASS SPECIFIER_DECLARATION  { $$ = new specifier_declaration($1, $2); }
-                       | SPECIFIER_TYPE                               { $$ = new specifier_declaration($1); }
+                       | SPECIFIER_TYPE                               { $$ = $1; }
                        | SPECIFIER_TYPE SPECIFIER_DECLARATION         { $$ = new specifier_declaration($1, $2); }
-                       | QUALIFIER_TYPE                               { $$ = new specifier_declaration($1); }
+                       | QUALIFIER_TYPE                               { $$ = $1; }
                        | QUALIFIER_TYPE SPECIFIER_DECLARATION         { $$ = new specifier_declaration($1, $2); }
  
  
-                       
-//
 DECLARATOR_INIT_LIST : DECLARATOR_INIT                              { $$ = $1;}
                      | DECLARATOR_INIT_LIST ',' DECLARATOR_INIT     { $$ = new declarator_init_list($1, $3);}
-   
-                     
-//                     
+
+
 DECLARATOR_INIT : DECLARATOR                        { $$ = $1;}
                 | DECLARATOR ASSIGN INITIALIZER     { $$ = new declarator_init( $1,'=' , $3);}
 
-
-
-
-
-
-
-
-
-
-
-                
+              
 SPECIFIER_STORE_CLASS : TYPEDEF   { $$ = new specifier_store_class("typedef");  }
                       | EXTERN    { $$ = new specifier_store_class("extern");   }
                       | STATIC    { $$ = new specifier_store_class("static");   }
@@ -273,28 +250,12 @@ SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_
 UNION_OR_STRUCT : STRUCT    { $$ = new union_or_struct("struct"); }
                 | UNION     { $$ = new union_or_struct("union" ); }
                 
-
-
-
-
-
-                
-                
-//                
+               
 DECLARATION_LIST_STRUCT : DECLARATION_STRUCT                                { $$ = $1;}
                         | DECLARATION_LIST_STRUCT DECLARATION_STRUCT        { $$ = new declaration_list_struct($1, $2);}
                         
 
-//
 DECLARATION_STRUCT : LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR ';'   { $$ = new declaration_struct ($1, $2); }
-
-
-
-
-
-
-
-
 
 
 LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL    { $$ = new list_spec_qual($1, $2); }
@@ -302,31 +263,15 @@ LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL    { $$ = new list_spec_qual($1, 
                | QUALIFIER_TYPE LIST_SPEC_QUAL    { $$ = new list_spec_qual($1, $2); }
                | QUALIFIER_TYPE                   { $$ = $1;                         }
                
-
-
-
-
-
-
-
-//                             
+                            
 LIST_STRUCT_DECLARATOR : STRUCT_DECLARATOR                                  { $$ = $1;}
                        | LIST_STRUCT_DECLARATOR ',' STRUCT_DECLARATOR       { $$ = new list_struct_declarator($1, $3);}
                       
 
-
-//
 STRUCT_DECLARATOR : DECLARATOR                 {$$ = $1;}
                   | ':' EXPR_CONST             {$$ = new struct_declarator($2);}
                   | DECLARATOR ':' EXPR_CONST  {$$ = new struct_declarator($1, $3);}
-                  
-
-
-
-
-
-
-
+  
 
 SPECIFIER_ENUM : ENUM L_BRACE LIST_ENUMERATOR R_BRACE               { $$ = new specifier_enum($3);      }
                | ENUM IDENTIFIER L_BRACE LIST_ENUMERATOR R_BRACE    { $$ = new specifier_enum(*$2, $4); }
@@ -348,8 +293,7 @@ QUALIFIER_TYPE : CONST      { $$ = new qualifier_type("const"); }
 DECLARATOR : POINTER DECLARATOR_DIRECT        { $$ = new declarator($1, $2); }
            | DECLARATOR_DIRECT                { $$ = $1;                     }
 
-
-//          
+         
 DECLARATOR_DIRECT : IDENTIFIER                                              { $$ = new declarator_direct(*$1); }
                   | L_BRACKET DECLARATOR R_BRACKET                          { $$ = new declarator_direct($2); }
                   | DECLARATOR_DIRECT L_SQUARE EXPR_CONST R_SQUARE          { $$ = new declarator_direct($1, $3); }
@@ -357,11 +301,6 @@ DECLARATOR_DIRECT : IDENTIFIER                                              { $$
                   | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET   { $$ = new declarator_direct($1, $3); }
                   | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET   { $$ = new declarator_direct($1, $3); }
                   | DECLARATOR_DIRECT L_BRACKET R_BRACKET                   { $$ = new declarator_direct($1); }
-
-
-
-
-
 
 
 POINTER : OP_MUL                                { $$ = new pointer(); }
@@ -382,18 +321,10 @@ LIST_PARAMETER : DECLARATION_PARAMETER                      { $$ = $1;          
                | LIST_PARAMETER ',' DECLARATION_PARAMETER   { $$ = new list_parameter($1, $3); }
 
 
-
-
-
-//
 DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR                    { $$ = new declaration_parameter($1,$2);}  
                       | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT           { $$ = new declaration_parameter($1,$2);}
                       | SPECIFIER_DECLARATION                               { $$ = $1;}
-
-
-
-
-                      
+                   
 
 LIST_IDENTIFIER : IDENTIFIER                        { $$ = new list_identifier(*$1);     }
                 | LIST_IDENTIFIER ',' IDENTIFIER    { $$ = new list_identifier($1, *$3); }
@@ -403,18 +334,11 @@ TYPE_NAME : LIST_SPEC_QUAL                        { $$ = $1;                    
           | LIST_SPEC_QUAL DECLARATOR_ABSTRACT    { $$ = new type_name($1, $2); }
 
 
-
-
-
-
-//
 DECLARATOR_ABSTRACT : POINTER                                   { $$ = $1; }
                     | DECLARATOR_DIRECT_ABSTRACT                { $$ = $1; }     
                     | POINTER DECLARATOR_DIRECT_ABSTRACT        { $$ = new declarator_abstract($1, $2);} 
    
-   
-   
-//                   
+                 
 DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET                                { $$ = new declarator_direct_abstract($2);}
                            | L_SQUARE R_SQUARE                                                      { $$ = new declarator_direct_abstract();}
                            | L_SQUARE EXPR_CONST R_SQUARE                                           { $$ = new declarator_direct_abstract($2);}
@@ -425,18 +349,16 @@ DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET            
                            | DECLARATOR_DIRECT_ABSTRACT L_BRACKET R_BRACKET                         { $$ = new declarator_direct_abstract($1);}
                            | DECLARATOR_DIRECT_ABSTRACT L_BRACKET LIST_PARAM_TYPE R_BRACKET         { $$ = new declarator_direct_abstract($1, $3);}
                            
-                                         
-//
+
 INITIALIZER : EXPR_ASSIGNMENT                                 { $$ = $1; }
             | L_BRACKET LIST_INITIALIZER R_BRACKET            { $$ = new initializer($2);}
             | L_BRACKET LIST_INITIALIZER ',' R_BRACKET        { $$ = new initializer($2);} 
             
 
-//
 LIST_INITIALIZER : INITIALIZER                          { $$ = $1; }
                  | LIST_INITIALIZER ',' INITIALIZER     { $$ = new list_initializer($1, $3);}
                  
-//               
+              
 STATEMENT : STATEMENT_LABELED       { $$ = $1; }
           | STATEMENT_COMPOUND      { $$ = $1; }
           | STATEMENT_EXPR          { $$ = $1; }
@@ -444,74 +366,62 @@ STATEMENT : STATEMENT_LABELED       { $$ = $1; }
           | STATEMENT_ITERATION     { $$ = $1; }
           | STATEMENT_JUMP          { $$ = $1; }
 
-
-//          
+         
 STATEMENT_LABELED : IDENTIFIER ':' STATEMENT       { $$ = new statement_labeled(*$1, $3);}
-                  | CASE EXPR_CONST ':' STATEMENT  { $$ = new statement_labeled("CASE", $2, $4);}
-                  | DEFAULT ':' STATEMENT          { $$ = new statement_labeled("DEFAULT", $3);}
+                  | CASE EXPR_CONST ':' STATEMENT  { $$ = new statement_labeled("case", $2, $4);}
+                  | DEFAULT ':' STATEMENT          { $$ = new statement_labeled("default", $3);}
                   
 
 
-//
 STATEMENT_COMPOUND : L_BRACE R_BRACE                                  { $$ = new statement_compound(); }
                    | L_BRACE LIST_STATEMENT R_BRACE                   { $$ = new statement_compound($2); }
                    | L_BRACE LIST_DECLARATION R_BRACE                 { $$ = new statement_compound($2); }
                    | L_BRACE LIST_DECLARATION LIST_STATEMENT R_BRACE  { $$ = new statement_compound($2, $3); }
                    
-//
+
 LIST_DECLARATION : DECLARATION                          { $$ = $1;}
                  | LIST_DECLARATION DECLARATION         { $$ = new list_declaration($1, $2); }
                  
-//              
+              
 LIST_STATEMENT : STATEMENT                      { $$ = $1; }
                | LIST_STATEMENT STATEMENT       { $$ = new list_statement($1,$2);}
                   
 
-//
 STATEMENT_EXPR : ';'          {$$ = new statement_expr();}
                | EXPR ';'     {$$ = $1;}  
                
 
-//
-STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT                         { $$ = new statement_selection("IF", $3, $5); }
-                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT          { $$ = new statement_selection("IF", $3, $5,"ELSE" ,$7); }
-                    | SWITCH L_BRACKET EXPR R_BRACKET STATEMENT                     { $$ = new statement_selection("SWITCH", $3, $5); }
+STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT                         { $$ = new statement_selection("if", $3, $5); }
+                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT          { $$ = new statement_selection("if", $3, $5,"ELSE" ,$7); }
+                    | SWITCH L_BRACKET EXPR R_BRACKET STATEMENT                     { $$ = new statement_selection("switch", $3, $5); }
                     
 
-
-//
-STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT                             { $$ = new statement_iteration("WHILE", $3, $5); }
-                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';'                      { $$ = new statement_iteration("DO", $2, "WHILE", $5); }
-                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT      { $$ = new statement_iteration("FOR", $3, $4, $6); }
-                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMENT { $$ = new statement_iteration("FOR", $3, $4, $5, $7); }
+STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT                             { $$ = new statement_iteration("while", $3, $5); }
+                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';'                      { $$ = new statement_iteration("do", $2, "WHILE", $5); }
+                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT      { $$ = new statement_iteration("for", $3, $4, $6); }
+                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMENT { $$ = new statement_iteration("for", $3, $4, $5, $7); }
 
 
+STATEMENT_JUMP : GOTO IDENTIFIER ';' {$$ = new statement_jump("goto",*$2);}
+               | CONTINUE ';' {$$ = new statement_jump("continue");}
+               | BREAK ';'  {$$ = new statement_jump("break");}
+               | RETURN ';' {$$ = new statement_jump("return");}
+               | RETURN EXPR ';' {$$ = new statement_jump("return",$2);}
 
-//
-STATEMENT_JUMP : GOTO IDENTIFIER ';' {$$ = new statement_jump("GOTO",*$2);}
-               | CONTINUE ';' {$$ = new statement_jump("CONTINUE");}
-               | BREAK ';'  {$$ = new statement_jump("BREAK");}
-               | RETURN ';' {$$ = new statement_jump("RETURN");}
-               | RETURN EXPR ';' {$$ = new statement_jump("RETURN",$2);}
-
-
-               
+         
 PROGRAM : DECLARATION_EXTERNAL            { $$ = $1;                  }
         | PROGRAM DECLARATION_EXTERNAL    { $$ = new program($1, $2); }
 
 
-//
-DECLARATION_EXTERNAL : DEFINITION_FUNCTION { $$ = new declaration_external($1); }
-                     | DECLARATION         { $$ = new declaration_external($1); }
+DECLARATION_EXTERNAL : DEFINITION_FUNCTION { $$ = $1; }
+                     | DECLARATION         { $$ = $1; }
 
-//
+
 DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND { $$ = new definition_function($1, $2, $3, $4); }
                     | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
                     | DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND                       { $$ = new definition_function('$', $1, $2, $3); }
                     | DECLARATOR STATEMENT_COMPOUND                                        { $$ = new definition_function($1, $2); }
          
-            
-
 
 %%
 
