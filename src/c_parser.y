@@ -473,9 +473,9 @@ STATEMENT_EXPR : ';'
                
 
 //
-STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT
-                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT
-                    | SWITCH L_BRACKET EXPR R_BRACKET STATEMENT
+STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT                         { $$ = statement_selection("IF", $3, $5); }
+                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT          { $$ = statement_selection("IF", $3, $5,"ELSE" ,$7); }
+                    | SWITCH L_BRACKET EXPR R_BRACKET STATEMENT                     { $$ = statement_selection("SWITCH", $3, $5); }
                     
 
 

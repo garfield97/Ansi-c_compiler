@@ -923,7 +923,7 @@ public:
     std::string name = "declarator";
     virtual void PrettyPrint(std::ostream &dst) const override
     {
-    /*
+    
 
         if(next != null) next->print();
         declaration->PrettyPrintp();
