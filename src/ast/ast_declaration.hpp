@@ -638,7 +638,7 @@ class declarator_direct : public Node{
             :current(_arg1)
             ,next(NULL)
             ,brackets(false)
-            symbol(NULL)
+            ,symbol(NULL)
         {}
 
         std::string name = "declarator_direct";

@@ -476,8 +476,9 @@ class list_parameter : public Node {
     //LIST_PARAMETER : DECLARATION_PARAMETER
     //               | LIST_PARAMETER ',' DECLARATION_PARAMETER
     private:
-        NodePtr dp;
         NodePtr rec;
+        NodePtr dp;
+        
     public:
         list_parameter(NodePtr _arg1, NodePtr _arg2)
             :  rec(_arg1)
