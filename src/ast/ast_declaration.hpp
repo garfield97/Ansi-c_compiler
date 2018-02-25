@@ -499,26 +499,26 @@ class declarator_direct_abstract : public Node{
         
     public:
     // LOOK AT THE DIFFERENTIATION LATER
-/*
-        declarator_direct_abstract(NodePtr _arg1,char x)
-            :now(_arg1)
-            ,next(NULL)
-           // ,bracket(true)
-        {}
-        */
-        
-        declarator_direct_abstract()
-            :now(NULL)
-            ,next(NULL)
-           // ,bracket(false)
-        {}
-        
-        declarator_direct_abstract(NodePtr _arg1)
-            :now(_arg1)
-            ,next(NULL)
-          //  ,bracket(false)
-        {}
-/*
+    /*
+            declarator_direct_abstract(NodePtr _arg1,char x)
+                :now(_arg1)
+                ,next(NULL)
+            // ,bracket(true)
+            {}
+            */
+            
+            declarator_direct_abstract()
+                :now(NULL)
+                ,next(NULL)
+            // ,bracket(false)
+            {}
+            
+            declarator_direct_abstract(NodePtr _arg1)
+                :now(_arg1)
+                ,next(NULL)
+            //  ,bracket(false)
+            {}
+    /*
         declarator_direct_abstract(NodePtr _arg1,NodePtr _arg2,char x)
             :now(_arg1)
             ,next(_arg2)
@@ -902,58 +902,6 @@ class declarator : public Node{
             exit(1);
         }
 };
-
-//not sure if delcaration is complete
-//lets move onto int main recursion
-
-/*
-class declarator : public Node{
-// DECLARATOR : POINTER DECLARATOR_DIRECT        { $$ = new declarator($1, $2); }
-//            | DECLARATOR_DIRECT    
-
-
-private:
-
-    NodePtr current;
-    NodePtr next;
-
-
-public:
-    
-    declarator(NodePtr _arg1,NodePtr _arg2)
-        :current(_arg1)
-        ,next(_arg2)
-    {}
-
-    declarator(NodePtr _arg1)
-        :current(_arg1)
-        ,next(NULL)
-    {}
-
-
-    std::string name = "declarator";
-    virtual void PrettyPrint(std::ostream &dst) const override
-    {
-    
-
-        if(next != null) next->print();
-        declaration->PrettyPrintp();
-        //MEHEDI IS TRIGGERED 
-        dst<<'(';
-      
-
-    }
-
-    virtual void toPY(std::ostream &dst) const override{
-
-    }
-
-    virtual void renderASM(std::ostream &dst) const override{
-
-    }  
-
-*/
-     
 
 
 #endif
