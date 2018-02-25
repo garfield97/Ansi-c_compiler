@@ -446,9 +446,9 @@ STATEMENT : STATEMENT_LABELED
 
 
 //          
-STATEMENT_LABELED : IDENTIFIER ':' STATEMENT       { $$ = new statement_labeled(*$1,$3);}
-                  | CASE EXPR_CONST ':' STATEMENT  { $$ = new statement_labeled("CASE",$2,$3);}
-                  | DEFAULT ':' STATEMENT          { $$ = new statement_labeled("DEFAULT",$2);}
+STATEMENT_LABELED : IDENTIFIER ':' STATEMENT       { $$ = new statement_labeled(*$1, $3);}
+                  | CASE EXPR_CONST ':' STATEMENT  { $$ = new statement_labeled("CASE", $2, $3);}
+                  | DEFAULT ':' STATEMENT          { $$ = new statement_labeled("DEFAULT", $2);}
                   
 
 
