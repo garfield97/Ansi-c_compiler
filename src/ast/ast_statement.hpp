@@ -67,11 +67,12 @@ class list_statement : public Node{
         NodePtr next;
 
     public:   
+    /*
         list_statement(NodePtr _arg1)
             :current(_arg1)
             ,next(NULL)
         {}
-        
+        */
         list_statement(NodePtr _arg1,NodePtr _arg2)
             :current(_arg1)
             ,next(_arg2)

@@ -446,9 +446,9 @@ STATEMENT : STATEMENT_LABELED
 
 
 //          
-STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
-                  | CASE EXPR_CONST ':' STATEMENT
-                  | DEFAULT ':' STATEMENT
+STATEMENT_LABELED : IDENTIFIER ':' STATEMENT       { $$ = new statement_labeled(*$1,$3);}
+                  | CASE EXPR_CONST ':' STATEMENT  { $$ = new statement_labeled("CASE",$2,$3);}
+                  | DEFAULT ':' STATEMENT          { $$ = new statement_labeled("DEFAULT",$2);}
                   
 
 
@@ -463,13 +463,13 @@ LIST_DECLARATION : DECLARATION
                  | LIST_DECLARATION DECLARATION
                  
 //              
-LIST_STATEMENT : STATEMENT
-               | LIST_STATEMENT STATEMENT
+LIST_STATEMENT : STATEMENT                      { $$ = $1; }
+               | LIST_STATEMENT STATEMENT       { $$ = new list_statement($1,$2);}
                   
 
 //
-STATEMENT_EXPR : ';'        
-               | EXPR ';'
+STATEMENT_EXPR : ';'          {$$ = new statement_expr();}
+               | EXPR ';'     {$$ = $1;}  
                
 
 //
