@@ -491,11 +491,11 @@ STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
 
 
 //
-STATEMENT_JUMP : GOTO IDENTIFIER ';'
-               | CONTINUE ';'
-               | BREAK ';'
-               | RETURN ';'
-               | RETURN EXPR ';'
+STATEMENT_JUMP : GOTO IDENTIFIER ';' {$$ = new statement_jump(*$1,*$2);}
+               | CONTINUE ';' {$$ = new statement_jump(*$1);}
+               | BREAK ';'  {$$ = new statement_jump(*$1);
+               | RETURN ';' {$$ = new statement_jump(*$1);}
+               | RETURN EXPR ';' {$$ = new statement_jump(*$1,$2);}
 
 
                
