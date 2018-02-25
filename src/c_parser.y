@@ -225,13 +225,13 @@ SPECIFIER_DECLARATION : SPECIFIER_STORE_CLASS                         { $$ = new
  
                        
 //
-DECLARATOR_INIT_LIST : DECLARATOR_INIT
-                     | DECLARATOR_INIT_LIST ',' DECLARATOR_INIT
+DECLARATOR_INIT_LIST : DECLARATOR_INIT                              { $$ = $1;}
+                     | DECLARATOR_INIT_LIST ',' DECLARATOR_INIT     { $$ = new declarator_init_list($1, $3);}
    
                      
 //                     
-DECLARATOR_INIT : DECLARATOR
-                | DECLARATOR ASSIGN INITIALIZER
+DECLARATOR_INIT : DECLARATOR                        { $$ = $1;}
+                | DECLARATOR ASSIGN INITIALIZER     { $$ = declarator_init( $1, "=", $3);}
 
 
 
@@ -281,12 +281,12 @@ UNION_OR_STRUCT : STRUCT    { $$ = new union_or_struct("struct"); }
                 
                 
 //                
-DECLARATION_LIST_STRUCT : DECLARATION_STRUCT
-                        | DECLARATION_LIST_STRUCT DECLARATION_STRUCT
+DECLARATION_LIST_STRUCT : DECLARATION_STRUCT                                { $$ = $1;}
+                        | DECLARATION_LIST_STRUCT DECLARATION_STRUCT        { $$ = new declaration_list_struct($1, $2);}
                         
 
 //
-DECLARATION_STRUCT : LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR ';'
+DECLARATION_STRUCT : LIST_SPEC_QUAL LIST_STRUCT_DECLARATOR ';'   { $$ = new declaration_struct ($1, $2); }
 
 
 
@@ -316,9 +316,9 @@ LIST_STRUCT_DECLARATOR : STRUCT_DECLARATOR
 
 
 //
-STRUCT_DECLARATOR : DECLARATOR
-                  | ':' EXPR_CONST
-                  | DECLARATOR ':' EXPR_CONST
+STRUCT_DECLARATOR : DECLARATOR                 {$$ = $1;}
+                  | ':' EXPR_CONST             {$$ = new struct_declarator($2);}
+                  | DECLARATOR ':' EXPR_CONST  {$$ = new struct_declarator($1, $3);}
                   
 
 
