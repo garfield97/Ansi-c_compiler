@@ -25,12 +25,16 @@ class expr : public Node {
             assignment->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -62,12 +66,16 @@ class expr_conditional : public Node {
 
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -96,12 +104,16 @@ class expr_assignment : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -124,12 +136,16 @@ class opr_assignment: public Node {
             dst<<opr<<' ';
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -156,12 +172,16 @@ class expr_logic_or : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -188,12 +208,16 @@ class expr_logic_and : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -221,12 +245,16 @@ class expr_inclusive_or : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -254,12 +282,16 @@ class expr_xor : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -287,12 +319,16 @@ class expr_and : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -323,12 +359,16 @@ class expr_equality : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -361,12 +401,16 @@ class expr_relational : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -397,12 +441,16 @@ class expr_shift : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -433,12 +481,16 @@ class expr_add : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -470,12 +522,16 @@ class expr_mul : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -505,12 +561,16 @@ class expr_cast : public Node {
             rec->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -559,12 +619,16 @@ class expr_unary : public Node {
 			else exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -589,12 +653,16 @@ class opr_unary: public Node {
             dst<<opr<<' ';
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -622,12 +690,16 @@ class arg_expr_list : public Node {
             exp->PrettyPrint(dst);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -720,12 +792,16 @@ class expr_postfix : public Node {
             }
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
@@ -850,12 +926,16 @@ class expr_primary : public Node {
                         
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
