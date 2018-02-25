@@ -118,11 +118,11 @@ class statement_expr : public Node{
 
     public:
             //since first line its no non terminal matched, terminal symbol only so maybe empty set?
-        /*
+        
         statement_expr()
             :current(NULL)
         {}
-        */
+        
         statement_expr(NodePtr _arg1)
             :current(_arg1)
         {}

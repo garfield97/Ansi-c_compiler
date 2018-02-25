@@ -415,15 +415,15 @@ DECLARATOR_ABSTRACT : POINTER                                   { $$ = $1; }
    
    
 //                   
-DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET                                { $$ = new declarator_direct_abstract($2 , 'x') }
-                           | L_SQUARE R_SQUARE                                                      { $$ = new initializer('x');}
+DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET                                { $$ = new declarator_direct_abstract($2);}
+                           | L_SQUARE R_SQUARE                                                      { $$ = new initializer();}
                            | L_SQUARE EXPR_CONST R_SQUARE                                           { $$ = new initializer($2);}
                            | DECLARATOR_DIRECT_ABSTRACT L_SQUARE R_SQUARE                           { $$ = new initializer($1);}
                            | DECLARATOR_DIRECT_ABSTRACT L_SQUARE EXPR_CONST R_SQUARE                { $$ = new initializer($1, $3);}
                            | L_BRACKET R_BRACKET                                                    { $$ = new initializer();}
-                           | L_BRACKET LIST_PARAM_TYPE R_BRACKET                                    { $$ = new initializer($2, 'x');}
-                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET R_BRACKET                         { $$ = new initializer($1, 'x');}
-                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET LIST_PARAM_TYPE R_BRACKET         { $$ = new initializer($1, $3, 'x');}
+                           | L_BRACKET LIST_PARAM_TYPE R_BRACKET                                    { $$ = new initializer($2);}
+                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET R_BRACKET                         { $$ = new initializer($1);}
+                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET LIST_PARAM_TYPE R_BRACKET         { $$ = new initializer($1, $3);}
                            
                                          
 //
