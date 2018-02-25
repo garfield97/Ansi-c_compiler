@@ -40,6 +40,8 @@ class statement_compound : public Node{
             }
             exp->PrettyPrint(dst);
             */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -87,6 +89,8 @@ class list_statement : public Node{
             }
             exp->PrettyPrint(dst);
             */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -132,6 +136,8 @@ class statement_expr : public Node{
             }
             exp->PrettyPrint(dst);
             */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -170,6 +176,8 @@ class statement : public Node{
         /*
            next_statement->PrettyPrint(dst);
            */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
     
         }
 
@@ -225,7 +233,9 @@ class statement_labeled :public Node{
                 dst<<':';    
                 statement->PrettyPrint(dst);     
             }   
-            */        
+            */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);        
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -266,9 +276,10 @@ class statement_jump : public Node{
         {}    
         
         statement_jump(std::string name_1,NodePtr _arg)
-            :symbol(name_1)
-            ,symbol_2(NULL)
-            ,expr(_arg)
+            : expr(_arg)
+            , symbol(name_1)
+            , symbol_2(NULL)
+            
         {}
 
         std::string name = "statement_jump";
@@ -290,6 +301,8 @@ class statement_jump : public Node{
                 symbol->PrettyPrint(dst);
                 dst<<';';
                  */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -321,36 +334,36 @@ class statement_iteration : public Node{
 
     public:
         statement_iteration(std::string name,NodePtr _arg1,NodePtr _arg2)
-            :symbol(name)
-            ,expr(_arg1)
-            ,statement(_arg2)
-            ,symbol_1(NULL)
-            ,statement_expr(NULL)
-            ,statement_expr_rep(NULL)
+            : expr(_arg1)
+            , statement(_arg2)
+            , statement_expr(NULL)
+            , symbol(name)
+            , symbol_1(NULL)
+            , statement_expr_rep(NULL)
         {}
         statement_iteration(std::string name,NodePtr _arg1,std::string name_1,NodePtr _arg2)
-            :symbol(name)
-            ,expr(_arg2)
-            ,statement(_arg1)
-            ,symbol_1(name_1)
-            ,statement_expr(NULL)
-            ,statement_expr_rep(NULL)
+            : expr(_arg2)
+            , statement(_arg1)
+            , statement_expr(NULL)
+            , symbol(name)
+            , symbol_1(name_1)
+            , statement_expr_rep(NULL)
         {}
         statement_iteration(std::string name,NodePtr _arg,NodePtr _arg1,NodePtr _arg2)
-            :symbol(name)
-            ,expr(NULL)
+            :expr(NULL)
             ,statement(_arg2)
-            ,symbol_1(NULL)
             ,statement_expr(_arg)
+            ,symbol(name)
+            ,symbol_1(NULL)    
             ,statement_expr_rep(_arg1)
 
         {} 
         statement_iteration(std::string name,NodePtr _arg,NodePtr _arg1,NodePtr _arg2,NodePtr _arg3)
-            :symbol(name)
-            ,expr(_arg3)
+            :expr(_arg3)
             ,statement(_arg2)
-            ,symbol_1(NULL)
             ,statement_expr(_arg)
+            ,symbol(name)
+            ,symbol_1(NULL)
             ,statement_expr_rep(_arg1)
         {}
 
@@ -389,6 +402,8 @@ class statement_iteration : public Node{
                 statement->PrettyPrint(dst);
             }
             */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -420,16 +435,16 @@ class statement_selection : public Node{
         statement_selection(std::string name,NodePtr _arg,NodePtr _arg1)
             :expr(_arg)
             ,statement(_arg1)
-            ,symbol_1(name)
             ,statement_rep(NULL)
+            ,symbol_1(name)
             ,symbol_2(NULL)
         {}
         
         statement_selection(std::string name,NodePtr _arg,NodePtr _arg1,std::string name1 , NodePtr _arg2)
             :expr(_arg)
             ,statement(_arg1)
-            ,symbol_1(name)
             ,statement_rep(_arg2)
+            ,symbol_1(name)
             ,symbol_2(name1)
         {}
 
@@ -455,7 +470,9 @@ class statement_selection : public Node{
                 statement_rep--PrettyPrint(dst);
             
             }  
-            */         
+            */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);         
   
         }
 

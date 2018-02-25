@@ -14,12 +14,16 @@ class declaration_external : public Node {
             : arg(_arg)
         {}
 
+        std::string name = "declaration_external"; 
+
         virtual void PrettyPrint(std::ostream &dst) const override{
         
          /*
             if(next != null) next->print();
             declaration->print();
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -72,12 +76,16 @@ class definition_function : public Node{
             ,statement_compound(_arg2)
         {}
 
+        std::string name = "definition_function"; 
+
         virtual void PrettyPrint(std::ostream &dst) const override
         {
         /*
             if(next != null) next->print();
             declaration->print();
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
         
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -110,6 +118,7 @@ class declaration : public Node{
             ,declarator_list_init(_arg2)
         {}
 
+        std::string name = "declaration"; 
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -120,6 +129,8 @@ class declaration : public Node{
             // SPECIFIER_DECLARATION ';'
             declaration->print();
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -151,6 +162,8 @@ class specifier_declaration : public Node{
             ,next(_arg2)
         {}    
     public:
+        std::string name = "specifier_declaration";   
+
         virtual void PrettyPrint(std::ostream &dst) const override
         {
         /*        
@@ -158,6 +171,8 @@ class specifier_declaration : public Node{
             if(next != null) next->print();
             declaration->print();
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -192,7 +207,8 @@ class list_declaration : public Node{
             :declaration(_arg2)
             ,list_declaration1(_arg1)
         {}
-              
+
+        std::string name = "list_declaration";              
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -203,6 +219,8 @@ class list_declaration : public Node{
             //MEHEDI IS TRIGGERE
             dst<<'(';
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -252,6 +270,8 @@ class declarator_init_list : public Node{
             //MEHEDI IS TRIGGERE
             dst<<'(';
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -295,6 +315,8 @@ class declarator_init : public Node{
             //MEHEDI IS TRIGGERE
             dst<<'(';
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
         
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -333,6 +355,8 @@ class initializer : public Node{
             //MEHEDI IS TRIGGERE
             dst<<'(';
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -379,6 +403,8 @@ class list_initializer : public Node{
             //MEHEDI IS TRIGGERE
             dst<<'(';
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -427,6 +453,8 @@ class declarator_abstract : public Node{
             //MEHEDI IS TRIGGERED 
             dst<<'(';
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -510,7 +538,8 @@ class declarator_direct_abstract : public Node{
             //MEHEDI IS TRIGGERED 
             dst<<'(';
         */
-
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -557,6 +586,8 @@ class declaration_parameter : public Node{
             //MEHEDI IS TRIGGERED 
             dst<<'(';
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -590,24 +621,24 @@ class declarator_direct : public Node{
 
     public:
         declarator_direct(std::string name)
-            :symbol(name)
-            ,current(NULL)
+            :current(NULL)
             ,next(NULL)
             ,brackets(false) //MEHEDI really wants false
+            ,symbol(name)
         {}
         
         declarator_direct(NodePtr _arg1,NodePtr _arg2)
-            :symbol(NULL)
-            ,current(_arg1)
+            :current(_arg1)
             ,next(_arg2)
             ,brackets(false)
+            ,symbol(NULL)
         {}
         
         declarator_direct(NodePtr _arg1)
-            :symbol(NULL)
-            ,current(_arg1)
+            :current(_arg1)
             ,next(NULL)
-            ,brackets(false)    
+            ,brackets(false)
+            symbol(NULL)
         {}
 
         std::string name = "declarator_direct";
@@ -621,6 +652,8 @@ class declarator_direct : public Node{
             //MEHEDI IS TRIGGERED 
             dst<<'(';
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -668,6 +701,8 @@ class struct_declarator : public Node{
             //MEHEDI IS TRIGGERED 
             dst<<'(';
         */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -715,6 +750,8 @@ class list_struct_declarator : public Node{
             //MEHEDI IS TRIGGERED 
             dst<<'(';
         */ 
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
@@ -755,6 +792,8 @@ class declaration_struct : public Node{
             //MEHEDI IS TRIGGERED 
             dst<<'(';
         */ 
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
@@ -800,6 +839,8 @@ class declaration_list_struct : public Node{
             //MEHEDI IS TRIGGERED 
             dst<<'(';
         */  
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
