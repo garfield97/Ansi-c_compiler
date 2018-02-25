@@ -21,9 +21,6 @@ int main(int argc, char* argv[])
     
     const Node* ast = parseAST(argv[2]);
 
-    int gi = -0x345;
-    
-
     // dest file
     std::ofstream dstStream(argv[4]);
 
