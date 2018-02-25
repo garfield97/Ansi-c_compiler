@@ -36,13 +36,15 @@ int main(int argc, char* argv[])
     // Compile to Assembly
     // bin/c_compiler -S [source-file.c] -o [dest-file.s]
     if( mode == "-S" ){
-        ast->renderASM(dstStream);
+        CompileContext CC;
+        ast->compile(dstStream, CC);
     } 
 
     // Translate to Python
     // bin/c_compiler --translate [source-file.c] -o [dest-file.py]
     if( mode == "--translate" ){
-        ast->toPY(dstStream);
+        TranslateContext TC;
+        ast->translate(dstStream, TC);
     }
 
     // close output file
