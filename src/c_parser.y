@@ -310,8 +310,8 @@ LIST_SPEC_QUAL : SPECIFIER_TYPE LIST_SPEC_QUAL    { $$ = new list_spec_qual($1, 
 
 
 //                             
-LIST_STRUCT_DECLARATOR : STRUCT_DECLARATOR
-                       | LIST_STRUCT_DECLARATOR ',' STRUCT_DECLARATOR
+LIST_STRUCT_DECLARATOR : STRUCT_DECLARATOR                                  { $$ = $1;}
+                       | LIST_STRUCT_DECLARATOR ',' STRUCT_DECLARATOR       { $$ = new list_struct_declarator($1, $3);}
                       
 
 
@@ -459,8 +459,8 @@ STATEMENT_COMPOUND : L_BRACE R_BRACE                                  { $$ = new
                    | L_BRACE LIST_DECLARATION LIST_STATEMENT R_BRACE  { $$ = new statement_compound($2, $3); }
                    
 //
-LIST_DECLARATION : DECLARATION
-                 | LIST_DECLARATION DECLARATION
+LIST_DECLARATION : DECLARATION                          { $$ = $1;}
+                 | LIST_DECLARATION DECLARATION         { $$ = new list_declaration($1, $2); }
                  
 //              
 LIST_STATEMENT : STATEMENT                      { $$ = $1; }

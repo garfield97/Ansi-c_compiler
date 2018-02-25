@@ -292,15 +292,19 @@ class declarator_init : public Node{
     private:
         NodePtr declarator;
         NodePtr initializer;
+        std::string symbol;
         
     public:
         declarator_init(NodePtr _arg1) 
             :declarator(_arg1)
+            ,symbol(" ")
+            ,initializer(NULL)
         {}
         
-        declarator_init(NodePtr _arg1,NodePtr _arg2)
+        declarator_init(NodePtr _arg1,std::string name,NodePtr _arg2)
             :declarator(_arg1)
             ,initializer(_arg2)
+            ,symbol(name)
         {}
         
     public:
