@@ -857,6 +857,41 @@ class declaration_list_struct : public Node{
         }
 };
 
+class declarator : public Node{
+    //DECLARATOR : POINTER DECLARATOR_DIRECT
+    //           | DECLARATOR_DIRECT  
+    private:
+        NodePtr ptr;
+        NodePtr dd;
+    public:
+        program(NodePtr _arg1, NodePtr _arg2)
+            : ptr(_arg1)
+            , dd(_arg2)
+        {}
+
+    public:
+
+        std::string name = "declarator";
+    
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+            ptr->PrettyPrint(dst);
+            dd->PrettyPrint(dst);
+        }
+
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
+        }
+
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
+        }
+};
+
 //not sure if delcaration is complete
 //lets move onto int main recursion
 

@@ -9,11 +9,13 @@ class program : public Node {
     private:
         NodePtr next;
         NodePtr declaration;
+
     public:
         program(NodePtr _arg1, NodePtr _arg2)
             : next(_arg1)
             , declaration(_arg2)
         {}
+        
     public:
 
         std::string name = "program";
