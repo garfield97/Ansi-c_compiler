@@ -895,7 +895,7 @@ class declarator : public Node{
 //not sure if delcaration is complete
 //lets move onto int main recursion
 
-
+/*
 class declarator : public Node{
 // DECLARATOR : POINTER DECLARATOR_DIRECT        { $$ = new declarator($1, $2); }
 //            | DECLARATOR_DIRECT    
@@ -929,7 +929,7 @@ public:
         declaration->PrettyPrintp();
         //MEHEDI IS TRIGGERED 
         dst<<'(';
-      */  
+      
 
     }
 
@@ -941,7 +941,7 @@ public:
 
     }  
 
-
+*/
      
 
 

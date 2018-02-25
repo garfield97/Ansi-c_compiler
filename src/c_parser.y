@@ -480,10 +480,10 @@ STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT
 
 
 //
-STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
-                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';' 
-                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT
-                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMENT
+STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT                             { $$ = statement_iteration(*$1, $2, $3); }
+                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';'                      { $$ = statement_iteration(*$1, $2, *$3, $4); }
+                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT      { $$ = statement_iteration(*$1, $2, $3, $4); }
+                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMENT { $$ = statement_iteration(*$1, $2, $3, $4, $5); }
 
 
 
