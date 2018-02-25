@@ -864,7 +864,7 @@ class declarator : public Node{
         NodePtr ptr;
         NodePtr dd;
     public:
-        program(NodePtr _arg1, NodePtr _arg2)
+        declarator(NodePtr _arg1, NodePtr _arg2)
             : ptr(_arg1)
             , dd(_arg2)
         {}
