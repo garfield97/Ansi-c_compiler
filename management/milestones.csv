@@ -5,6 +5,8 @@ C_Lexer,Preliminary _C_lexer,4,mh3216,163dc776e053d42ba3ae4ffb00d4af8955724e31,I
 C_parser_framework,C_Lexer,3,mh3216,163dc776e053d42ba3ae4ffb00d4af8955724e31,Produce a skeletal outline of the C parser with all the necessary parameters
 C_parser_grammar,C_parser_framework,5,rz1616,b495090533643b844633f3f56f47e6cfa9c19ef5, parser grammar rules
 build_routine,,1,mh3216,122586530192bf869b2b153e9223b4e1f9f3632c,Decided to dedicate time to creating a makefile for build automaition
-c_compiler_framework,C_Lexer;C_parser_grammar,2,mh3216,,
+c_compiler_framework,C_Lexer;C_parser_grammar,2,mh3216,3fd67decf6f03c7e0daed7e023e87efbbb83177e,
 test_suite,,2,mh3216,15976e51c7f95f1e44f169a3248a20cd494b7ee9,create C programs for test suite
-C_parser_AST,C_parser_grammar,8,,,
+C_parser_AST,C_parser_grammar,8,mh3216,a3a23ca10d9543644f97c5df62bdc91d5b6ba4fe,Create classes for C_parser_AST
+C_translator_formative,C_parser_AST,8,,,
+C_translator_final,C_translator_formative,6,,,

@@ -3,5 +3,11 @@ Date,Effort,Developers,Milestones
 2018-02-03,5,mh3216;rz1616,Preliminary_C_lexer;C_Lexer
 2018-02-06,2,mh3216;rz1616,Preliminary_C_lexer;C_Lexer
 2018-02-10,4,mh3216,C_Lexer;C_parser_framework
-2018-02-17,6,mh3216,test_suite
+2018-02-17,6,mh3216,test_suite;build_routine
 2018-02-17,4,rz1616,C_parser_grammar
+2018-02-21,4,mh3216,C_parser_AST
+2018-02-22,8,mh3216,C_parser_AST
+2018-02-22,8,rz1616,C_parser_AST
+2018-02-24,6,mh3216,C_parser_AST
+2018-02-22,1,mh3216,c_compiler_framework
+2018-02-24,6,rz1616,C_parser_AST
