@@ -231,7 +231,7 @@ DECLARATOR_INIT_LIST : DECLARATOR_INIT                              { $$ = $1;}
                      
 //                     
 DECLARATOR_INIT : DECLARATOR                        { $$ = $1;}
-                | DECLARATOR ASSIGN INITIALIZER     { $$ = new declarator_init( $1,"=" , $3);}
+                | DECLARATOR ASSIGN INITIALIZER     { $$ = new declarator_init( $1,'=' , $3);}
 
 
 
