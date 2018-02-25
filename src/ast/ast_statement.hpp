@@ -3,98 +3,82 @@
 
 #include "ast_node.hpp"
 
-
-
-
-
-
 class statement_compound : public Node{
-//STATEMENT_COMPOUND : L_BRACE R_BRACE                                  { $$ = new statement_compound(); }
-//                   | L_BRACE LIST_STATEMENT R_BRACE                   { $$ = new statement_compound($2); }
-//                   | L_BRACE LIST_DECLARATION R_BRACE                 { $$ = new statement_compound($2); }
-//                   | L_BRACE LIST_DECLARATION LIST_STATEMENT R_BRACE 
+    //STATEMENT_COMPOUND : L_BRACE R_BRACE                                  { $$ = new statement_compound(); }
+    //                   | L_BRACE LIST_STATEMENT R_BRACE                   { $$ = new statement_compound($2); }
+    //                   | L_BRACE LIST_DECLARATION R_BRACE                 { $$ = new statement_compound($2); }
+    //                   | L_BRACE LIST_DECLARATION LIST_STATEMENT R_BRACE 
+    private:
+        NodePtr current;
+        NodePtr next;
 
-private:
+    public:
+        statement_compound()
+            :current(NULL)
+            ,next(NULL)
+        {}
 
-    NodePtr current;
-    NodePtr next;
+        statement_compound(NodePtr _arg)
+            :current(_arg)
+            ,next(NULL)
+        {}
 
-
-
-public:
-
-    statement_compound()
-        :current(NULL)
-        ,next(NULL)
-    {}
-
-
-    statement_compound(NodePtr _arg)
-        :current(_arg)
-        ,next(NULL)
-    {}
-
-
-    statement_compound(NodePtr _arg1,NodePtr _arg2)
-        :current(_arg1)
-        ,next(_arg2)
-    {}
-    
-
-
-    
-    
-        std::string name = "statement_compound";
+        statement_compound(NodePtr _arg1,NodePtr _arg2)
+            :current(_arg1)
+            ,next(_arg2)
+        {}      
         
-      virtual void PrettyPrint(std::ostream &dst) const override{
-    /*  
-          
-              if(rec != NULL){
+        std::string name = "statement_compound";
+            
+        virtual void PrettyPrint(std::ostream &dst) const override
+        {
+        /*  
+            
+            if(rec != NULL){
                     rec->PrettyPrint(dst);
                     dst<<'^ ';
-              }
-              exp->PrettyPrint(dst);
-              */
+            }
+            exp->PrettyPrint(dst);
+            */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
-
 class list_statement : public Node{
+    //LIST_STATEMENT : STATEMENT
+    //               | LIST_STATEMENT STATEMENT         
 
-//LIST_STATEMENT : STATEMENT
-//               | LIST_STATEMENT STATEMENT
-                  
+    private:
+        NodePtr current;
+        NodePtr next;
 
-private:
-
-    NodePtr current;
-    NodePtr next;
-
-
-public:
-    
-    list_statement(NodePtr _arg1)
-        :current(_arg1)
-        ,next(NULL)
-    {}
-    
-    list_statement(NodePtr _arg1,NodePtr _arg2)
-        :current(_arg1)
-        ,next(_arg2)
-    {}
-
-
+    public:   
+        list_statement(NodePtr _arg1)
+            :current(_arg1)
+            ,next(NULL)
+        {}
+        
+        list_statement(NodePtr _arg1,NodePtr _arg2)
+            :current(_arg1)
+            ,next(_arg2)
+        {}
 
         std::string name = "list_statement";
+
         virtual void PrettyPrint(std::ostream &dst) const override
         {
             /*
@@ -105,46 +89,42 @@ public:
             }
             exp->PrettyPrint(dst);
             */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
 
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 
 };
 
-
-
-
 class statement_expr : public Node{
+    //STATEMENT_EXPR : ';'
+    //               | EXPR ';'
 
-//STATEMENT_EXPR : ';'
-//               | EXPR ';'
+    private:
+        NodePtr current;
 
-
-private:
-
-    NodePtr current;
-
-public:
-        //since first line its no non terminal matched, terminal symbol only so maybe empty set?
-
-    statement_expr()
-        :current(NULL)
-    {}
-    
-    statement_expr(NodePtr _arg1)
-        :current(_arg1)
-    {}
-    
-
-
-
+    public:
+            //since first line its no non terminal matched, terminal symbol only so maybe empty set?
+        statement_expr()
+            :current(NULL)
+        {}
+        
+        statement_expr(NodePtr _arg1)
+            :current(_arg1)
+        {}
+ 
         std::string name = "statement_expr";
    
         virtual void PrettyPrint(std::ostream &dst) const override
@@ -156,40 +136,38 @@ public:
             }
             exp->PrettyPrint(dst);
             */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
-
-
 };
-    
-    
-    
+        
 class statement : public Node{
+    //STATEMENT : STATEMENT_LABELED
+    //          | STATEMENT_COMPOUND
+    //          | STATEMENT_EXPR
+    //          | STATEMENT_SELECTION
+    //          | STATEMENT_ITERATION
+    //          | STATEMENT_JUMP'
 
-//STATEMENT : STATEMENT_LABELED
-//          | STATEMENT_COMPOUND
-//          | STATEMENT_EXPR
-//          | STATEMENT_SELECTION
-//          | STATEMENT_ITERATION
-//          | STATEMENT_JUMP'
-
-private:
-    
-    NodePtr next_statement;
-    
-public:
-
-    statement(NodePtr _arg1)
-        :next_statement(_arg1)
-    {}
-
+    private:
+        NodePtr next_statement;
+        
+    public:
+        statement(NodePtr _arg1)
+            :next_statement(_arg1)
+        {}
 
         std::string name = "statement";
     
@@ -198,53 +176,47 @@ public:
         /*
            next_statement->PrettyPrint(dst);
            */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
     
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
-
-
 };
 
-
-
-
 class statement_labeled :public Node{
-
-//STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
-//                  | CASE EXPR_CONST ':' STATEMENT
-//                  | DEFAULT ':' STATEMENT
+    //STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
+    //                  | CASE EXPR_CONST ':' STATEMENT
+    //                  | DEFAULT ':' STATEMENT
                   
-private:
+    private:
+        NodePtr statement;
+        std::string labels;
+        NodePtr const_expr;
 
-    NodePtr statement;
-    std::string labels;
-    NodePtr const_expr;
+    public: 
+        statement_labeled(std::string symbol,NodePtr _arg1)
+            :statement(_arg1)
+            ,labels(symbol)
+            ,const_expr(NULL)
+        {}
+        
+        statement_labeled(std::string symbol,NodePtr _arg1,NodePtr _arg2)
+            :statement(_arg2)
+            ,labels(symbol)
+            ,const_expr(_arg1)
+        {} 
 
-
-
-public: 
-    statement_labeled(std::string symbol,NodePtr _arg1)
-        :statement(_arg1)
-        ,labels(symbol)
-        ,const_expr(NULL)
-    {}
-    
-    statement_labeled(std::string symbol,NodePtr _arg1,NodePtr _arg2)
-        :statement(_arg2)
-        ,labels(symbol)
-        ,const_expr(_arg1)
-    {}
-    
-
-
-    
         std::string name = "statement_labeled";
     
         virtual void PrettyPrint(std::ostream &dst) const override
@@ -261,51 +233,54 @@ public:
                 dst<<':';    
                 statement->PrettyPrint(dst);     
             }   
-            */        
+            */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);        
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 
 };
 
+class statement_jump : public Node{ 
+    //STATEMENT_JUMP : GOTO IDENTIFIER ';'
+    //               | CONTINUE ';'
+    //               | BREAK ';'
+    //               | RETURN ';'
+    //               | RETURN EXPR ';'
 
+    private:
+        NodePtr expr;
+        std::string symbol;
+        std::string symbol_2;
 
-
-class statement_jump : public Node{
-    
-//STATEMENT_JUMP : GOTO IDENTIFIER ';'
-//               | CONTINUE ';'
-//               | BREAK ';'
-//               | RETURN ';'
-//               | RETURN EXPR ';'
-private:
-    NodePtr expr;
-    std::string symbol;
-    std::string symbol_2;
-public:
-    
-    statement_jump(std::string name_1,std::string name_2)
-        :symbol(name_1)
-        ,symbol_2(name_2)
-    {}
-    
-    statement_jump(std::string name_1)
-        :symbol(name_1)
-        ,symbol_2(NULL)
-    {}    
-    
-    statement_jump(std::string name_1,NodePtr _arg)
-        :symbol(name_1)
-        ,symbol_2(NULL)
-        ,expr(_arg)
-    {}
-
+    public:
+        statement_jump(std::string name_1,std::string name_2)
+            :symbol(name_1)
+            ,symbol_2(name_2)
+        {}
+        
+        statement_jump(std::string name_1)
+            :symbol(name_1)
+            ,symbol_2(NULL)
+        {}    
+        
+        statement_jump(std::string name_1,NodePtr _arg)
+            : expr(_arg)
+            , symbol(name_1)
+            , symbol_2(NULL)
+            
+        {}
 
         std::string name = "statement_jump";
     
@@ -326,66 +301,71 @@ public:
                 symbol->PrettyPrint(dst);
                 dst<<';';
                  */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
-
 };
 
-
 class statement_iteration : public Node{
-//STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
-//                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';' 
-//                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT
-//                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMENT
-private:
-    
-    NodePtr expr;
-    NodePtr statement;
-    NodePtr statement_expr;
-    std::string symbol;
-    std::string symbol_1;
-    NodePtr statement_expr_rep;
-public:
-    statement_iteration(std::string name,NodePtr _arg1,NodePtr _arg2)
-        :symbol(name)
-        ,expr(_arg1)
-        ,statement(_arg2)
-        ,symbol_1(NULL)
-        ,statement_expr(NULL)
-        ,statement_expr_rep(NULL)
-    {}
-    statement_iteration(std::string name,NodePtr _arg1,std::string name_1,NodePtr _arg2)
-        :symbol(name)
-        ,expr(_arg2)
-        ,statement(_arg1)
-        ,symbol_1(name_1)
-        ,statement_expr(NULL)
-        ,statement_expr_rep(NULL)
-    {}
-    statement_iteration(std::string name,NodePtr _arg,NodePtr _arg1,NodePtr _arg2)
-        :symbol(name)
-        ,expr(NULL)
-        ,statement(_arg2)
-        ,symbol_1(NULL)
-        ,statement_expr(_arg)
-        ,statement_expr_rep(_arg1)
+    //STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
+    //                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';' 
+    //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT
+    //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMENT
 
-    {} 
-    statement_iteration(std::string name,NodePtr _arg,NodePtr _arg1,NodePtr _arg2,NodePtr _arg3)
-        :symbol(name)
-        ,expr(_arg3)
-        ,statement(_arg2)
-        ,symbol_1(NULL)
-        ,statement_expr(_arg)
-        ,statement_expr_rep(_arg1)
-    {}
+    private:
+        NodePtr expr;
+        NodePtr statement;
+        NodePtr statement_expr;
+        std::string symbol;
+        std::string symbol_1;
+        NodePtr statement_expr_rep;
+
+    public:
+        statement_iteration(std::string name,NodePtr _arg1,NodePtr _arg2)
+            : expr(_arg1)
+            , statement(_arg2)
+            , statement_expr(NULL)
+            , symbol(name)
+            , symbol_1(NULL)
+            , statement_expr_rep(NULL)
+        {}
+        statement_iteration(std::string name,NodePtr _arg1,std::string name_1,NodePtr _arg2)
+            : expr(_arg2)
+            , statement(_arg1)
+            , statement_expr(NULL)
+            , symbol(name)
+            , symbol_1(name_1)
+            , statement_expr_rep(NULL)
+        {}
+        statement_iteration(std::string name,NodePtr _arg,NodePtr _arg1,NodePtr _arg2)
+            :expr(NULL)
+            ,statement(_arg2)
+            ,statement_expr(_arg)
+            ,symbol(name)
+            ,symbol_1(NULL)    
+            ,statement_expr_rep(_arg1)
+
+        {} 
+        statement_iteration(std::string name,NodePtr _arg,NodePtr _arg1,NodePtr _arg2,NodePtr _arg3)
+            :expr(_arg3)
+            ,statement(_arg2)
+            ,statement_expr(_arg)
+            ,symbol(name)
+            ,symbol_1(NULL)
+            ,statement_expr_rep(_arg1)
+        {}
 
         std::string name = "statement_iteration";
    
@@ -422,58 +402,53 @@ public:
                 statement->PrettyPrint(dst);
             }
             */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
-        }
-   
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
+        }  
 };
 
 class statement_selection : public Node{
+    //STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT
+    //                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT
+    //                    | SWITCH L_BRACKET EXPR R_BRACKET STATEMENT
 
-//STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT
-//                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT
-//                    | SWITCH L_BRACKET EXPR R_BRACKET STATEMENT
+    private:
+        NodePtr expr;
+        NodePtr statement;
+        NodePtr statement_rep;
+        std::string symbol_1;
+        std::string symbol_2;      
+        
+    public:
+        statement_selection(std::string name,NodePtr _arg,NodePtr _arg1)
+            :expr(_arg)
+            ,statement(_arg1)
+            ,statement_rep(NULL)
+            ,symbol_1(name)
+            ,symbol_2(NULL)
+        {}
+        
+        statement_selection(std::string name,NodePtr _arg,NodePtr _arg1,std::string name1 , NodePtr _arg2)
+            :expr(_arg)
+            ,statement(_arg1)
+            ,statement_rep(_arg2)
+            ,symbol_1(name)
+            ,symbol_2(name1)
+        {}
 
-
-private:
-
-    NodePtr expr;
-    NodePtr statement;
-    NodePtr statement_rep;
-    std::string symbol_1;
-    std::string symbol_2;
-    
-    
-
-public:
-    
-    statement_selection(std::string name,NodePtr _arg,NodePtr _arg1)
-        :expr(_arg)
-        ,statement(_arg1)
-        ,symbol_1(name)
-        ,statement_rep(NULL)
-        ,symbol_2(NULL)
-    {}
-    
-    statement_selection(std::string name,NodePtr _arg,NodePtr _arg1,std::string name1 , NodePtr _arg2)
-        :expr(_arg)
-        ,statement(_arg1)
-        ,symbol_1(name)
-        ,statement_rep(_arg2)
-        ,symbol_2(name1)
-    {}
-
-
-
-
-
-    std::string name = "statement_selection";
+        std::string name = "statement_selection";
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -495,22 +470,24 @@ public:
                 statement_rep--PrettyPrint(dst);
             
             }  
-            */         
+            */
+            dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
+            exit(1);         
   
         }
 
-        virtual void toPY(std::ostream &dst) const override{
-
+        virtual void translate(std::ostream &dst, TranslateContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
+            exit(1);
         }
 
-        virtual void renderASM(std::ostream &dst) const override{
-
+        virtual void compile(std::ostream &dst, CompileContext &context) const override
+        {
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
-   
 };
-
-
-
 
 
 #endif

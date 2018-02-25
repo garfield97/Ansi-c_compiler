@@ -343,15 +343,12 @@ ENUMERATOR : IDENTIFIER                      { $$ = new enumerator(*$1);     }
 
 QUALIFIER_TYPE : CONST      { $$ = new qualifier_type("const"); }
                | VOLATILE   { $$ = new qualifier_type("volatile"); }
-               
 
 
-
-
-
-//               
 DECLARATOR : POINTER DECLARATOR_DIRECT        { $$ = new declarator($1, $2); }
-           | DECLARATOR_DIRECT                { $$ = new declarator($1); }
+           | DECLARATOR_DIRECT                { $$ = $1;                     }
+
+
 //          
 DECLARATOR_DIRECT : IDENTIFIER                                              { $$ = new declarator_direct(*$1); }
                   | L_BRACKET DECLARATOR R_BRACKET                          { $$ = new declarator_direct($2); }

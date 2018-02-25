@@ -24,15 +24,15 @@ IDENTIFIER  			[_a-zA-Z][0-9_a-zA-Z]*
 
 INTEGER_SUFFIX          ([uU][lL]?) | ([lL][uU]?)
 
-DECIMAL_CONSTANT        [1-9][0-9]*[integer_suffix]?
+DECIMAL_CONSTANT        -?[1-9][0-9]*[integer_suffix]?
 
-OCTAL_CONSTANT		    [0][0-7]*[integer_suffix]?
+OCTAL_CONSTANT		    -?[0][0-7]*[integer_suffix]?
 
-HEXAD_CONSTANT    		(0x|0X)[0-9a-fA-F]+[integer_suffix]?
+HEXAD_CONSTANT    		-?(0x|0X)[0-9a-fA-F]+[integer_suffix]?
 
 CHAR_CONSTANT     		L?['][.]+[']
 
-STRING_LITERAL			L?["]([.^"])*["]
+FLOAT_CONSTANT			-?([0-9]+|[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?)
 
 INCLUDE					#[.^\n]
 
@@ -49,103 +49,103 @@ OTHER					.
 
 %%
 
-auto			{ fprintf(stderr, "AUTO\n");
+"auto"				{ fprintf(stderr, "AUTO\n");
 						return AUTO; }
 
-double			{ fprintf(stderr, "DOUBLE\n");
+"double"			{ fprintf(stderr, "DOUBLE\n");
 						return DOUBLE; }
 
-int				{ fprintf(stderr, "INT\n");
+"int"				{ fprintf(stderr, "INT\n");
 						return INT; }
 
-struct			{ fprintf(stderr, "STRUCT\n");
+"struct"			{ fprintf(stderr, "STRUCT\n");
 						return STRUCT; }
 
-break			{ fprintf(stderr, "BREAK\n");
+"break"				{ fprintf(stderr, "BREAK\n");
 						return BREAK; }
 
-else			{ fprintf(stderr, "ELSE\n");
+"else"				{ fprintf(stderr, "ELSE\n");
 						return ELSE; }
 
-long			{ fprintf(stderr, "LONG\n");
+"long"				{ fprintf(stderr, "LONG\n");
 						return LONG; }
 
-switch			{ fprintf(stderr, "SWITCH\n");
+"switch"			{ fprintf(stderr, "SWITCH\n");
 						return SWITCH; }
 
-case			{ fprintf(stderr, "CASE\n");
+"case"				{ fprintf(stderr, "CASE\n");
 						return CASE; }
 
-enum			{ fprintf(stderr, "ENUM\n");
+"enum"				{ fprintf(stderr, "ENUM\n");
 						return ENUM; }
 
-... 			{ fprintf(stderr, "ELIPSIS\n");
+"..." 				{ fprintf(stderr, "ELIPSIS\n");
 						return ELIPSIS; }
 
-register		{ fprintf(stderr, "REGISTER\n");
+"register"			{ fprintf(stderr, "REGISTER\n");
 						return REGISTER; }
 
-typedef			{ fprintf(stderr, "TYPEDEF\n");
+"typedef"			{ fprintf(stderr, "TYPEDEF\n");
 						return TYPEDEF; }
 
-char			{ fprintf(stderr, "CHAR\n");
+"char"				{ fprintf(stderr, "CHAR\n");
 						return CHAR; }
 
-extern			{ fprintf(stderr, "EXTERN\n");
+"extern"			{ fprintf(stderr, "EXTERN\n");
 						return EXTERN; }
 
-return			{ fprintf(stderr, "RETURN\n");
+"return"			{ fprintf(stderr, "RETURN\n");
 						return RETURN; }
 
-union			{ fprintf(stderr, "UNION\n");
+"union"				{ fprintf(stderr, "UNION\n");
 						return UNION; }
 
-const			{ fprintf(stderr, "CONST\n");
+"const"				{ fprintf(stderr, "CONST\n");
 						return CONST; }
 
-float			{ fprintf(stderr, "FLOAT\n");
+"float"				{ fprintf(stderr, "FLOAT\n");
 						return FLOAT; }
 
-short			{ fprintf(stderr, "SHORT\n");
+"short"				{ fprintf(stderr, "SHORT\n");
 						return SHORT; }
 
-unsigned		{ fprintf(stderr, "UNSIGNED\n");
+"unsigned"			{ fprintf(stderr, "UNSIGNED\n");
 						return UNSIGNED; }
 
-continue		{ fprintf(stderr, "CONTINUE\n");
+"continue"			{ fprintf(stderr, "CONTINUE\n");
 						return CONTINUE; }
 
-"for"			{ fprintf(stderr, "FOR\n");
+"for"				{ fprintf(stderr, "FOR\n");
 						return FOR; }
 
-signed			{ fprintf(stderr, "SIGNED\n");
+"signed"			{ fprintf(stderr, "SIGNED\n");
 						return SIGNED; }
 
-void			{ fprintf(stderr, "VOID\n");
+"void"				{ fprintf(stderr, "VOID\n");
 						return VOID; }
 
-default			{ fprintf(stderr, "DEFAULT\n");
+"default"			{ fprintf(stderr, "DEFAULT\n");
 						return DEFAULT; }
 
-goto			{ fprintf(stderr, "GOTO\n");
+"goto"				{ fprintf(stderr, "GOTO\n");
 						return GOTO; }
 
-sizeof			{ fprintf(stderr, "SIZEOF\n");
+"sizeof"			{ fprintf(stderr, "SIZEOF\n");
 						return SIZEOF; }
 
-volatile		{ fprintf(stderr, "VOLATILE\n");
+"volatile"			{ fprintf(stderr, "VOLATILE\n");
 						return VOLATILE; }
 
-do				{ fprintf(stderr, "DO\n");
+"do"				{ fprintf(stderr, "DO\n");
 						return DO; }
 
-if				{ fprintf(stderr, "IF\n");
+"if"				{ fprintf(stderr, "IF\n");
 						return IF; }
 
-static			{ fprintf(stderr, "STATIC\n");
+"static"			{ fprintf(stderr, "STATIC\n");
 						return STATIC; }
 
-while			{ fprintf(stderr, "WHILE\n");
+"while"				{ fprintf(stderr, "WHILE\n");
 						return WHILE; }
 
 
@@ -186,7 +186,7 @@ while			{ fprintf(stderr, "WHILE\n");
 						return CHARACTER_C; 
 					}
 
-{STRING_LITERAL}	{ fprintf(stderr, "String : %s\n", yytext);
+L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 						toString();
 						return STRING_LITERAL;
 					}
@@ -383,15 +383,15 @@ void get_DECIMAL_U(){
 }
 
 void get_DECIMAL_L(){   
-    long int num;
+    int num;
 	sscanf(yytext, "%d", &num);
-	yylval.longintValue = num;
+	yylval.longintValue = (long int) num;
 }
 
 void get_DECIMAL_UL(){   
-    unsigned long num;
+    unsigned int num;
 	sscanf(yytext, "%u", &num);
-	yylval.longuintValue = num;
+	yylval.longuintValue = (unsigned long) num;
 }
 
 
@@ -409,16 +409,15 @@ void get_OCTAL_U(){
 }
 
 void get_OCTAL_L(){
- 
-    long int num;
+    int num;
     sscanf(yytext,"%o", &num);    
-    yylval.longintValue = num;
+    yylval.longintValue = (long int) num;
 }
 
 void get_OCTAL_UL(){
-    unsigned long num;
+    unsigned int num;
     sscanf(yytext,"%o", &num);    
-    yylval.longuintValue = num;   
+    yylval.longuintValue = (unsigned long) num;   
 }
 
 
@@ -436,16 +435,15 @@ void get_HEXA_U(){
 }
 
 void get_HEXA_L(){   
-    long int num;
+    int num;
     sscanf(yytext,"%x",&num);
-    yylval.longintValue = num;   
+    yylval.longintValue = (long int) num;  
 } 
   
 void get_HEXA_UL(){
-    
-    unsigned long int num;
+    unsigned int num;
     sscanf(yytext,"%x",&num);
-    yylval.longuintValue = num;
+    yylval.longuintValue = (unsigned long) num; 
 }
     
 
