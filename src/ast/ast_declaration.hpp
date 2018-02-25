@@ -489,42 +489,43 @@ class declarator_direct_abstract : public Node{
         
     public:
     // LOOK AT THE DIFFERENTIATION LATER
-
+/*
         declarator_direct_abstract(NodePtr _arg1,char x)
             :now(_arg1)
             ,next(NULL)
-            ,bracket(true)
+           // ,bracket(true)
         {}
-        
+        */
         
         declarator_direct_abstract()
             :now(NULL)
             ,next(NULL)
-            ,bracket(false)
+           // ,bracket(false)
         {}
         
         declarator_direct_abstract(NodePtr _arg1)
             :now(_arg1)
             ,next(NULL)
-            ,bracket(false)
+          //  ,bracket(false)
         {}
-
+/*
         declarator_direct_abstract(NodePtr _arg1,NodePtr _arg2,char x)
             :now(_arg1)
             ,next(_arg2)
-            ,bracket(false)
+         //   ,bracket(false)
         {}
-        
+        */
+        /*
         declarator_direct_abstract(char x)
             :now(NULL)
             ,next(NULL)
-            ,bracket(true)
+          //  ,bracket(true)
         {}   
-        
+        */
         declarator_direct_abstract(NodePtr _arg1,NodePtr _arg2)
             :now(_arg1)
             ,next(_arg2)
-            ,bracket(true)
+           // ,bracket(true)
         {} 
 
         std::string name = "declarator_direct_abstract";
