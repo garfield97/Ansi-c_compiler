@@ -118,10 +118,11 @@ class statement_expr : public Node{
 
     public:
             //since first line its no non terminal matched, terminal symbol only so maybe empty set?
+        /*
         statement_expr()
             :current(NULL)
         {}
-        
+        */
         statement_expr(NodePtr _arg1)
             :current(_arg1)
         {}
@@ -166,10 +167,12 @@ class statement : public Node{
         NodePtr next_statement;
         
     public:
+    
+    /*
         statement(NodePtr _arg1)
             :next_statement(_arg1)
         {}
-
+*/
         std::string name = "statement";
     
         virtual void PrettyPrint(std::ostream &dst) const override

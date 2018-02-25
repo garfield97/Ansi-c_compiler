@@ -386,9 +386,9 @@ LIST_PARAMETER : DECLARATION_PARAMETER                      { $$ = $1;          
 
 
 //
-DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR        
-                      | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT
-                      | SPECIFIER_DECLARATION
+DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR                    { $$ = new declaration_parameter($1,$2);}  
+                      | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT           { $$ = new declaration_parameter($1,$2);}
+                      | SPECIFIER_DECLARATION                               { $$ = $1;}
 
 
 
@@ -408,47 +408,47 @@ TYPE_NAME : LIST_SPEC_QUAL                        { $$ = $1;                    
 
 
 //
-DECLARATOR_ABSTRACT : POINTER
-                    | DECLARATOR_DIRECT_ABSTRACT
-                    | POINTER DECLARATOR_DIRECT_ABSTRACT
+DECLARATOR_ABSTRACT : POINTER                                   { $$ = $1; }
+                    | DECLARATOR_DIRECT_ABSTRACT                { $$ = $1; }     
+                    | POINTER DECLARATOR_DIRECT_ABSTRACT        { $$ = new declarator_abstract($1, $2);} 
    
    
    
 //                   
-DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET
-                           | L_SQUARE R_SQUARE
-                           | L_SQUARE EXPR_CONST R_SQUARE
-                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE R_SQUARE
-                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE EXPR_CONST R_SQUARE
-                           | L_BRACKET R_BRACKET
-                           | L_BRACKET LIST_PARAM_TYPE R_BRACKET
-                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET R_BRACKET
-                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET LIST_PARAM_TYPE R_BRACKET
+DECLARATOR_DIRECT_ABSTRACT : L_BRACKET DECLARATOR_ABSTRACT R_BRACKET                                { $$ = new declarator_direct_abstract($2 , 'x') }
+                           | L_SQUARE R_SQUARE                                                      { $$ = new initializer('x');}
+                           | L_SQUARE EXPR_CONST R_SQUARE                                           { $$ = new initializer($2);}
+                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE R_SQUARE                           { $$ = new initializer($1);}
+                           | DECLARATOR_DIRECT_ABSTRACT L_SQUARE EXPR_CONST R_SQUARE                { $$ = new initializer($1, $3);}
+                           | L_BRACKET R_BRACKET                                                    { $$ = new initializer();}
+                           | L_BRACKET LIST_PARAM_TYPE R_BRACKET                                    { $$ = new initializer($2, 'x');}
+                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET R_BRACKET                         { $$ = new initializer($1, 'x');}
+                           | DECLARATOR_DIRECT_ABSTRACT L_BRACKET LIST_PARAM_TYPE R_BRACKET         { $$ = new initializer($1, $3, 'x');}
                            
                                          
 //
-INITIALIZER : EXPR_ASSIGNMENT    
-            | L_BRACKET LIST_INITIALIZER R_BRACKET
-            | L_BRACKET LIST_INITIALIZER ',' R_BRACKET 
+INITIALIZER : EXPR_ASSIGNMENT                                 { $$ = $1; }
+            | L_BRACKET LIST_INITIALIZER R_BRACKET            { $$ = new initializer($2);}
+            | L_BRACKET LIST_INITIALIZER ',' R_BRACKET        { $$ = new initializer($2);} 
             
 
 //
-LIST_INITIALIZER : INITIALIZER
-                 | LIST_INITIALIZER ',' INITIALIZER
+LIST_INITIALIZER : INITIALIZER                          { $$ = $1; }
+                 | LIST_INITIALIZER ',' INITIALIZER     { $$ = new list_initializer($1, $3);}
                  
 //               
-STATEMENT : STATEMENT_LABELED
-          | STATEMENT_COMPOUND
-          | STATEMENT_EXPR
-          | STATEMENT_SELECTION
-          | STATEMENT_ITERATION
-          | STATEMENT_JUMP
+STATEMENT : STATEMENT_LABELED       { $$ = $1; }
+          | STATEMENT_COMPOUND      { $$ = $1; }
+          | STATEMENT_EXPR          { $$ = $1; }
+          | STATEMENT_SELECTION     { $$ = $1; }
+          | STATEMENT_ITERATION     { $$ = $1; }
+          | STATEMENT_JUMP          { $$ = $1; }
 
 
 //          
 STATEMENT_LABELED : IDENTIFIER ':' STATEMENT       { $$ = new statement_labeled(*$1, $3);}
-                  | CASE EXPR_CONST ':' STATEMENT  { $$ = new statement_labeled("CASE", $2, $3);}
-                  | DEFAULT ':' STATEMENT          { $$ = new statement_labeled("DEFAULT", $2);}
+                  | CASE EXPR_CONST ':' STATEMENT  { $$ = new statement_labeled("CASE", $2, $4);}
+                  | DEFAULT ':' STATEMENT          { $$ = new statement_labeled("DEFAULT", $3);}
                   
 
 
