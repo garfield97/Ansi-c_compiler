@@ -20,6 +20,8 @@ int main(int argc, char* argv[])
     // 2nd argument is source C file to compile
     
     const Node* ast = parseAST(argv[2]);
+
+    int gi = -0x345;
     
 
     // dest file
