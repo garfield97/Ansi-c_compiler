@@ -289,10 +289,14 @@ class declarator_init_list : public Node{
 
 class declarator_init : public Node{
 
+
+//DECLARATOR_INIT : DECLARATOR                        { $$ = $1;}
+//                | DECLARATOR ASSIGN INITIALIZER     { $$ = declarator_init( $1,"=" , $3);}
+
     private:
         NodePtr declarator;
         NodePtr initializer;
-        std::string symbol;
+        char symbol;
         
     public:
     /*
@@ -302,11 +306,12 @@ class declarator_init : public Node{
             ,initializer(NULL)
         {}
     */
-        declarator_init(NodePtr _arg1,std::string name,NodePtr _arg2)
+        declarator_init(NodePtr _arg1,char name,NodePtr _arg2)
             :declarator(_arg1)
             ,initializer(_arg2)
             ,symbol(name)
         {}
+        
         
     public:
         
