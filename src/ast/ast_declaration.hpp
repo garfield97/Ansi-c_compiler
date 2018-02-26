@@ -103,6 +103,9 @@ class definition_function : public Node{
 
 class declaration : public Node{
 
+//DECLARATION : SPECIFIER_DECLARATION ';'                       { $$ = new declaration($1); }
+//            | SPECIFIER_DECLARATION DECLARATOR_INIT_LIST ';'  { $$ = new declaration($1, $2); }
+
     private:
         NodePtr  specifier_declaration;
         NodePtr  declarator_list_init;
@@ -136,8 +139,7 @@ class declaration : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+                
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -145,6 +147,8 @@ class declaration : public Node{
             dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
             exit(1);
         }
+        
+        
 };
 
 class specifier_declaration : public Node{
