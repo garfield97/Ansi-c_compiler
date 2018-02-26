@@ -342,7 +342,7 @@ class statement_jump : public Node{
                     dst<<"\t";
                 }
                 
-                dst<<"return";
+                dst<<"return ";
                 
                 if(expr != NULL){
                     

@@ -97,7 +97,6 @@ class definition_function : public Node{
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
            //         | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
-            dst<<"def ";
             declarator->translate(dst,context); 
             context.indent++;
             statement_compound->translate(dst,context);
