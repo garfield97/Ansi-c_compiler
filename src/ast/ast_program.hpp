@@ -28,8 +28,8 @@ class program : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            next->translate();
-            declaration->translate();
+            next->translate(dst, context);
+            declaration->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
