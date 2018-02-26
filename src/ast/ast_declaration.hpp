@@ -139,7 +139,9 @@ class declaration : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-                
+            specifier_declaration->translate(dst,context);
+            dst<<" ";
+            declarator_list_init->translate(dst,context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -182,8 +184,7 @@ class specifier_declaration : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            present->translate(dst,context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -258,8 +259,8 @@ class declarator_init_list : public Node{
         {}
         
         declarator_init_list(NodePtr _arg1,NodePtr _arg2)
-            :declarator_init1(_arg1)
-            ,declarator_init(_arg2)
+            :declarator_init1(_arg2)
+            ,declarator_init(_arg1)
         {}
     
     public:
@@ -280,8 +281,11 @@ class declarator_init_list : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            if(declarator_init != NULL){
+                declarator_init->translate(dst,context);
+                dst<<", ";   //FUCrer
+            }
+                declarator_init1->translate(dst,context);            
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override

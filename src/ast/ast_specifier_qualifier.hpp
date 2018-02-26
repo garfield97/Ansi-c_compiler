@@ -68,8 +68,7 @@ class specifier_type : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            dst<<ter<<" ";
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
