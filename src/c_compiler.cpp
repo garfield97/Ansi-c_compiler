@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
         TC.indent = 0;
         TC.function_dec = false;
         TC.main_exists = false;
-        //ast->translate(dstStream, TC);
+        ast->translate(dstStream, TC);
 
         if(TC.main_exists){
             dstStream<<std::endl;
