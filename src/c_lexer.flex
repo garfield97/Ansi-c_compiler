@@ -335,13 +335,13 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 						return '.'; }
 
 
-{INCLUDE}		{ fprintf(stderr, "#include\n"); }
+{INCLUDE}		{ //fprintf(stderr, "#include\n"); }
 
-{COMMENT_L}		{ fprintf(stderr, "Line comment\n"); }
+{COMMENT_L}		{ //fprintf(stderr, "Line comment\n"); }
 
-{COMMENT}		{ fprintf(stderr, "comment\n"); }
+{COMMENT}		{ //fprintf(stderr, "comment\n"); }
 
-{WHITESPACE}    { fprintf(stderr, "Newline, tab or space\n"); }
+{WHITESPACE}    { //fprintf(stderr, "Newline, tab or space\n"); }
 
 
 {OTHER}			{ yyerror(yytext); }
