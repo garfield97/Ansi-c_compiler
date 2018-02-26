@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
         TC.main_exists = false;
         ast->translate(dstStream, TC);
 
-        if(main_exists){
+        if(TC.main_exists){
             dstStream<<std::endl;
             dstStream<<"# Boilerplate"<<std::endl;
             dstStream<<"if __name__ == \"__main__\":"<<std::endl;
