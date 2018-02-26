@@ -299,13 +299,13 @@ class statement_jump : public Node{
         
         statement_jump(std::string name_1)
             :symbol(name_1)
-            ,symbol_2(NULL)
+            ,symbol_2(" ")
         {}    
         
         statement_jump(std::string name_1,NodePtr _arg)
             : expr(_arg)
             , symbol(name_1)
-            , symbol_2(NULL)
+            , symbol_2(" ")
             
         {}
 
@@ -380,7 +380,7 @@ class statement_iteration : public Node{
             , statement(_arg2)
             , statement_expr(NULL)
             , symbol(name)
-            , symbol_1(NULL)
+            , symbol_1(" ")
             , statement_expr_rep(NULL)
         {}
         statement_iteration(std::string name,NodePtr _arg1,std::string name_1,NodePtr _arg2)
@@ -396,7 +396,7 @@ class statement_iteration : public Node{
             ,statement(_arg2)
             ,statement_expr(_arg)
             ,symbol(name)
-            ,symbol_1(NULL)    
+            ,symbol_1(" ")    
             ,statement_expr_rep(_arg1)
 
         {} 
@@ -405,7 +405,7 @@ class statement_iteration : public Node{
             ,statement(_arg2)
             ,statement_expr(_arg)
             ,symbol(name)
-            ,symbol_1(NULL)
+            ,symbol_1(" ")
             ,statement_expr_rep(_arg1)
         {}
 
@@ -503,7 +503,7 @@ class statement_selection : public Node{
             ,statement(_arg1)
             ,statement_rep(NULL)
             ,symbol_1(name)
-            ,symbol_2(NULL)
+            ,symbol_2(" ")
         {}
         
         statement_selection(std::string name,NodePtr _arg,NodePtr _arg1,std::string name1 , NodePtr _arg2)
