@@ -356,7 +356,7 @@ class declarator_init : public Node{
             
             if(!context.function_dec){    //this checks if it is a global variable, which it is
                 dst<<"=0";
-                context.globalVar[tmp_v]++;
+                context.globalVar[context.tmp_v]++;
                 
             }
             
