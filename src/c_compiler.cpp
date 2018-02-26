@@ -45,7 +45,17 @@ int main(int argc, char* argv[])
         TranslateContext TC;
         TC.indent = 0;
         TC.function_dec = false;
+        TC.main_exists = false;
         ast->translate(dstStream, TC);
+
+        if(main_exists){
+            dstStream<<std::endl;
+            dstStream<<"# Boilerplate"<<std::endl;
+            dstStream<<"if __name__ == \"__main__\":"<<std::endl;
+            dstStream<<"\timport sys"<<std::endl;
+            dstStream<<"\tret=main()"<<std::endl;
+            dstStream<<"\tsys.exit(ret)"<<std::endl;
+        }
     }
 
     // close output file
