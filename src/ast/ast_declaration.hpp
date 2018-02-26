@@ -635,8 +635,7 @@ class declaration_parameter : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<context.tmp_v;
-        
+            if(recur != NULL) recur->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -654,7 +653,7 @@ class declarator_direct : public Node{
     //                | DECLARATOR_DIRECT L_SQUARE R_SQUARE                         declarator_direct []
     //                | DECLARATOR_DIRECT L_BRACKET LIST_PARAM_TYPE R_BRACKET       declarator_direct (list_param_type)
     //                | DECLARATOR_DIRECT L_BRACKET LIST_IDENTIFIER R_BRACKET       declarator_direct (list_identifier)
-    //                | DECLARATOR_DIRECT L_BRACKET R_BRACKET                       declarator ()
+    //                | DECLARATOR_DIRECT L_BRACKET R_BRACKET                       declarator_direct ()
     private:
         NodePtr  current;
         NodePtr  next;
