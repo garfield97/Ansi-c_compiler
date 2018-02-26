@@ -242,8 +242,8 @@ class list_declaration : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            list_declaration->translate(dst,context);
+            declaration->translate(dst,context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override

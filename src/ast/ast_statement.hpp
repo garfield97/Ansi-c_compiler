@@ -47,8 +47,22 @@ class statement_compound : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            if(current != NULL && next != NULL){ 
+           
+            if(current == NULL && next == NULL){ 
+                dst<<"\n";
+            }
             
+            else{
+                
+                current->translate(dst,context);
+            }
+            
+            if(next != NULL){
+                
+                next->translate(dst,context);
+            }
+         
+                    
             
         }
 
