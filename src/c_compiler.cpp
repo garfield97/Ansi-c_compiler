@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     // bin/c_compiler -S [source-file.c] -o [dest-file.s]
     if( mode == "-S" ){
         CompileContext CC;
-        ast->compile(dstStream, CC);
+        //ast->compile(dstStream, CC);
     } 
 
     // Translate to Python
