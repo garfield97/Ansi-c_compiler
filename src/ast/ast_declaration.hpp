@@ -339,9 +339,10 @@ class declarator_init : public Node{
         
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            declarator->translate(dst,context);
-            dst<<" = ";
-            initializer->translate(dst,context);
+        
+          //  declarator->translate(dst,context);
+          //  dst<<" = ";
+          //  initializer->translate(dst,context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -680,21 +681,19 @@ class declarator_direct : public Node{
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
             if(symbol != " "){
-               
-                dst<<symbol<<" ";
-            }
-            
+                dst<<symbol;
+            }          
             else{
                 
-                current->translate(dst,context);
-                dst<<" (";
-                
+                    dst<<"def ";
+                    current->translate(dst,context);
+                    dst<<"(";
                     if(next != NULL){
-                        
                         next->translate(dst,context);
-                    }
-                    
-                dst<<")"<<" :"<<std::endl;  
+                    }  
+                    dst<<")"<<" :"<<std::endl;  
+                
+            }
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
