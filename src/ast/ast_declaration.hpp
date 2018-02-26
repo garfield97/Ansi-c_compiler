@@ -41,6 +41,12 @@ class declaration_external : public Node {
 
 class definition_function : public Node{
 
+
+//DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND { $$ = new definition_function($1, $2, $3, $4); }
+//                    | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
+//                    | DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND                       { $$ = new definition_function('$', $1, $2, $3); }
+//                    | DECLARATOR STATEMENT_COMPOUND       
+
     private:
         NodePtr  specifier_declaration;
         NodePtr  declarator;
@@ -90,8 +96,13 @@ class definition_function : public Node{
         
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+           //         | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
+            dst<<"def ";
+            declarator->translate(dst,context); 
+            context.indent++;
+            statement_compound->translate(dst,context);
+
+
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -626,6 +637,7 @@ class declaration_parameter : public Node{
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
             dst<<context.tmp_v;
+        
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -693,6 +705,10 @@ class declarator_direct : public Node{
             if(symbol != " "){
                 dst<<symbol;
                 context.tmp_v = symbol;
+                
+                if(symbol == "main"){
+                    main_exist = true;
+                }
             }          
             else{
                 
@@ -706,6 +722,7 @@ class declarator_direct : public Node{
                     dst<<")"<<" :"<<std::endl;  
                 
             }
+            
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
