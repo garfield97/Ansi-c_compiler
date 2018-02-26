@@ -354,12 +354,10 @@ class declarator_init : public Node{
             
             
             if(!context.function_dec){    //this checks if it is a global variable, which it is
-                dst<<"=0";
                 context.globalVar[context.tmp_v]++;
-                
             }
-            
-            context.function_dec = false; 
+            context.function_dec = false;
+
             if(symbol == '='){
                 dst<<"=";
             initializer->translate(dst,context);
