@@ -101,7 +101,7 @@ class definition_function : public Node{
             declarator->translate(dst,context); 
             context.indent++;
             statement_compound->translate(dst,context);
-
+            context.indent--;
 
         }
 
@@ -703,6 +703,10 @@ class declarator_direct : public Node{
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
             if(symbol != " "){
+                
+                for(int i=0; i<context.indent ; i++){
+                    dst<<"\t";
+                }            
                 dst<<symbol;
                 context.tmp_v = symbol;
                 
@@ -711,6 +715,7 @@ class declarator_direct : public Node{
                 }
             }          
             else{
+
                 
                     dst<<"def ";
                     context.function_dec = true;

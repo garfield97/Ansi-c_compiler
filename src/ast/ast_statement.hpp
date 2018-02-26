@@ -112,8 +112,8 @@ class list_statement : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            current->translate(dst,context);
+            next->translate(dst,context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -176,7 +176,7 @@ class statement : public Node{
     //          | STATEMENT_EXPR
     //          | STATEMENT_SELECTION
     //          | STATEMENT_ITERATION
-    //          | STATEMENT_JUMP'
+    //          | STATEMENT_JUMP
 
     private:
         NodePtr next_statement;
@@ -326,8 +326,23 @@ class statement_jump : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+    //               | RETURN ';'
+    //               | RETURN EXPR ';'
+                
+                
+                for(int i=0; i<context.indent ; i++){
+                    dst<<"\t";
+                }
+                
+                dst<<"return";
+                
+                if(expr != NULL){
+                    
+                    expr->translate(dst,context);
+                }
+                
+                dst<<"\n";
+
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -427,8 +442,32 @@ class statement_iteration : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+
+    //STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
+    //                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';' 
+    //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT
+    //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMEN
+            
+            if(symbol == "while"){
+
+                for(int i=0; i<context.indent ; i++){
+                    dst<<"\t";
+                }
+                
+                dst<<"while (";
+             
+                expr->translate(dst,context);
+             
+                dst<<"):"<<std::endl;
+             
+                context.indent++;
+             
+                statement->translate(dst,context);
+             
+                context.indent--;
+            }
+            
+             
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -497,8 +536,29 @@ class statement_selection : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            if(symbol_1 == "if"){
+                for(int i=0; i<context.indent ; i++){
+                    dst<<"\t";
+                }
+                dst<<"if(";
+                expr->translate(dst,context);
+                dst<<")"<<" :"<<std::endl;
+                
+                context.indent++;
+                statement->translate(dst,context);
+                context.indent--;
+            }
+            if(symbol_2 == "else"){
+                
+                for(int i=0; i<context.indent ; i++){
+                    dst<<"\t";
+                }
+                
+                dst<<"else:"<<std::endl;
+                context.indent++;
+                statement->translate(dst,context)
+                context.indent--;
+            }           
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
