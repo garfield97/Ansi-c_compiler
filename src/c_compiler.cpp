@@ -6,6 +6,9 @@
 
 int main(int argc, char* argv[])
 {
+    // redirect std err to some file
+    fopen("random.stderr.txt", "w", stderr);
+    
     if(argc != 5){
         fprintf(stderr, "incorrect argument amount\n");
         exit(1);
