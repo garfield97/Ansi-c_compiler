@@ -43,6 +43,8 @@ int main(int argc, char* argv[])
     // bin/c_compiler --translate [source-file.c] -o [dest-file.py]
     if( mode == "--translate" ){
         TranslateContext TC;
+        TC.indent = 0;
+        TC.function_dec = false;
         ast->translate(dstStream, TC);
     }
 

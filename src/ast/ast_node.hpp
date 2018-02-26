@@ -15,7 +15,10 @@ struct CompileContext{
 };
 
 struct TranslateContext{
-
+    int indent;
+    std::map<std::string, int> globalVar;
+    bool function_dec;
+    std::string tmp_v;
 };
 
 typedef const Node* NodePtr;
