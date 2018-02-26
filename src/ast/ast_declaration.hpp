@@ -242,7 +242,7 @@ class list_declaration : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            list_declaration->translate(dst,context);
+            list_declaration1->translate(dst,context);
             declaration->translate(dst,context);
         }
 
@@ -321,8 +321,8 @@ class declarator_init : public Node{
     
         declarator_init(NodePtr _arg1) 
             :declarator(_arg1)
-            ,symbol(" ")
             ,initializer(NULL)
+            ,symbol(' ')
         {}
     
         declarator_init(NodePtr _arg1,char name,NodePtr _arg2)
@@ -351,12 +351,12 @@ class declarator_init : public Node{
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
             
-            declarator->translator(dst,context);
+            declarator->translate(dst,context);
             
             
             if(!context.function_dec){    //this checks if it is a global variable, which it is
                 dst<<"=0";
-                context.globalVar[tmp_gv]++;
+                context.globalVar[tmp_v]++;
                 
             }
             
@@ -711,7 +711,7 @@ class declarator_direct : public Node{
                 context.tmp_v = symbol;
                 
                 if(symbol == "main"){
-                    main_exist = true;
+                    context.main_exists = true;
                 }
             }          
             else{
