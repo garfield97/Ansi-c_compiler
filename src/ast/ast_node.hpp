@@ -19,6 +19,7 @@ struct TranslateContext{
     std::map<std::string, int> globalVar;
     bool function_dec;
     std::string tmp_v;
+    bool main_exists;
 };
 
 typedef const Node* NodePtr;
