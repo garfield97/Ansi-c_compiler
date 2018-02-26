@@ -388,7 +388,7 @@ LIST_STATEMENT : STATEMENT                      { $$ = $1; }
                   
 
 STATEMENT_EXPR : ';'          {$$ = new statement_expr();}
-               | EXPR ';'     {$$ = $1;}  
+               | EXPR ';'     {$$ = new statement_expr($1);}  
                
 
 STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT                         { $$ = new statement_selection("if", $3, $5); }
