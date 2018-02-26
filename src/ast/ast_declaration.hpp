@@ -307,13 +307,13 @@ class declarator_init : public Node{
         char symbol;
         
     public:
-    /*
+    
         declarator_init(NodePtr _arg1) 
             :declarator(_arg1)
             ,symbol(" ")
             ,initializer(NULL)
         {}
-    */
+    
         declarator_init(NodePtr _arg1,char name,NodePtr _arg2)
             :declarator(_arg1)
             ,initializer(_arg2)
@@ -339,7 +339,12 @@ class declarator_init : public Node{
         
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-        
+            if(!context.function_dec){    //this checks if it is a global variable, which it is
+                dst<<"=0";
+                
+            }
+            
+            context.function_dec = false; 
           //  declarator->translate(dst,context);
           //  dst<<" = ";
           //  initializer->translate(dst,context);
@@ -639,7 +644,7 @@ class declarator_direct : public Node{
         NodePtr  next;
         bool brackets;
         std::string symbol;
-
+        
     public:
         declarator_direct(std::string name)
             :current(NULL)
@@ -686,6 +691,7 @@ class declarator_direct : public Node{
             else{
                 
                     dst<<"def ";
+                    context.function_dec = true;
                     current->translate(dst,context);
                     dst<<"(";
                     if(next != NULL){
