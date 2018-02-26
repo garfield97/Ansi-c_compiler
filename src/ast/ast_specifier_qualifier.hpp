@@ -68,7 +68,7 @@ class specifier_type : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<ter<<" ";
+           // dst<<ter<<" ";
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override

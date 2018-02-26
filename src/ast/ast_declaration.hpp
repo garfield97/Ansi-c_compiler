@@ -139,8 +139,8 @@ class declaration : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            specifier_declaration->translate(dst,context);
-            dst<<" ";
+            //specifier_declaration->translate(dst,context);
+           // dst<<" ";
             declarator_list_init->translate(dst,context);
         }
 
@@ -693,6 +693,7 @@ class declarator_direct : public Node{
                         
                         next->translate(dst,context);
                     }
+                    
                 dst<<")"<<" :"<<std::endl;  
         }
 
