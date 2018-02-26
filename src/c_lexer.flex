@@ -192,10 +192,10 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 					}
 
 
-{				{ fprintf(stderr, "L_BRACE\n");
+\{				{ fprintf(stderr, "L_BRACE\n");
 						return L_BRACE; }
 
-}				{ fprintf(stderr, "R_BRACE\n");
+\}				{ fprintf(stderr, "R_BRACE\n");
 						return R_BRACE; }
 
 \(				{ fprintf(stderr, "L_BRACKET\n");
@@ -207,7 +207,7 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 \[				{ fprintf(stderr, "L_SQUARE\n");
 						return L_SQUARE; }
 
-]				{ fprintf(stderr, "R_SQUARE\n");
+\]				{ fprintf(stderr, "R_SQUARE\n");
 						return R_SQUARE; }
 
 
