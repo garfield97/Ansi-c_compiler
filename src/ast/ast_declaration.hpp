@@ -364,6 +364,9 @@ class declarator_init : public Node{
                 dst<<"=";
             initializer->translate(dst,context);
             }
+            else{
+                dst<<"=0\n";        // initial 
+            }
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
