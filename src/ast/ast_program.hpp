@@ -29,6 +29,7 @@ class program : public Node {
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
             next->translate(dst, context);
+            dst<<"\n";
             declaration->translate(dst, context);
         }
 

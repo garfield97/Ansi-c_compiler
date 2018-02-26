@@ -42,10 +42,10 @@ class declaration_external : public Node {
 class definition_function : public Node{
 
 
-//DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND { $$ = new definition_function($1, $2, $3, $4); }
-//                    | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
-//                    | DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND                       { $$ = new definition_function('$', $1, $2, $3); }
-//                    | DECLARATOR STATEMENT_COMPOUND       
+    //DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND { $$ = new definition_function($1, $2, $3, $4); }
+    //                    | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
+    //                    | DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND                       { $$ = new definition_function('$', $1, $2, $3); }
+    //                    | DECLARATOR STATEMENT_COMPOUND       
 
     private:
         NodePtr  specifier_declaration;
@@ -113,8 +113,8 @@ class definition_function : public Node{
 
 class declaration : public Node{
 
-//DECLARATION : SPECIFIER_DECLARATION ';'                       { $$ = new declaration($1); }
-//            | SPECIFIER_DECLARATION DECLARATOR_INIT_LIST ';'  { $$ = new declaration($1, $2); }
+    //DECLARATION : SPECIFIER_DECLARATION ';'                       { $$ = new declaration($1); }
+    //            | SPECIFIER_DECLARATION DECLARATOR_INIT_LIST ';'  { $$ = new declaration($1, $2); }
 
     private:
         NodePtr  specifier_declaration;
@@ -308,8 +308,8 @@ class declarator_init_list : public Node{
 class declarator_init : public Node{
 
 
-//DECLARATOR_INIT : DECLARATOR                        { $$ = $1;}
-//                | DECLARATOR ASSIGN INITIALIZER     { $$ = declarator_init( $1,"=" , $3);}
+    //DECLARATOR_INIT : DECLARATOR                        { $$ = $1;}
+    //                | DECLARATOR ASSIGN INITIALIZER     { $$ = declarator_init( $1,"=" , $3);}
 
     private:
         NodePtr declarator;
@@ -723,7 +723,7 @@ class declarator_direct : public Node{
                     if(next != NULL){
                         next->translate(dst,context);
                     }  
-                    dst<<")"<<" :"<<std::endl;  
+                    dst<<")"<<":"<<std::endl;  
                 
             }
             

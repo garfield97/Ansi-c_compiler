@@ -7,7 +7,7 @@
 int main(int argc, char* argv[])
 {
     // redirect std err to some file
-    freopen("random.stderr.txt", "w", stderr);
+    freopen("tmp/stderr.txt", "w", stderr);
 
     if(argc != 5){
         fprintf(stderr, "incorrect argument amount\n");
