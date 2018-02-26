@@ -805,7 +805,7 @@ class expr_postfix : public Node {
             //             | EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET
             next->translate(dst, context);
             dst<<"(";
-            exp->translate(dst, context);
+            if(exp != NULL) exp->translate(dst, context);
             dst<<")";
         }
 
