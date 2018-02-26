@@ -339,15 +339,21 @@ class declarator_init : public Node{
         
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
+            
+            declarator->translator(dst,context);
+            
+            
             if(!context.function_dec){    //this checks if it is a global variable, which it is
                 dst<<"=0";
+                context.globalVar[tmp_gv]++;
                 
             }
             
             context.function_dec = false; 
-          //  declarator->translate(dst,context);
-          //  dst<<" = ";
-          //  initializer->translate(dst,context);
+            if(symbol == '='){
+                dst<<"=";
+            initializer->translate(dst,context);
+            }
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -585,8 +591,8 @@ class declaration_parameter : public Node{
 
 
     //DECLARATION_PARAMETER : SPECIFIER_DECLARATION DECLARATOR        
-    //                    | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT
-    //                    | SPECIFIER_DECLARATION
+    //                      | SPECIFIER_DECLARATION DECLARATOR_ABSTRACT
+    //                      | SPECIFIER_DECLARATION
     private:
         NodePtr current;
         NodePtr recur;
@@ -619,8 +625,7 @@ class declaration_parameter : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            dst<<context.tmp_v;
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -687,6 +692,7 @@ class declarator_direct : public Node{
         {
             if(symbol != " "){
                 dst<<symbol;
+                context.tmp_v = symbol;
             }          
             else{
                 
