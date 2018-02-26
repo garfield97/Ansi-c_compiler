@@ -159,8 +159,19 @@ class statement_expr : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+        
+            for(int i=0; i<context.indent ; i++){
+                    dst<<"\t";
+            }     
+            
+               
+            context.indent++
+            if(current != NULL){
+                current->translate(dst,context);
+            }
+            dst<<std::endl;
+            
+            
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
