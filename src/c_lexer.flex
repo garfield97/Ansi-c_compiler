@@ -198,10 +198,10 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 }				{ fprintf(stderr, "R_BRACE\n");
 						return R_BRACE; }
 
-\(\				{ fprintf(stderr, "L_BRACKET\n");
+\(				{ fprintf(stderr, "L_BRACKET\n");
 						return L_BRACKET; }
 
-[)]				{ fprintf(stderr, "R_BRACKET\n");
+\)				{ fprintf(stderr, "R_BRACKET\n");
 						return R_BRACKET; }
 
 \[				{ fprintf(stderr, "L_SQUARE\n");
@@ -226,23 +226,23 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 \%				{ fprintf(stderr, "OP_MOD\n");
 						return OP_MOD; }
 
-'++' 			{ fprintf(stderr, "OP_INC\n");
+"++" 			{ fprintf(stderr, "OP_INC\n");
 						return OP_INC; }
 
-'--' 			{ fprintf(stderr, "OP_DEC\n");
+"--" 			{ fprintf(stderr, "OP_DEC\n");
 						return OP_DEC; }
 
 
-'<=' 			{ fprintf(stderr, "OP_LE\n");
+"<=" 			{ fprintf(stderr, "OP_LE\n");
 						return OP_LE; }
 
-'>=' 			{ fprintf(stderr, "OP_GE\n");
+">=" 			{ fprintf(stderr, "OP_GE\n");
 						return OP_GE; }
 
-'==' 			{ fprintf(stderr, "OP_EQ\n");
+"==" 			{ fprintf(stderr, "OP_EQ\n");
 						return OP_EQ; }
 
-'!='			{ fprintf(stderr, "OP_NE\n");
+"!="			{ fprintf(stderr, "OP_NE\n");
 						return OP_NE; }
 
 \<				{ fprintf(stderr, "OP_L\n");
@@ -252,7 +252,7 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 						return OP_G; }
 
 
-'&&' 			{ fprintf(stderr, "OP_LAND\n");
+"&&" 			{ fprintf(stderr, "OP_LAND\n");
 						return OP_LAND; }
 
 '|''|' 			{ fprintf(stderr, "OP_LOR\n");
@@ -274,42 +274,42 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 \~				{ fprintf(stderr, "OP_B_ONESC\n");
 						return OP_B_ONESC; }
 
-'>>'			{ fprintf(stderr, "OP_BRIGHT\n");
+">>"			{ fprintf(stderr, "OP_BRIGHT\n");
 						return OP_BRIGHT; }
 
-'<<' 			{ fprintf(stderr, "OP_BLEFT\n");
+"<<" 			{ fprintf(stderr, "OP_BLEFT\n");
 						return OP_BLEFT; }
 
 
-'->' 			{ fprintf(stderr, "OP_PTR\n");
+"->" 			{ fprintf(stderr, "OP_PTR\n");
 						return OP_PTR; }
 
 
 \=				{ fprintf(stderr, "ASSIGN\n");
 						return ASSIGN; }
 
-'>>=' 			{ fprintf(stderr, "RIGHT_ASSIGN\n");
+">>=" 			{ fprintf(stderr, "RIGHT_ASSIGN\n");
 						return RIGHT_ASSIGN; }
 
-'<<='			{ fprintf(stderr, "LEFT_ASSIGN\n");
+"<<="			{ fprintf(stderr, "LEFT_ASSIGN\n");
 						return LEFT_ASSIGN; }
 
-'+='			{ fprintf(stderr, "ADD_ASSIGN\n");
+"+="			{ fprintf(stderr, "ADD_ASSIGN\n");
 						return ADD_ASSIGN; }
 
-'-='			{ fprintf(stderr, "SUB_ASSIGN\n");
+"-="			{ fprintf(stderr, "SUB_ASSIGN\n");
 						return SUB_ASSIGN; }
 
-'*='			{ fprintf(stderr, "MUL_ASSIGN\n");
+"*="			{ fprintf(stderr, "MUL_ASSIGN\n");
 						return MUL_ASSIGN; }
 
 "/="			{ fprintf(stderr, "DIV_ASSIGN\n");
 						return DIV_ASSIGN; }
 
-'%='			{ fprintf(stderr, "MOD_ASSIGN\n");
+"%="			{ fprintf(stderr, "MOD_ASSIGN\n");
 						return MOD_ASSIGN; }
 
-'&='			{ fprintf(stderr, "AND_ASSIGN\n");
+"&="			{ fprintf(stderr, "AND_ASSIGN\n");
 						return AND_ASSIGN; }
 
 "|="			{ fprintf(stderr, "OR_ASSIGN\n");
