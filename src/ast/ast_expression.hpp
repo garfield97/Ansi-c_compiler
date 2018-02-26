@@ -26,9 +26,10 @@ class expr : public Node {
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
-        {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+        {   
+            rec->translate(dst, context);
+            dst<<" , ";
+            assignment->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -106,8 +107,9 @@ class expr_assignment : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            unary->translate(dst, context);
+            opr->translate(dst, context);
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -138,8 +140,7 @@ class opr_assignment: public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            dst<<opr;
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -174,8 +175,9 @@ class expr_logic_or : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            rec->translate(dst, context);
+            dst<<"||";
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -210,8 +212,9 @@ class expr_logic_and : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            rec->translate(dst, context);
+            dst<<"&&";
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -361,8 +364,9 @@ class expr_equality : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            rec->translate(dst, context);
+            dst<<op;
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -403,8 +407,9 @@ class expr_relational : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            rec->translate(dst, context);
+            dst<<op;
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -483,8 +488,9 @@ class expr_add : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            rec->translate(dst, context);
+            dst<<op;
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -524,8 +530,9 @@ class expr_mul : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            rec->translate(dst, context);
+            dst<<op;
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -692,8 +699,9 @@ class arg_expr_list : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            next->translate(dst, context);
+            dst<<",";
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -794,8 +802,11 @@ class expr_postfix : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            //             | EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET
+            next->translate(dst, context);
+            dst<<"(";
+            exp->translate(dst, context);
+            dst<<")";
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -923,13 +934,17 @@ class expr_primary : public Node {
             else if(LIbool) dst<<LIval<<" ";
             else if(ULbool) dst<<ULval<<" ";
             else if(Cbool)  dst<<Cval<<" ";
-                        
         }
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            if(Sbool)  dst<<Sval;
+            else if(Ibool)  dst<<Ival;
+            else if(UIbool) dst<<UIval;
+            else if(LIbool) dst<<LIval;
+            else if(ULbool) dst<<ULval;
+            else if(Cbool)  dst<<Cval;
+
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
