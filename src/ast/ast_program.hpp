@@ -28,8 +28,8 @@ class program : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            next->translate();
+            declaration->translate();
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
