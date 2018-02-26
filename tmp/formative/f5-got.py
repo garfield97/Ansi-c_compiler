@@ -1,4 +1,4 @@
-def main() :
+def main():
 	z	z=7
 	return z
 

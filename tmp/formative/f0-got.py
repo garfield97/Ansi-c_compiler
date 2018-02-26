@@ -1,4 +1,4 @@
-def main() :
+def main():
 	return 10
 
 # Boilerplate

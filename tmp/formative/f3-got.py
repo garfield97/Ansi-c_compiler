@@ -1,6 +1,7 @@
-def f(f) :
+def f(f):
 	return 10
-def main() :
+
+def main():
 	return f(11)+7
 
 # Boilerplate

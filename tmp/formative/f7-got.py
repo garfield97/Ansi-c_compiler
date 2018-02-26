@@ -1,4 +1,5 @@
-x=0def main() :
+x=0
+def main():
 	x=1
 	return x
 

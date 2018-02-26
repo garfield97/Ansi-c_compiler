@@ -1,3 +1,4 @@
-def f() :
+def f():
 	return 10
-def main() :
+
+def main():

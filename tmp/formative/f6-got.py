@@ -1,4 +1,4 @@
-def main() :
+def main():
 	x	x=5
 	x=x*x
 	return x
