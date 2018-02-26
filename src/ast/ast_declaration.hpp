@@ -339,8 +339,9 @@ class declarator_init : public Node{
         
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            declarator->translate(dst,context);
+            dst<<" = ";
+            initializer->translate(dst,context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -650,14 +651,14 @@ class declarator_direct : public Node{
             :current(_arg1)
             ,next(_arg2)
             ,brackets(false)
-            ,symbol(NULL)
+            ,symbol(" ")
         {}
         
         declarator_direct(NodePtr _arg1)
             :current(_arg1)
             ,next(NULL)
             ,brackets(false)
-            ,symbol(NULL)
+            ,symbol(" ")
         {}
 
         std::string name = "declarator_direct";
@@ -678,8 +679,21 @@ class declarator_direct : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            if(symbol != " "){
+               
+                dst<<symbol<<" ";
+            }
+            
+            else{
+                
+                current->translate(dst,context);
+                dst<<" (";
+                
+                    if(next != NULL){
+                        
+                        next->translate(dst,context);
+                    }
+                dst<<")"<<" :"<<std::endl;  
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
