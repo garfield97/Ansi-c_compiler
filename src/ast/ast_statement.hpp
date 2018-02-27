@@ -48,6 +48,17 @@ class statement_compound : public Node{
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
            
+            std::vector<std::string>::iterator myVector;
+            
+            for(myVector = context.globalVar.begin() ; myVector != context.globalVar.end() ; myVector++){
+                for(int i=0; i<context.indent ; i++){
+                    dst<<"\t";
+                }
+                
+                dst<<"global "<<*myVector<<std::endl;    
+            }           
+           
+            
             if(current == NULL && next == NULL){ 
                 dst<<"\n";
             }
@@ -62,7 +73,7 @@ class statement_compound : public Node{
                 next->translate(dst,context);
             }
          
-                    
+            
             
         }
 
