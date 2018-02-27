@@ -691,7 +691,7 @@ class declarator_direct : public Node{
         declarator_direct(NodePtr _arg1)
             :current(_arg1)
             ,next(NULL)
-            ,brackets(false)
+            ,brackets(false) // fix this for the actual thing
             ,symbol(" ")
         {}
 
