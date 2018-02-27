@@ -29,20 +29,22 @@ def oprOnGlobal():
     return a+b
 
 def main():
+    global a
+    global b
     setGlobal()
     count=5
-    while(count>2):
+    while (count>2):
+		count=count-1
         addToGlobal(1,1)
         if(count==4 or count==5):
             addToGlobal(1,1)
         else:
-            if(count+3 == 6):
+            if(count+3==6):
                 addToGlobal(3,3)
             else:
-                addToGlobal(0,0)
+				addToGlobal(0,0)
 		count=count-1
-		
-    res = oprOnGlobal()
+	res = oprOnGlobal()
     if(res>0 and res<256):
         return 0
 	else:
