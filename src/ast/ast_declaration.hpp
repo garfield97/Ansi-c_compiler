@@ -99,7 +99,16 @@ class definition_function : public Node{
            //         | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
             declarator->translate(dst,context); 
             context.indent++;
-
+           
+            std::vector<std::string>::iterator myVector;
+            
+            for(myVector = context.globalVar.begin() ; myVector != context.globalVar.end() ; myVector++){
+                for(int i=0; i<context.indent ; i++){
+                    dst<<"\t";
+                }
+                
+                dst<<"global "<<*myVector<<std::endl;    
+            }     
                 
             statement_compound->translate(dst,context);
             context.indent--;
