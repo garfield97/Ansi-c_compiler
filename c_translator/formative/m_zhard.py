@@ -27,7 +27,6 @@ def oprOnGlobal():
     b = 2*b+15-14
     a = a*b-a
     return a+b
-}
 
 def main():
     setGlobal()
@@ -46,8 +45,6 @@ def main():
     res = oprOnGlobal()
     if(res >0 and res< 256):
         return res
-    else:
-        return 0
 
 
 # Boilerplate

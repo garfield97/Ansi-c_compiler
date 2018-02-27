@@ -32,24 +32,23 @@ int main(int argc)
 {
     setGlobal();
 
-    int count = 5;
-    while(count > 2){
+    int counts = 5;
+    while(counts > 2){
         addToGlobal(1,1);
-        if(count == 4 || count==5){
+        if(counts == 4 || counts==5){
           addToGlobal(1,1);  
         }
         else{
-            if(count+3 == 6) addToGlobal(3,3); 
+            if(counts+3 == 6) addToGlobal(3,3); 
             else addToGlobal(0,0);
         }
-		count = count -1;
+		counts = counts -1;
     }
 
     int res = oprOnGlobal();
     if(res >0 && res< 256){
         return res;
     }
-    else return 0;
     
 }
 
