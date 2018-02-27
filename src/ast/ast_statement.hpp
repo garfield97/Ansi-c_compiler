@@ -50,8 +50,11 @@ class statement_compound : public Node{
       
            
             
-            if(current == NULL && next == NULL){ 
-                dst<<"\n";
+            if(current == NULL && next == NULL){
+                for(int i=0; i<context.indent ; i++){
+                    dst<<"\t";
+                }
+                dst<<"pass";
             }
             
             else{

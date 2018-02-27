@@ -176,7 +176,7 @@ class expr_logic_or : public Node {
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
             rec->translate(dst, context);
-            dst<<"||";
+            dst<<" or ";
             exp->translate(dst, context);
         }
 
@@ -213,7 +213,7 @@ class expr_logic_and : public Node {
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
             rec->translate(dst, context);
-            dst<<"&&";
+            dst<<" and ";
             exp->translate(dst, context);
         }
 
