@@ -1,0 +1,33 @@
+INT
+Newline, tab or space
+Identifier : function
+L_BRACKET
+INT
+Newline, tab or space
+Identifier : a
+,
+Newline, tab or space
+INT
+Newline, tab or space
+Identifier : b
+R_BRACKET
+Newline, tab or space
+L_BRACE
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+IF
+L_BRACKET
+Identifier : a
+OP_L
+Identifier : b
+R_BRACKET
+L_BRACE
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
