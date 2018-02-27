@@ -372,7 +372,8 @@ class declarator_init : public Node{
 
             if(symbol == '='){
                 dst<<"=";
-            initializer->translate(dst,context);
+                initializer->translate(dst,context);
+                dst<<"\n";
             }
             else{
                 dst<<"=0\n";        // initial 
