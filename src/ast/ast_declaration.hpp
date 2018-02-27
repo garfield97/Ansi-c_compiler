@@ -106,7 +106,7 @@ class definition_function : public Node{
                     dst<<"\t";
                 }
                 
-                dst<<*myVector<<std::endl;    
+                dst<<"global "<<*myVector<<std::endl;    
             }
                 
             statement_compound->translate(dst,context);
