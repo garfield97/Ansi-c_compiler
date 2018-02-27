@@ -38,7 +38,7 @@ INCLUDE					#[.^\n]
 
 COMMENT_L				"//"[^\n]*
 
-COMMENT					"/*"[.]*"*/"
+COMMENT					"/*"[^"*/"]*"*/"
 
 WHITESPACE				[ \n\t\v\f\r]
 
