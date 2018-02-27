@@ -66,7 +66,7 @@
              PROGRAM DECLARATION_EXTERNAL DEFINITION_FUNCTION
                              
                                        // for grammar production rules
-%type <string> IDENTIFIER STRING_LITERAL R_BRACKET L_BRACKET R_SQUARE L_SQUARE R_BRACE L_BRACE
+%type <string> IDENTIFIER STRING_LITERAL
 %type <intValue> INT_C
 %type <uintValue> UNSIGNED_C
 %type <longintValue> LONG_C

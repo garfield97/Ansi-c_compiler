@@ -12,6 +12,7 @@
 
 extern FILE* yyin;
 
+int debug = 1;
 // This is to work around an irritating bug in Flex
 // https://stackoverflow.com/questions/46213840/get-rid-of-warning-implicit-declaration-of-function-fileno-in-flex
 extern "C" int fileno(FILE *stream);
@@ -341,7 +342,7 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 
 {COMMENT}		{ fprintf(stderr, "comment\n"); }
 
-{WHITESPACE}    { fprintf(stderr, "Newline, tab or space\n"); }
+{WHITESPACE}    { fprintf(stderr, "Newline, tab or space\n" + debug++);  }
 
 
 {OTHER}			{ yyerror(yytext); }
