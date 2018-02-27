@@ -1,0 +1,34 @@
+INT
+Newline, tab or space
+Identifier : x
+;
+Newline, tab or space
+Newline, tab or space
+INT
+Newline, tab or space
+Identifier : f
+L_BRACKET
+R_BRACKET
+Newline, tab or space
+L_BRACE
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+Identifier : x
+ASSIGN
+Identifier : x
+OP_PLUS
+Decimal : 1
+;
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+Newline, tab or space
+RETURN
+Newline, tab or space
+Identifier : x
+;
+Newline, 
