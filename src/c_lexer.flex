@@ -195,7 +195,7 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 \{				{ fprintf(stderr, "L_BRACE\n");
 						return L_BRACE; }
 
-\}				{ fprintf(stderr, "R_BRACE\n");
+"}"				{ fprintf(stderr, "R_BRACE\n");
 						return R_BRACE; }
 
 \(				{ fprintf(stderr, "L_BRACKET\n");
