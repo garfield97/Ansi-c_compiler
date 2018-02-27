@@ -99,6 +99,16 @@ class definition_function : public Node{
            //         | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
             declarator->translate(dst,context); 
             context.indent++;
+            std::vector<std::string>::iterator myVector;
+            
+            for(myVector = globalVar.begin() ; myVector != globalVar.end() ; myVector++){
+                for(int i=0; i<context.indent ; i++){
+                    dst<<"\t";
+                }
+                
+                dst<<*myVector<<std::endl;    
+            }
+                
             statement_compound->translate(dst,context);
             context.indent--;
 
@@ -307,6 +317,7 @@ class declarator_init_list : public Node{
 
 class declarator_init : public Node{
 
+////////////////////////?Trust in my co pilot mahadu97
 
     //DECLARATOR_INIT : DECLARATOR                        { $$ = $1;}
     //                | DECLARATOR ASSIGN INITIALIZER     { $$ = declarator_init( $1,"=" , $3);}
@@ -354,7 +365,7 @@ class declarator_init : public Node{
             
             
             if(!context.function_dec){    //this checks if it is a global variable, which it is
-                context.globalVar[context.tmp_v]++;
+                context.globalVar.push_back(context.tmp_v);
             }
             context.function_dec = false;
 
