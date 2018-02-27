@@ -392,12 +392,12 @@ STATEMENT_EXPR : ';'          {$$ = new statement_expr();}
                
 
 STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT                         { $$ = new statement_selection("if", $3, $5); }
-                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT          { $$ = new statement_selection("if", $3, $5,"ELSE" ,$7); }
+                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT          { $$ = new statement_selection("if", $3, $5,"else" ,$7); }
                     | SWITCH L_BRACKET EXPR R_BRACKET STATEMENT                     { $$ = new statement_selection("switch", $3, $5); }
                     
 
 STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT                             { $$ = new statement_iteration("while", $3, $5); }
-                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';'                      { $$ = new statement_iteration("do", $2, "WHILE", $5); }
+                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';'                      { $$ = new statement_iteration("do", $2, "while", $5); }
                     | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT      { $$ = new statement_iteration("for", $3, $4, $6); }
                     | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMENT { $$ = new statement_iteration("for", $3, $4, $5, $7); }
 

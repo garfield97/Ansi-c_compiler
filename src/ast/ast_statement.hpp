@@ -569,7 +569,7 @@ class statement_selection : public Node{
                 
                 dst<<"else:"<<std::endl;
                 context.indent++;
-                statement->translate(dst,context);
+                statement_rep->translate(dst,context);
                 context.indent--;
             }           
         }
