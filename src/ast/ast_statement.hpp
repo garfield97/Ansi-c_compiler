@@ -197,7 +197,7 @@ class statement : public Node{
         statement(NodePtr _arg1)
             :next_statement(_arg1)
         {}
-*/
+    */
         std::string name = "statement";
     
         virtual void PrettyPrint(std::ostream &dst) const override
@@ -552,7 +552,7 @@ class statement_selection : public Node{
                 }
                 dst<<"if(";
                 expr->translate(dst,context);
-                dst<<")"<<" :"<<std::endl;
+                dst<<")"<<":"<<std::endl;
                 
                 context.indent++;
                 statement->translate(dst,context);

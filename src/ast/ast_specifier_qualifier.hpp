@@ -497,7 +497,7 @@ class list_parameter : public Node {
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
             rec->translate(dst,context);
-            dst<<", ";
+            dst<<",";
             dp->translate(dst,context);
         }
 
