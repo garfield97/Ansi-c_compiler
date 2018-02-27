@@ -6,8 +6,6 @@
 
 int main(int argc, char* argv[])
 {
-    // redirect std err to some file
-    freopen("tmp/stderr.txt", "w", stderr);
 
     if(argc != 5){
         fprintf(stderr, "incorrect argument amount\n");
@@ -22,7 +20,11 @@ int main(int argc, char* argv[])
     // Build AST (FE)
     // 2nd argument is source C file to compile
     
+    freopen("tmp/stderr.txt", "w", stderr);
+    
     const Node* ast = parseAST(argv[2]);
+
+    fclose(stderr);
 
     // dest file
     std::ofstream dstStream(argv[4]);
@@ -63,8 +65,6 @@ int main(int argc, char* argv[])
 
     // close output file
     dstStream.close();
-
-    fclose(stderr);
 
     return 0;
 }
