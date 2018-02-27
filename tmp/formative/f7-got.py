@@ -1,7 +1,7 @@
 x=0
 
 def main():
-	x
+	global x
 	x=1
 	return x
 
