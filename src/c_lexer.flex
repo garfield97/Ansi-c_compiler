@@ -36,7 +36,7 @@ FLOAT_CONSTANT			-?([0-9]+|[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?)
 
 INCLUDE					#[.^\n]
 
-COMMENT_L				"//"[.\n]*\n
+COMMENT_L				"//"[.^\n]*\n
 
 COMMENT					"/*"[.]*"*/"
 
