@@ -1,6 +1,7 @@
 x=0
 
 def main():
+	x
 	x=1
 	return x
 
