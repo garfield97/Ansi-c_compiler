@@ -304,7 +304,7 @@ class declarator_init_list : public Node{
         {
             if(declarator_init != NULL){
                 declarator_init->translate(dst,context);
-                dst<<", ";   //FUCrer
+
             }
                 declarator_init1->translate(dst,context);            
         }
@@ -318,7 +318,7 @@ class declarator_init_list : public Node{
 
 class declarator_init : public Node{
 
-////////////////////////?Trust in my co pilot mahadu97
+    ////////////////////////?Trust in my co pilot mahadu97
 
     //DECLARATOR_INIT : DECLARATOR                        { $$ = $1;}
     //                | DECLARATOR ASSIGN INITIALIZER     { $$ = declarator_init( $1,"=" , $3);}
