@@ -101,7 +101,7 @@ class definition_function : public Node{
             context.indent++;
             std::vector<std::string>::iterator myVector;
             
-            for(myVector = globalVar.begin() ; myVector != globalVar.end() ; myVector++){
+            for(myVector = context.globalVar.begin() ; myVector != context.globalVar.end() ; myVector++){
                 for(int i=0; i<context.indent ; i++){
                     dst<<"\t";
                 }
