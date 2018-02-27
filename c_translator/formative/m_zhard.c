@@ -28,7 +28,7 @@ int oprOnGlobal(){
     return a+b;
 }
 
-int main(int argc)
+int main()
 {
 	int count = 5;
 	int res;
@@ -49,8 +49,8 @@ int main(int argc)
 
     res = oprOnGlobal();
     if(res >0 && res< 256){
-        return res;
-    }
+        return 0;
+    }else return res;
     
 }
 
