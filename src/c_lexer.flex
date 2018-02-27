@@ -255,7 +255,7 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 "&&" 			{ fprintf(stderr, "OP_LAND\n");
 						return OP_LAND; }
 
-'|''|' 			{ fprintf(stderr, "OP_LOR\n");
+"||" 			{ fprintf(stderr, "OP_LOR\n");
 						return OP_LOR; }
 
 \!				{ fprintf(stderr, "OP_LNOT\n");
