@@ -40,7 +40,7 @@ COMMENT_L				"//"[.^\n]*
 
 COMMENT					"/*"[.]*"*/"
 
-WHITESPACE				[ \n\t\v\f]
+WHITESPACE				[ \n\t\v\f\r]
 
 OTHER					.
 
