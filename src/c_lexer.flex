@@ -24,11 +24,11 @@ IDENTIFIER  			[_a-zA-Z][0-9_a-zA-Z]*
 
 INTEGER_SUFFIX          ([uU][lL]?) | ([lL][uU]?)
 
-DECIMAL_CONSTANT        -?[1-9][0-9]*[integer_suffix]?
+DECIMAL_CONSTANT        [1-9][0-9]*[integer_suffix]?
 
-OCTAL_CONSTANT		    -?[0][0-7]*[integer_suffix]?
+OCTAL_CONSTANT		    [0][0-7]*[integer_suffix]?
 
-HEXAD_CONSTANT    		-?(0x|0X)[0-9a-fA-F]+[integer_suffix]?
+HEXAD_CONSTANT    		(0x|0X)[0-9a-fA-F]+[integer_suffix]?
 
 CHAR_CONSTANT     		L?['][.]+[']
 
