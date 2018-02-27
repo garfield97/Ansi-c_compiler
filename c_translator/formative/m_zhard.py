@@ -41,6 +41,7 @@ def main():
                 addToGlobal(3,3)
             else:
                 addToGlobal(0,0)
+		count = count -1
 
     res = oprOnGlobal()
     if(res >0 and res< 256):

@@ -42,6 +42,7 @@ int main(int argc)
             if(count+3 == 6) addToGlobal(3,3); 
             else addToGlobal(0,0);
         }
+		count = count -1;
     }
 
     int res = oprOnGlobal();
