@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include <map>
+#include <vector>
 
 #include <memory>
 
@@ -16,7 +16,7 @@ struct CompileContext{
 
 struct TranslateContext{
     int indent;
-    std::map<std::string, int> globalVar;
+    std::vector<std::string> globalVar;
     bool function_dec;
     std::string tmp_v;
     bool main_exists;
