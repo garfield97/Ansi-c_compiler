@@ -113,7 +113,7 @@ class definition_function : public Node{
                 
             statement_compound->translate(dst,context);
             context.indent--;
-            context.function_dec = true;
+            context.function_dec = false;
 
         }
 
