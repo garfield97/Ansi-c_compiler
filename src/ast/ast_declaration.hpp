@@ -97,6 +97,7 @@ class definition_function : public Node{
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
            //         | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
+            context.function_dec = true;
             declarator->translate(dst,context); 
             context.indent++;
            
@@ -112,6 +113,7 @@ class definition_function : public Node{
                 
             statement_compound->translate(dst,context);
             context.indent--;
+            context.function_dec = true;
 
         }
 
@@ -368,7 +370,6 @@ class declarator_init : public Node{
             if(!context.function_dec){    //this checks if it is a global variable, which it is
                 context.globalVar.push_back(context.tmp_v);
             }
-            context.function_dec = false;
 
             if(symbol == '='){
                 dst<<"=";
@@ -730,7 +731,7 @@ class declarator_direct : public Node{
 
                 
                     dst<<"def ";
-                    context.function_dec = true;
+
                     current->translate(dst,context);
                     dst<<"(";
                     if(next != NULL){
