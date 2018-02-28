@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
     if( mode == "--translate" ){
         TranslateContext TC;
         TC.indent = 0;
+        TC.function_dec = false;
         TC.main_exists = false;
         ast->translate(dstStream, TC);
 

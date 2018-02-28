@@ -17,6 +17,7 @@ struct CompileContext{
 struct TranslateContext{
     int indent;
     std::vector<std::string> globalVar;
+    bool function_dec;
     std::string tmp_v;
     bool main_exists;
 };

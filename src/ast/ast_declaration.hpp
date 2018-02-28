@@ -365,9 +365,10 @@ class declarator_init : public Node{
             declarator->translate(dst,context);
             
             
-            if(!context.indent == 0){    //this checks if it is a global variable
+            if(!context.function_dec){    //this checks if it is a global variable, which it is
                 context.globalVar.push_back(context.tmp_v);
             }
+            context.function_dec = false;
 
             if(symbol == '='){
                 dst<<"=";
@@ -729,6 +730,7 @@ class declarator_direct : public Node{
 
                 
                     dst<<"def ";
+                    context.function_dec = true;
                     current->translate(dst,context);
                     dst<<"(";
                     if(next != NULL){

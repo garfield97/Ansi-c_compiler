@@ -8,7 +8,7 @@
 *.tab.hpp
 *.yy.cpp
 bin/*
-tmp/*
+tmp/stderr.txt
 test_deliverable/bin/*
 test_deliverable/test_results.txt
 test_deliverable/asm/*
