@@ -54,7 +54,7 @@ class statement_compound : public Node{
                 for(int i=0; i<context.indent ; i++){
                     dst<<"\t";
                 }
-                dst<<"pass";
+                dst<<"pass\n";
             }
             
             else{

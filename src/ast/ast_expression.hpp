@@ -250,8 +250,9 @@ class expr_inclusive_or : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            rec->translate(dst, context);
+            dst<<"|";
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -287,8 +288,9 @@ class expr_xor : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            rec->translate(dst, context);
+            dst<<"^";
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -324,8 +326,9 @@ class expr_and : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            rec->translate(dst, context);
+            dst<<"&";
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -628,8 +631,8 @@ class expr_unary : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            if(O_U != NULL) O_U->translate(dst, context);
+            exp->translate(dst, context);
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -662,8 +665,7 @@ class opr_unary: public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support transalte function"<<std::endl;
-            exit(1);
+            dst<<opr;
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -944,6 +946,11 @@ class expr_primary : public Node {
             else if(LIbool) dst<<LIval;
             else if(ULbool) dst<<ULval;
             else if(Cbool)  dst<<Cval;
+            else if(exp != NULL){
+                dst<<"(";
+                exp->translate(dst, context);
+                dst<<")";
+            }
 
         }
 
