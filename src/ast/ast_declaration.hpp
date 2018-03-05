@@ -745,9 +745,17 @@ class declarator_direct : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+        
+            if(symbol != " "){
+    
+                if(global_scope){
+                    dst<<"  .global "<<symbol<<'\n';
+                    dst<<"  .ent "<<symbol<<'\n';
+                    dst<<"main:"<<'\n';
+                }
+            }
         }
+
 };
 
 class struct_declarator : public Node{
@@ -967,7 +975,8 @@ class declarator : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"  .global"<<'\n';
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+
             exit(1);
         }
 };
