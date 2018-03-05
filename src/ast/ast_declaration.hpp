@@ -125,7 +125,7 @@ class definition_function : public Node{
         dst<<"\taddiu\t$sp,$sp,-4\n"; // pushed stack down
         context.stack_size++;
         dst<<"\tsw\t$fp,4($sp)\n"; // stores value of fp intp sp+4
-        dst<<"\taddu\t%fp,$sp\n"; // moves value of sp into fp
+        dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp
 
         // now evaluate compound statement
 
