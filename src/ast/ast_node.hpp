@@ -1,6 +1,7 @@
 #ifndef ast_node_hpp
 #define ast_node_hpp
 
+#include <cstdint>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -11,7 +12,12 @@
 class Node;
 
 struct CompileContext{
-
+    uint32_t register_file [32];
+    std::vector<uint32_t> v_address_space;
+    std::vector<uint32_t> stack;
+    std::vector<std::string> global_var;
+    bool main_exists;
+    std::string tmp_v;  // used to transfer variable name across nodes
 };
 
 struct TranslateContext{
