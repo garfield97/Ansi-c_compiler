@@ -121,7 +121,7 @@ class definition_function : public Node{
         {
         
         declarator->compile(dst,context);
-        dst<<"  .end "<<context.current_func<<std::endl;
+        dst<<'\t'<<".end "<<context.current_func<<std::endl;
         
         }
 };
@@ -755,17 +755,16 @@ class declarator_direct : public Node{
             if(symbol != " "){
     
                 if(context.global_scope){
-                    dst<<"  .global "<<symbol<<'\n';
-
+                    dst<<'\t'<<".global "<<symbol<<'\n';
+                    context.current_func = symbol;
                     
                 }
             }
             
             else if(brackets){
                     current->compile(dst,context);
-                    dst<<"  .ent "<<symbol<<'\n';
+                    dst<<'\t'<<".ent "<<context.current_func<<'\n';
                     dst<<"main:"<<'\n';
-                    context.current_func = symbol;
             }
             
             //HEY 
