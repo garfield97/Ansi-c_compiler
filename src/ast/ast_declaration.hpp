@@ -673,6 +673,7 @@ class declarator_direct : public Node{
         NodePtr  current;
         NodePtr  next;
         bool brackets;
+        bool squares;
         std::string symbol;
         
     public:
@@ -680,20 +681,23 @@ class declarator_direct : public Node{
             :current(NULL)
             ,next(NULL)
             ,brackets(false) //MEHEDI really wants false
+            ,squares(false)
             ,symbol(name)
         {}
         
         declarator_direct(NodePtr _arg1,NodePtr _arg2)
             :current(_arg1)
             ,next(_arg2)
-            ,brackets(false)
+            ,brackets(true)
+            ,squares(false)
             ,symbol(" ")
         {}
         
         declarator_direct(NodePtr _arg1)
             :current(_arg1)
             ,next(NULL)
-            ,brackets(false) // fix this for the actual thing
+            ,brackets(true) // fix this for the actual thing
+            ,squares(false)
             ,symbol(" ")
         {}
 
@@ -750,10 +754,17 @@ class declarator_direct : public Node{
     
                 if(global_scope){
                     dst<<"  .global "<<symbol<<'\n';
-                    dst<<"  .ent "<<symbol<<'\n';
-                    dst<<"main:"<<'\n';
+
+                    
                 }
             }
+            
+            else if(brackets){
+                    current->compile(dst,context);
+                    dst<<"  .ent "<<symbol<<'\n';
+                    dst<<"main:"<<'\n';
+            }
+            
         }
 
 };
