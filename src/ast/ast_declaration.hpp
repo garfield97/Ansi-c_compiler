@@ -763,6 +763,7 @@ class declarator_direct : public Node{
                     current->compile(dst,context);
                     dst<<"  .ent "<<symbol<<'\n';
                     dst<<"main:"<<'\n';
+                    current_func = symbol;
             }
             
         }
