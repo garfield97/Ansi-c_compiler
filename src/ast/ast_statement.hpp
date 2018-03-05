@@ -372,11 +372,9 @@ class statement_jump : public Node{
             if(expr != NULL) {
                                      
                 expr->compile(dst, context); // prints out an immediate or a register value
-                
-                if(!context.expr_result_is_reg){
-                    
-                    dst<<"\taddi\t$2,$0,"<<context.expr_result<<"\n";
-                }
+                                    
+                dst<<"\taddi\t$2,$0,"<<context.expr_result<<"\n";
+        
 
             }
             if(symbol == "return"){
