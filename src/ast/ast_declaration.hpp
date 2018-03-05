@@ -752,7 +752,7 @@ class declarator_direct : public Node{
         
             if(symbol != " "){
     
-                if(global_scope){
+                if(context.global_scope){
                     dst<<"  .global "<<symbol<<'\n';
 
                     
@@ -763,7 +763,7 @@ class declarator_direct : public Node{
                     current->compile(dst,context);
                     dst<<"  .ent "<<symbol<<'\n';
                     dst<<"main:"<<'\n';
-                    current_func = symbol;
+                    context.current_func = symbol;
             }
             
             //HEY 
