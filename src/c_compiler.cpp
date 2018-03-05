@@ -42,6 +42,7 @@ int main(int argc, char* argv[])
     if( mode == "-S" ){
         CompileContext CC;
         CC.global_scope = true;
+        CC.stack_size = 0;
         dstStream<<'\t'<<".text"<<'\n';
         ast->compile(dstStream, CC);
     } 
