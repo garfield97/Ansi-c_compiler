@@ -370,10 +370,14 @@ class statement_jump : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             if(expr != NULL) {
-                context.target_reg = 2;
-                expr->compile(dst, context);
-            
-            
+                                     
+                expr->compile(dst, context); // prints out an immediate or a register value
+                
+                if(!context.expr_result_is_reg){
+                    
+                    dst<<"\taddi\t$2,$0,"<<context.expr_result<<"\n";
+                }
+
             }
             if(symbol == "return"){
                 // push stack
