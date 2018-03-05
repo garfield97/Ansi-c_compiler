@@ -1,13 +1,27 @@
 Date,Effort,Developers,Milestones
-2018-01-30,2,mh3216;rz1616,DefineInitialMilestones;Preliminary_C_lexer
-2018-02-03,5,mh3216;rz1616,Preliminary_C_lexer;C_Lexer
-2018-02-06,2,mh3216;rz1616,Preliminary_C_lexer;C_Lexer
-2018-02-10,4,mh3216,C_Lexer;C_parser_framework
-2018-02-17,6,mh3216,test_suite;build_routine
-2018-02-17,4,rz1616,C_parser_grammar
-2018-02-21,4,mh3216,C_parser_AST
-2018-02-22,8,mh3216,C_parser_AST
-2018-02-22,8,rz1616,C_parser_AST
-2018-02-24,6,mh3216,C_parser_AST
-2018-02-22,1,mh3216,c_compiler_framework
-2018-02-24,6,rz1616,C_parser_AST
+30/01/2018,2,mh3216;rz1616,DefineInitialMilestones;Preliminary_C_lexer
+03/02/2018,5,mh3216;rz1616,Preliminary_C_lexer;C_Lexer
+06/02/2018,2,mh3216;rz1616,Preliminary_C_lexer;C_Lexer
+10/02/2018,4,mh3216,C_Lexer;C_parser_framework
+17/02/2018,6,mh3216,test_suite;build_routine
+17/02/2018,7,rz1616,C_parser_grammar
+21/02/2018,3,rz1616,C_parser_AST
+21/02/2018,4,mh3216,C_parser_AST
+22/02/2018,8,mh3216,C_parser_AST
+22/02/2018,8,rz1616,C_parser_AST
+24/02/2018,6,mh3216,C_parser_AST
+22/02/2018,1,mh3216,c_compiler_framework
+24/02/2018,6,rz1616,C_parser_AST
+26/02/2018,7,rz1616,Python Translator
+26/02/2018,8,mh3216,Python Translator
+05/03/2018,5,rz1616,Code Generator
+05/03/2018,5,mh3216,Code Generator
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
