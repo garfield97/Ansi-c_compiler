@@ -766,6 +766,7 @@ class declarator_direct : public Node{
                     current_func = symbol;
             }
             
+            //HEY 
         }
 
 };
