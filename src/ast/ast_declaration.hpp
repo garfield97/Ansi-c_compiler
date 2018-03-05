@@ -967,7 +967,7 @@ class declarator : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            dst<<"  .global"<<'\n';
             exit(1);
         }
 };

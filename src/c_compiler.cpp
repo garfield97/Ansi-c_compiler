@@ -41,8 +41,11 @@ int main(int argc, char* argv[])
     // bin/c_compiler -S [source-file.c] -o [dest-file.s]
     if( mode == "-S" ){
         CompileContext CC;
+        
+        dstStream<<"    .text"<<'\n';
         ast->compile(dstStream, CC);
     } 
+
 
     // Translate to Python
     // bin/c_compiler --translate [source-file.c] -o [dest-file.py]
