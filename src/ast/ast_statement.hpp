@@ -369,7 +369,12 @@ class statement_jump : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            if(expr != NULL) expr->compile(dst, context);
+            if(expr != NULL) {
+                context.target_reg = 2;
+                expr->compile(dst, context);
+            
+            
+            }
             if(symbol == "return"){
                 // push stack
                 dst<<"\taddu\t$sp,$fp,$0"; // restore sp

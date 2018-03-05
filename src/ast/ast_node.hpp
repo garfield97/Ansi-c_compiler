@@ -19,6 +19,7 @@ struct CompileContext{
     bool global_scope;
     std::string current_func;
     std::string tmp_v;  // used to transfer variable name across nodes
+    int target_reg;
 };
 
 struct TranslateContext{
