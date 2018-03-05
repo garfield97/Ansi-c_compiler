@@ -16,7 +16,7 @@ struct CompileContext{
     std::vector<uint32_t> v_address_space;
     std::vector<uint32_t> stack;
     std::vector<std::string> global_var;
-    bool main_exists;
+    bool global_scope;
     std::string tmp_v;  // used to transfer variable name across nodes
 };
 
