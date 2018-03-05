@@ -14,7 +14,7 @@ class Node;
 struct CompileContext{
     uint32_t register_file [32];
     std::vector<uint32_t> v_address_space;
-    std::vector<uint32_t> stack;
+    uint stack_size;
     std::vector<std::string> global_var;
     bool global_scope;
     std::string current_func;

@@ -73,8 +73,17 @@ class statement_compound : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            if(current != NULL){
+                
+                current->compile(dst,context);
+            }
+            
+            if(next != NULL){
+                
+                next->compile(dst,context);
+            }
+
+
         }
 };
 
@@ -123,8 +132,8 @@ class list_statement : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            current->compile(dst,context);
+            next->compile(dst,context);
         }
 
 };
@@ -360,8 +369,14 @@ class statement_jump : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            if(expr != NULL) expr->compile(dst, context);
+            if(symbol == "return"){
+                // push stack
+                dst<<"\taddu\t$sp,$fp,$0"; // restore sp
+                dst<<"\tlw\t$fp,4($sp)\n";
+                dst<<"\taddiu\t$sp,$sp,"<<context.stack_size*4<<"\n";
+                dst<<"\tj\t$31\nnop\n"; // jump to return addr
+            }
         }
 };
 
