@@ -119,8 +119,10 @@ class definition_function : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+        
+        declarator->compile(dst,context);
+        dst<<"  .end "<<context.current_func<<std::endl;
+        
         }
 };
 
