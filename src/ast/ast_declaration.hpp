@@ -673,6 +673,7 @@ class declarator_direct : public Node{
         NodePtr  current;
         NodePtr  next;
         bool brackets;
+        bool squares;
         std::string symbol;
         
     public:
@@ -680,20 +681,23 @@ class declarator_direct : public Node{
             :current(NULL)
             ,next(NULL)
             ,brackets(false) //MEHEDI really wants false
+            ,squares(false)
             ,symbol(name)
         {}
         
         declarator_direct(NodePtr _arg1,NodePtr _arg2)
             :current(_arg1)
             ,next(_arg2)
-            ,brackets(false)
+            ,brackets(true)
+            ,squares(false)
             ,symbol(" ")
         {}
         
         declarator_direct(NodePtr _arg1)
             :current(_arg1)
             ,next(NULL)
-            ,brackets(false) // fix this for the actual thing
+            ,brackets(true) // fix this for the actual thing
+            ,squares(false)
             ,symbol(" ")
         {}
 
@@ -745,9 +749,25 @@ class declarator_direct : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+        
+            if(symbol != " "){
+    
+                if(global_scope){
+                    dst<<"  .global "<<symbol<<'\n';
+
+                    
+                }
+            }
+            
+            else if(brackets){
+                    current->compile(dst,context);
+                    dst<<"  .ent "<<symbol<<'\n';
+                    dst<<"main:"<<'\n';
+                    current_func = symbol;
+            }
+            
         }
+
 };
 
 class struct_declarator : public Node{
@@ -968,6 +988,7 @@ class declarator : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+
             exit(1);
         }
 };
