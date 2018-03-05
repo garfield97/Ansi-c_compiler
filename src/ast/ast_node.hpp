@@ -17,6 +17,7 @@ struct CompileContext{
     std::vector<uint32_t> stack;
     std::vector<std::string> global_var;
     bool global_scope;
+    std::string current_func;
     std::string tmp_v;  // used to transfer variable name across nodes
 };
 
