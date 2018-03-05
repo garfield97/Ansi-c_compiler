@@ -958,8 +958,15 @@ class expr_primary : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+         //   if(Sbool)  dst<<Sval;     
+            if(Ibool)  dst<<Ival;
+            else if(UIbool) dst<<UIval;
+            else if(LIbool) dst<<LIval;
+            else if(ULbool) dst<<ULval;
+   //         else if(Cbool)  dst<<Cval;
+            else if(exp != NULL){
+                exp->compile(dst, context);
+            }        
         }
 };
 
