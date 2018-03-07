@@ -427,9 +427,8 @@ class declarator_init : public Node{
             initializer->compile(dst,context); //if its a constant it stores into expression_results
             dst<<"\taddi\t$15,$0,"<<context.expr_result<<'\n';
             uint temp_variable;
-            temp_variable = context.scopes[context.scope_index][context.tmp_v].stack_position;  //access the binding struct to get the position of the variable on the stack and put it into temp_variable
+            temp_variable = context.stack_size;  //access the binding struct to get the position of the variable on the stack and put it into temp_variable
             dst<<"\tsw\t$15,"<<temp_variable*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
-            dst<<temp_variable<<'\n';
 
             
             
