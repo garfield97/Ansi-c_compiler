@@ -72,7 +72,7 @@ public:
     //! Evaluate the tree using the given mapping of variables to numbers
     virtual void compile(std::ostream &dst, CompileContext &context) const =0;
     
-    void push_stack(std::ostream &dst, CompileContext &context){
+    void push_stack(std::ostream &dst, CompileContext &context) const =0{
         
         
         dst<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-4"<<'\n';
