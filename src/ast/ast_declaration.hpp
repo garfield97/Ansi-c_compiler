@@ -185,14 +185,18 @@ class declaration : public Node{
             if(declarator_list_init != NULL){
                 
                 binding temp;
-                temp.reg_ID = context.get_free_reg();
                 
                 specifier_declaration->compile(dst,context); // assigns tmp_v with C type
                 temp.type = context.tmp_v;
                 
                 
                 declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v
+                this.push_stack(dst,context); //stack size is changed here.(incremented)
+                
+                temp.stack_position = context.stack_size;
+                
                 context.scopes[context.scope_index][context.tmp_v] = temp; // not sure if this map works
+                
                                 
                                 
            
@@ -416,8 +420,9 @@ class declarator_init : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+        
+            declarator->compile(dst,context);
+        
         }
 };
 
