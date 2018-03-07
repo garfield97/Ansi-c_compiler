@@ -73,6 +73,11 @@ class statement_compound : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+        
+            context.scope_index++; // incrementing the scope index
+            std::map<std::string,binding>bindings; //create a map for pushing it out at the end.
+            context.scopes.push_back(bindings);
+            
             if(current != NULL){
                 
                 current->compile(dst,context);
@@ -82,7 +87,11 @@ class statement_compound : public Node{
                 
                 next->compile(dst,context);
             }
-
+        
+        
+            context.scope_index--; // decrementing the scope index so we can keep track of which scope we are in
+            context.scopes.pop_back(bindings); // pop out
+            
 
         }
 };
