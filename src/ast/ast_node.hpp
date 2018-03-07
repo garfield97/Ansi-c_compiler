@@ -77,7 +77,7 @@ public:
         
         dst<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-4"<<'\n';
         
-        for(int i = 1; i <= context.stack_size ; i++){ 
+        for(uint i = 1; i <= context.stack_size ; i++){ 
             dst<<"\tlw\t$15,"<<i*4+4<<"($sp)"<<'\n';                                        //permanently assign register 15 as temporary stack shifting storage
             dst<<"\tsw\t$15,"<<i*4<<"($sp)"<<'\n';
         }
