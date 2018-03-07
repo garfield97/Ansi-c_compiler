@@ -42,6 +42,9 @@ struct CompileContext{
     std::string expr_result;        // literal values
 };
 
+
+
+
 struct TranslateContext{
     int indent;
     std::vector<std::string> globalVar;
@@ -69,7 +72,24 @@ public:
     //! Evaluate the tree using the given mapping of variables to numbers
     virtual void compile(std::ostream &dst, CompileContext &context) const =0;
     
+    void push_stack(std::ostream &dst, CompileContext &context){
+        
+        
+        dst<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-4"<<'\n';
+        
+        for(int i = 1; i <= context.stack_size ; i++){ 
+            dst<<"\tlw\t$15,"<<i*4+4<<"($sp)"<<'\n';                                        //permanently assign register 15 as temporary stack shifting storage
+            dst<<"\tsw\t$15,"<<i*4<<"($sp)"<<'\n';
+        }
+        dst<<"\taddu\t$fp,$sp,$0"<<std::endl;                       //outside of forloop
+        context.stack_size++;
+    }
+    
 };
+
+
+
+
 
 
 #endif
