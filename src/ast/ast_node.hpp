@@ -15,15 +15,25 @@ class Node;
 struct binding{
     uint reg_ID;        // register number
     std::string type;   // C type being stored
-}
+};
 
 struct CompileContext{
+    bool reg_free[32];              // check if reg available
+    int get_free_reg(){
+        for(int i=0; i<32; i++){
+            if(reg_free[i] == true && ( i >= 8 && i <= 15 ) ){
+                    // check for unsaved regs
+                return i;
+            }
+        }
+    }
+
+
     uint stack_size;                // dealing with stack pointer
 
     std::vector<std::map<std::string, binding> > scopes; // vector of bindings for each scope
                                                       // map - variable name to register number
-
-    bool global_scope;              // determine whether to add to global scope 
+    uint scope_index;       // use to access orrect map in vector
 
     std::string current_func;
     std::string tmp_v;              // used to transfer variable name across nodes
