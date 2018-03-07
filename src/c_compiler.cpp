@@ -43,6 +43,8 @@ int main(int argc, char* argv[])
         CompileContext CC;
         CC.global_scope = true;
         CC.stack_size = 0;
+        std::map<std::string, uint> global;
+        CC.scopes.push_back(global); 
         dstStream<<'\t'<<".text"<<'\n';
         ast->compile(dstStream, CC);
     } 

@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <map>
 
 #include <memory>
 
@@ -12,14 +13,18 @@
 class Node;
 
 struct CompileContext{
-    uint32_t register_file [32];
-    std::vector<uint32_t> v_address_space;
-    uint stack_size;
-    std::vector<std::string> global_var;
-    bool global_scope;
+    uint32_t register_file [32];    // register file
+
+    uint stack_size;                // dealing with stack pointer
+
+    std::vector<std::map<std::string, uint> > scopes; // vector of bindings for each scope
+                                                      // map - variable name to register number
+
+    bool global_scope;              // determine whether to add to global scope 
+
     std::string current_func;
-    std::string tmp_v;  // used to transfer variable name across nodes
-    std::string expr_result;
+    std::string tmp_v;              // used to transfer variable name across nodes
+    std::string expr_result;        // literal values
 };
 
 struct TranslateContext{
