@@ -3,7 +3,6 @@
 
 #include "ast.hpp"
 
-
 int main(int argc, char* argv[])
 {
 
@@ -41,10 +40,14 @@ int main(int argc, char* argv[])
     // bin/c_compiler -S [source-file.c] -o [dest-file.s]
     if( mode == "-S" ){
         CompileContext CC;
-        CC.global_scope = true;
         CC.stack_size = 0;
         std::map<std::string, binding> global;
-        CC.scopes.push_back(global); 
+        CC.scopes.push_back(global);
+        // set regs to free
+        for(int i=8; i<=23; i++){
+            CC.reg_free[i] = true;
+        }
+        CC.scope_index=0; //default global
         dstStream<<'\t'<<".text"<<'\n';
         ast->compile(dstStream, CC);
     } 
