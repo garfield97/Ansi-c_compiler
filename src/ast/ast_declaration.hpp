@@ -191,7 +191,7 @@ class declaration : public Node{
                 
                 
                 declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v
-                this.push_stack(dst,context); //stack size is changed here.(incremented)
+                this->push_stack(dst,context); //stack size is changed here.(incremented)
                 
                 temp.stack_position = context.stack_size;
                 
