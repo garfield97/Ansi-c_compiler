@@ -12,12 +12,15 @@
 // abstarct class for any node of the AST
 class Node;
 
-struct CompileContext{
-    uint32_t register_file [32];    // register file
+struct binding{
+    uint reg_ID;        // register number
+    std::string type;   // C type being stored
+}
 
+struct CompileContext{
     uint stack_size;                // dealing with stack pointer
 
-    std::vector<std::map<std::string, uint> > scopes; // vector of bindings for each scope
+    std::vector<std::map<std::string, binding> > scopes; // vector of bindings for each scope
                                                       // map - variable name to register number
 
     bool global_scope;              // determine whether to add to global scope 
