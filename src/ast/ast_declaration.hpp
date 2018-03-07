@@ -420,9 +420,19 @@ class declarator_init : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+            
         
-            declarator->compile(dst,context);
-        
+            declarator->compile(dst,context);   //will do binding first , stores into tmp_V (variable name)
+            initializer->compile(dst,context); //if its a constant it stores into expression_results
+            dst<<"\taddi\t$15,$0,"<<context.expr_result<<'\n';
+            uint temp_variable;
+            temp_variable = context.scopes[scope_index][tmp_v].stack_position;  //access the binding struct to get the position of the variable on the stack and put it into temp_variable
+            dst<<"\tsw\t$15,"<<context.stack_size*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
+
+            
+            
+            
+            
         }
 };
 
