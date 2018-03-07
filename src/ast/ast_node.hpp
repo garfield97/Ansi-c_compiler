@@ -21,7 +21,7 @@ struct CompileContext{
     bool reg_free[32];              // check if reg available
     int get_free_reg(){
         for(int i=0; i<32; i++){
-            if(reg_free[i] == true && ( reg_free[i] >= 8 && reg_free[i] <= 15 ){
+            if(reg_free[i] == true && ( i >= 8 && i <= 15 ) ){
                     // check for unsaved regs
                 return i;
             }
