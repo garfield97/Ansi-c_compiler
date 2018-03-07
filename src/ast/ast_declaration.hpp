@@ -189,9 +189,8 @@ class declaration : public Node{
                 specifier_declaration->compile(dst,context); // assigns tmp_v with C type
                 temp.type = context.tmp_v;
                 
-                
-                declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v
                 this->push_stack(dst,context); //stack size is changed here.(incremented)
+                declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v
                 
                 temp.stack_position = context.stack_size;
                 
@@ -421,8 +420,9 @@ class declarator_init : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             
-        
             declarator->compile(dst,context);   //will do binding first , stores into tmp_V (variable name)
+            
+            
             initializer->compile(dst,context); //if its a constant it stores into expression_results
             dst<<"\taddi\t$15,$0,"<<context.expr_result<<'\n';
             uint temp_variable;
