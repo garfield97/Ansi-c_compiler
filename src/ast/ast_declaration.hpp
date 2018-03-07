@@ -192,7 +192,7 @@ class declaration : public Node{
                 
                 
                 declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v
-                context.scopes[scope_index][context.tmp_v] = temp; // not sure if this map works
+                context.scopes[context.scope_index][context.tmp_v] = temp; // not sure if this map works
                                 
                                 
            
