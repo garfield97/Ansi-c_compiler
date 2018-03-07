@@ -15,6 +15,7 @@ class Node;
 struct binding{
     uint reg_ID;        // register number
     std::string type;   // C type being stored
+    uint stack_position;
 };
 
 struct CompileContext{
@@ -26,6 +27,7 @@ struct CompileContext{
                 return i;
             }
         }
+        return 33;      // no free reg - need to backup - implement later
     }
 
 
