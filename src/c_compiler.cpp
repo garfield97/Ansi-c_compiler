@@ -3,6 +3,8 @@
 
 #include "ast.hpp"
 
+std::ofstream dstStream; // global to give access to struct
+
 int main(int argc, char* argv[])
 {
 
@@ -26,7 +28,7 @@ int main(int argc, char* argv[])
     fclose(stderr);
 
     // dest file
-    std::ofstream dstStream(argv[4]);
+    dstStream.open(argv[4]);
 
     std::string mode = argv[1];
     

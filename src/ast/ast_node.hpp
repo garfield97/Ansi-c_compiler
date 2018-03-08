@@ -13,6 +13,8 @@
 
 #include <memory>
 
+extern std::ofstream dstStream;
+
 // abstarct class for any node of the AST
 class Node;
 
@@ -23,8 +25,6 @@ struct binding{
 };
 
 struct CompileContext{
-    std::ofstream dest; // need access to dst printing
-
 
     bool reg_free[32];              // check if reg available
 
@@ -59,14 +59,14 @@ struct CompileContext{
 
         // search through map to find variable stored in the reg to be replaced
         for(std::map<std::string, binding>::iterator it= scopes[scope_index].begin(); it !=scopes[scope_index].end(); ++it){
-            if(*it->second.reg_ID == reg_counter){
-                s_pos = *it->second.stack_position;
+            if(it->second.reg_ID == reg_counter){
+                s_pos = it->second.stack_position;
                 break;
             } 
         }
 
         // store variable in reg back onto stack
-        dest<<"\tsw\t$"<<reg_counter<<","<<s_pos*4<<"($fp)";
+        dstStream<<"\tsw\t$"<<reg_counter<<","<<s_pos*4<<"($fp)";
 
         if(++reg_counter == 16u) reg_counter = 8u; // loop back for next replacement
 
