@@ -530,14 +530,22 @@ class expr_add : public Node {
                 
 
                 if(regex_match(context.expr_result, context.reNum)){
-                    dst<<"\taddi\t"<<"$"<<temp_register<<",$0,"<<context.expr_result<<'\n';
+                    dst<<"\taddi\t"<<"$"<<temp_register<<",$0,"<<context.expr_result<<'\n';  
                 }
                 
                 else{
-                    dst<<"\tadd\t"<<"$"<<temp_register<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n';
+                    
+                    if(update_variable()){
+                
+                        dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;
+                    }
+                        dst<<"\tadd\t"<<"$"<<temp_register<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n';
+
                 }
                 
-                context.expr_result = to_string(temp_register);
+                context.expr_result = "$"+to_string(temp_register);    //REGEX DOLLA DOLLA matching
+                
+        
 
             }
                 
