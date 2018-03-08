@@ -59,8 +59,8 @@ struct CompileContext{
         }    
         
         return false;   // no update made
-    }
-    */
+    }*/
+    
 
     // used to check if variable is a literal
     std::regex reNum("[1-9][0-9]*");
