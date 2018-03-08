@@ -130,7 +130,7 @@ class expr_assignment : public Node {
             
             
             exp->compile(dst,context);
-            
+            context.update_variable();                      
             dst<<"\taddi\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;    // move results into assignment register. Mips Mov STORE RESULT FROM EXPRESSION INTO REGISTER THAT WAS ASSIGNED - Good comment OK                    
                 
                 
