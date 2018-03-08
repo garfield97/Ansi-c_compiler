@@ -521,43 +521,55 @@ class expr_add : public Node {
         {
             rec->compile(dst, context); // store variable into expression result
             
-            int temp_register = context.get_free_reg();
+            int temp_register = context.get_free_reg(); //storing result of the addition into this register.
             
+            
+            // store first operand of RHS into temp reg
+            if(regex_match(context.expr_result, context.reNum)){ // literal
+                dst<<"\taddi\t"<<"$"<<temp_register<<",$0,"<<context.expr_result<<'\n';  
+            }
+            else{   // variable
+                if(context.update_variable()){  // is stored in a reg already
+                    dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                }
+                dst<<"\tadd\t"<<"$"<<temp_register<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+            }
+                
+            exp->compile(dst,context);
             
             
             if(op == "+"){
-                
-                
-
-                if(regex_match(context.expr_result, context.reNum)){
-                    dst<<"\taddi\t"<<"$"<<temp_register<<",$0,"<<context.expr_result<<'\n';  
+                if(regex_match(context.expr_result, context.reNum)){ // literal
+                    dst<<"\taddi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  
                 }
-                
-                else{
-                    
-                    if(context.update_variable()){
-                
-                        dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;
+                else{   // variable
+                    if(context.update_variable()){  // is stored in a reg already
+                        dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
-                        dst<<"\tadd\t"<<"$"<<temp_register<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n';
-
-                }
-                
-                context.expr_result = "$"+std::to_string(temp_register);    //REGEX DOLLA DOLLA matching
-                
-        
-
+                    dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                }            
+            
             }
-                
-                
-                
+            
+            
             else{
-            
+                if(regex_match(context.expr_result, context.reNum)){ // literal
+                    dst<<"\tsubi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  
+                }
+                else{   // variable
+                    if(context.update_variable()){  // is stored in a reg already
+                        dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                    }
+                    dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                }            
             
             
             }
             
+            
+                     context.expr_result = "$"+std::to_string(temp_register);    //return temp register   
         }
+
 };
 
 class expr_mul : public Node {
