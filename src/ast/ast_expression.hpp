@@ -118,25 +118,13 @@ class expr_assignment : public Node {
         {
             unary->compile(dst,context);                                //Find the name of the variable stored in expression_result
                 
-            binding tmp_binding;                                            //create a temporary bindings for later use
-            tmp_binding = context.scopes[context.scope_index][context.expr_result];        //setting the temp binding to equals toquery the expr_results
-
-            int reg_assign = tmp_binding.reg_ID                           // getting a free register for use
-               
-            if(reg_assign == 33){     
-                                                          //checking if there are actually free registers            
-                context.free_up_reg();                                              // free up the registers by loading them onto the stack for use
-                reg_assign = context.get_free_reg();
-                tmp_binding.reg_ID = reg_assign;
-                
-                
-            }
-
-            context.scopes[context.scope_index][context.expr_result] = tmp_binding; //updating the binding stored in our vectors of map-> no more updates to reg_assign
+            context.update_variable();                      
+            
+            binding tmp = context.scopes[context.scope_index][context.expr_result];
             
                     
                 
-            dst<<"\tlw\t"<<"$"<<reg_assign<<","<<tmp_binding.stack_position*4<<"($sp)"<<std::endl; //this loads from stack into register.      
+            dst<<"\tlw\t"<<"$"<<tmp.reg_ID<<","<<tmp.stack_position*4<<"($sp)"<<std::endl; //this loads from stack into register.      
             
             // This only supports normal assign currently. assuming that opr_assignment is '= ' 
             
