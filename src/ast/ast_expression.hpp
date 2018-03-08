@@ -521,7 +521,7 @@ class expr_add : public Node {
         {
             rec->compile(dst, context); // store variable into expression result
             
-            int temp_register = get_free_reg();
+            int temp_register = context.get_free_reg();
             
             
             
