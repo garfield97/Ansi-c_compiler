@@ -188,6 +188,7 @@ class declaration : public Node{
                 
                 specifier_declaration->compile(dst,context); // assigns tmp_v with C type
                 temp.type = context.tmp_v;
+                temp.reg_ID = 33;    // forgot to initialise reg_ID into 33 -> not empty
                 
                 this->push_stack(dst,context); //stack size is changed here.(incremented)
                 temp.stack_position = context.stack_size;
@@ -421,7 +422,7 @@ class declarator_init : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             
-            declarator->compile(dst,context);   //will do binding first , stores into tmp_V (variable name)
+            declarator->compile(dst,context);   //stores into tmp_V (variable name)
             
             
             initializer->compile(dst,context); //if its a constant it stores into expression_results
