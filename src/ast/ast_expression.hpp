@@ -525,7 +525,7 @@ class expr_add : public Node {
             
             
             
-            if(op == '+'){
+            if(op == "+"){
                 
                 
 
@@ -535,7 +535,7 @@ class expr_add : public Node {
                 
                 else{
                     
-                    if(update_variable()){
+                    if(context.update_variable()){
                 
                         dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;
                     }
@@ -543,7 +543,7 @@ class expr_add : public Node {
 
                 }
                 
-                context.expr_result = "$"+to_string(temp_register);    //REGEX DOLLA DOLLA matching
+                context.expr_result = "$"+std::to_string(temp_register);    //REGEX DOLLA DOLLA matching
                 
         
 
