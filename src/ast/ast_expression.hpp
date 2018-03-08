@@ -121,7 +121,7 @@ class expr_assignment : public Node {
             
             binding tmp = context.scopes[context.scope_index][context.expr_result];
                 
-            if(update) dstt<<"\tlw\t"<<"$"<<tmp.reg_ID<<","<<tmp.stack_position*4<<"($sp)"<<std::endl; //this loads from stack into register.      
+            if(update) dst<<"\tlw\t"<<"$"<<tmp.reg_ID<<","<<tmp.stack_position*4<<"($sp)"<<std::endl; //this loads from stack into register.      
             
             // This only supports normal assign currently. assuming that opr_assignment is '= ' 
             
