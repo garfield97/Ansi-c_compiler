@@ -35,7 +35,7 @@ struct CompileContext{
 
     }
 
-    void update_variable(){
+    bool update_variable(){ // return true when given a new reg - i.e. loaded from the stack
         binding tmp_binding;
 
         tmp_binding = scopes[scope_index][expr_result]; // store current variable in tmp
@@ -50,15 +50,20 @@ struct CompileContext{
             }
 
             tmp_binding.reg_ID = reg_assign;
-        }
 
-        scopes[scope_index][expr_result] = tmp_binding; //updating the binding stored in our vectors of map-> no more updates to reg_assign
+            scopes[scope_index][expr_result] = tmp_binding; //updating the binding stored in our vectors of map-> no more updates to reg_assign
+
+            return true;
+
+        }    
         
+        return false;   // no update made
     }
 
     // used to check if variable is a literal
     std::regex reNum("[1-9][0-9]*");
     std::regex reChar("L?['][.]+[']");
+    std::regec is_reg("$[0-9]+");
 
     uint stack_size;                // dealing with stack pointer
 
