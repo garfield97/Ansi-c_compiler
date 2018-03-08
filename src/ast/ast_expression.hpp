@@ -117,8 +117,9 @@ class expr_assignment : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             unary->compile(dst,context);                                //Find the name of the variable stored in expression_result
-                
+            dst<<context.scopes[context.scope_index][context.expr_result].reg_ID<<std::endl;
             context.update_variable();                      
+            dst<<context.scopes[context.scope_index][context.expr_result].reg_ID<<std::endl;
             
             binding tmp = context.scopes[context.scope_index][context.expr_result];
             
