@@ -26,7 +26,7 @@ struct CompileContext{
         for(int i=0; i<32; i++){
             if(reg_free[i] == true && ( i >= 8 && i <= 15 ) ){
                     // check for unsaved regs
-                reg_free[i] == false;
+                reg_free[i] = false;
                 return i;
             }
         }
