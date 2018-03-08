@@ -516,8 +516,36 @@ class expr_add : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            rec->compile(dst, context); // store variable into expression result
+            
+            int temp_register = get_free_reg();
+            
+            
+            
+            if(op == '+'){
+                
+                
+
+                if(regex_match(context.expr_result, context.reNum)){
+                    dst<<"\taddi\t"<<"$"<<temp_register<<",$0,"<<context.expr_result<<'\n';
+                }
+                
+                else{
+                    dst<<"\tadd\t"<<"$"<<temp_register<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n';
+                }
+                
+                context.expr_result = to_string(temp_register);
+
+            }
+                
+                
+                
+            else{
+            
+            
+            
+            }
+            
         }
 };
 
