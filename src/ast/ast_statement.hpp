@@ -395,7 +395,10 @@ class statement_jump : public Node{
                 }
                 
                 else if(regex_match(context.expr_result, reChar)){
-                    dst<<"\taddi\t$2,$0,"<<atoi(context.expr_result)<<'\n';
+                    int temp_int;
+                    stringstream convert(context.expr_result);
+                    convert>>temp_int;
+                    dst<<"\taddi\t$2,$0,"<<temp_int<<'\n';
                 }
                 
                 else{
