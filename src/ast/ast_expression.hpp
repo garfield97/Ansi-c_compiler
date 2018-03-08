@@ -984,7 +984,7 @@ class expr_primary : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            if(Sbool)  context.expr_result = std::to_string(Sval);    
+            if(Sbool)  context.expr_result = Sval;    
             else if(Ibool)  context.expr_result = std::to_string(Ival);
             else if(UIbool) context.expr_result = std::to_string(UIval);
             else if(LIbool) context.expr_result = std::to_string(LIval);
