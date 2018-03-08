@@ -117,21 +117,24 @@ class expr_assignment : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             unary->compile(dst,context);                                //Find the name of the variable stored in expression_result
-            context.update_variable();                      
+            bool update = context.update_variable(); // true if loaded from stack                     
             
             binding tmp = context.scopes[context.scope_index][context.expr_result];
-            
-                    
                 
-            dst<<"\tlw\t"<<"$"<<tmp.reg_ID<<","<<tmp.stack_position*4<<"($sp)"<<std::endl; //this loads from stack into register.      
+            if(update) dstt<<"\tlw\t"<<"$"<<tmp.reg_ID<<","<<tmp.stack_position*4<<"($sp)"<<std::endl; //this loads from stack into register.      
             
             // This only supports normal assign currently. assuming that opr_assignment is '= ' 
             
-            
+            // evaluates RHS
             exp->compile(dst,context);
-            context.update_variable();                      
+            update = context.update_variable(); // don't care about result
+
+            if( regex_match(context.expr_result, context.is_reg) ){
+                dst<<"\tadd\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;
+            }
+            else { // literal                   
             dst<<"\taddi\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;    // move results into assignment register. Mips Mov STORE RESULT FROM EXPRESSION INTO REGISTER THAT WAS ASSIGNED - Good comment OK                    
-                
+            }    
                 
         
         }
