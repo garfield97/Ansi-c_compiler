@@ -54,6 +54,9 @@ int main(int argc, char* argv[])
         CC.reChar = ("L?['][.]+[']");
         CC.is_reg = ("\\$[0-9]+");
 
+        CC.reg_counter = 8; // initialise reg to be replaced when no free reg's
+
+        CC.dest = dst; // struct functions abble to print
 
         dstStream<<'\t'<<".text"<<'\n';
         ast->compile(dstStream, CC);

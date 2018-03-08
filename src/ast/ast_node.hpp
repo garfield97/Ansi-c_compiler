@@ -8,6 +8,8 @@
 #include <vector>
 #include <map>
 #include <regex>
+#include <stdio.h>
+#include <fstream>
 
 #include <memory>
 
@@ -21,44 +23,66 @@ struct binding{
 };
 
 struct CompileContext{
+    std::ofstream dest; // need access to dst printing
+
+
     bool reg_free[32];              // check if reg available
-    int get_free_reg(){
+
+    uint get_free_reg(){
+        for(uint i=0u; i<32u; i++){
+            if(reg_free[i] == true && ( i >= 8u && i <= 15u ) ){ // register to be saved by calling function
+                reg_free[i] = false;
+                return i;
+            }
+        }
+
+        // no free reg found in 8-15
+        /*
+        //give one in range 16-23
         for(int i=0; i<32; i++){
-            if(reg_free[i] == true && ( i >= 8 && i <= 15 ) ){
+            if(reg_free[i] == true && ( i >= 16 && i <= 23 ) ){ // register to be saved by called function
                     // check for unsaved regs
                 reg_free[i] = false;
                 return i;
             }
         }
-        return 33;      // no free reg - need to backup - implement later
+        */
+
+        // all reg occupied
+        free_up_reg();  // free up a reg from $8-$15
+        return get_free_reg(); // now get a free reg - guaranteed
     }
+
+    uint reg_counter;
     void free_up_reg(){
+        uint s_pos;
+
+        // search through map to find variable stored in the reg to be replaced
+        for(std::map<std::string, binding>::iterator it= scopes[scope_index].begin(); it !=scopes[scope_index].end(); ++it){
+            if(*it.reg_ID == reg_counter){
+                s_pos = *it.stack_position;
+                break;
+            } 
+        }
+
+        // store variable in reg back onto stack
+        dest<<"\tsw\t$"<<reg_counter<<","<<s_pos*4<<"($fp)";
+
+        if(++reg_counter == 16u) reg_counter = 8u; // loop back for next replacement
 
     }
 
     
     bool update_variable(){ // return true when given a new reg - i.e. loaded from the stack
-        binding tmp_binding;
 
-        tmp_binding = scopes[scope_index][expr_result]; // store current variable in tmp
-
-        int reg_assign = tmp_binding.reg_ID;  // get current reg
+        uint local = scopes[scope_index][expr_result].reg_ID; // store current variable in tmp
             
-        if(reg_assign == 33){               // if no reg assign, find one  
-            reg_assign = get_free_reg();
-            if(reg_assign == 33){        // no free available
-                free_up_reg();          // free up the registers by loading them onto the stack for use
-                reg_assign = get_free_reg();
-            }
-
-            tmp_binding.reg_ID = reg_assign;
-
-            scopes[scope_index][expr_result] = tmp_binding; //updating the binding stored in our vectors of map-> no more updates to reg_assign
-
+        if(local == 33){    // unassigned
+            local = get_free_reg();
+            scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
             return true;
-
         }    
-        
+
         return false;   // no update made
     }
     
