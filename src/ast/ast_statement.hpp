@@ -379,22 +379,19 @@ class statement_jump : public Node{
         {
         
         
-            std::regex reNum("[1-9][0-9]*");
-            std::regex reChar("L?['][.]+[']");
             
-            
-
+        
             if(expr != NULL) {
                                      
                 expr->compile(dst, context); // prints out an immediate or a register value
                 
                 context.update_variable(); 
                 
-                if(regex_match(context.expr_result, reNum)){
+                if(regex_match(context.expr_result, context.reNum)){
                     dst<<"\taddi\t$2,$0,"<<context.expr_result<<'\n';
                 }
                 
-                else if(regex_match(context.expr_result, reChar)){
+                else if(regex_match(context.expr_result, context.reChar)){
                     int temp_int;
                     std::stringstream convert(context.expr_result);
                     convert>>temp_int;
