@@ -12,7 +12,7 @@ if [[ ! -f bin/c_compiler ]] ; then
     have_compiler=1
 fi
 
-input_dir="c_compiler_internal"
+input_dir="test_internal"
 
 working="tmp/internal"
 mkdir -p ${working}
