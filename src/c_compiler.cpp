@@ -3,6 +3,8 @@
 
 #include "ast.hpp"
 
+std::ofstream dstStream; // global to give access to struct
+
 int main(int argc, char* argv[])
 {
 
@@ -26,7 +28,7 @@ int main(int argc, char* argv[])
     fclose(stderr);
 
     // dest file
-    std::ofstream dstStream(argv[4]);
+    dstStream.open(argv[4]);
 
     std::string mode = argv[1];
     
@@ -54,6 +56,7 @@ int main(int argc, char* argv[])
         CC.reChar = ("L?['][.]+[']");
         CC.is_reg = ("\\$[0-9]+");
 
+        CC.reg_counter = 8; // initialise reg to be replaced when no free reg's
 
         dstStream<<'\t'<<".text"<<'\n';
         ast->compile(dstStream, CC);
