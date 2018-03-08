@@ -404,7 +404,7 @@ class statement_jump : public Node{
                 else{
                 
                     context.update_variable();
-                    dst<<"\taddi\t$2,$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<std::endl;
+                    dst<<"\tadd\t$2,$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<std::endl;
                 }
                     
                     
