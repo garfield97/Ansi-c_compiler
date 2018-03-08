@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
         // set regex's
         CC.reNum = ("[1-9][0-9]*");
         CC.reChar = ("L?['][.]+[']");
-        CC.is_reg = ("\Q$\E[0-9]+");
+        CC.is_reg = ("\$[0-9]+");
 
 
         dstStream<<'\t'<<".text"<<'\n';
