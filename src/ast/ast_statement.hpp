@@ -377,28 +377,40 @@ class statement_jump : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+        
+        
+            std::regex reNum("[1-9][0-9]*");
+            std::regex reChar("L?['][.]+[']");
+            
+            
+
             if(expr != NULL) {
                                      
                 expr->compile(dst, context); // prints out an immediate or a register value
                 
+                context.update_variable(); 
                 
-                binding tmp_binding;                                            //create a temporary bindings for later use
-                tmp_binding = context.scopes[context.scope_index][context.expr_result];        //setting the temp binding to equals toquery the expr_results
-
-                int reg_assign = tmp_binding.reg_ID                           // getting a free register for use
-               
-                if(reg_assign == 33){                                                   //checking if there are actually free registers
-                    context.free_up_reg();                                              // free up the registers by loading them onto the stack for use
-                    reg_assign = context.get_free_reg();
-                    tmp_binding.reg_ID = reg_assign;
+                if(regex_match(context.expr_result, reNum)){
+                    dst<<"\taddi\t$2,$0,"<<context.expr_result<<'\n';
                 }
-            
-
-            
-                context.scopes[context.scope_index][context.expr_result] = tmp_binding; //updating the binding stored in our vectors of map-> no more updates to reg_assign
-            
+                
+                else if(regex_match(context.expr_result, reChar)){
+                    dst<<"\taddi\t$2,$0,"<<atoi(context.expr_result)<<'\n';
+                }
+                
+                else{
+                
+                    context.update_variable();
+                    dst<<"\taddo\t$2,$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<std::endl;
+                }
+                    
+                    
+                    
+                    
+               
+               
+               
                                     
-                dst<<"\tadd\t$2,$0,$,"<<   <<"\n";
                 
         
 
