@@ -59,8 +59,8 @@ struct CompileContext{
 
         // search through map to find variable stored in the reg to be replaced
         for(std::map<std::string, binding>::iterator it= scopes[scope_index].begin(); it !=scopes[scope_index].end(); ++it){
-            if(*it.reg_ID == reg_counter){
-                s_pos = *it.stack_position;
+            if(*it->second.reg_ID == reg_counter){
+                s_pos = *it->second.stack_position;
                 break;
             } 
         }

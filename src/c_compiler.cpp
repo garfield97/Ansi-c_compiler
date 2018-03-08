@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
 
         CC.reg_counter = 8; // initialise reg to be replaced when no free reg's
 
-        CC.dest = dst; // struct functions abble to print
+        CC.dest = dstStream; // struct functions able to print
 
         dstStream<<'\t'<<".text"<<'\n';
         ast->compile(dstStream, CC);
