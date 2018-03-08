@@ -35,6 +35,7 @@ struct CompileContext{
 
     }
 
+    /*
     bool update_variable(){ // return true when given a new reg - i.e. loaded from the stack
         binding tmp_binding;
 
@@ -59,11 +60,12 @@ struct CompileContext{
         
         return false;   // no update made
     }
+    */
 
     // used to check if variable is a literal
     std::regex reNum("[1-9][0-9]*");
     std::regex reChar("L?['][.]+[']");
-    //std::regex is_reg("$[0-9]+");
+    std::regex is_reg("$[0-9]+");
 
     uint stack_size;                // dealing with stack pointer
 
