@@ -48,6 +48,13 @@ int main(int argc, char* argv[])
             CC.reg_free[i] = true;
         }
         CC.scope_index=0; //default global
+
+        // set regex's
+        CC.reNum = ("[1-9][0-9]*");
+        CC.reChar = ("L?['][.]+[']");
+        CC.is_reg = ("$[0-9]+");
+
+
         dstStream<<'\t'<<".text"<<'\n';
         ast->compile(dstStream, CC);
     } 
