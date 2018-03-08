@@ -63,7 +63,7 @@ struct CompileContext{
     // used to check if variable is a literal
     std::regex reNum("[1-9][0-9]*");
     std::regex reChar("L?['][.]+[']");
-    std::regec is_reg("$[0-9]+");
+    std::regex is_reg("$[0-9]+");
 
     uint stack_size;                // dealing with stack pointer
 
