@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <string>
+#include <stringstream>
 #include <iostream>
 #include <vector>
 #include <map>
@@ -37,21 +38,21 @@ struct CompileContext{
     void update_variable(){
         binding tmp_binding;
 
-        tmp_binding = context.scopes[context.scope_index][context.expr_result]; // store current variable in tmp
+        tmp_binding = scopes[scope_index][expr_result]; // store current variable in tmp
 
         int reg_assign = tmp_binding.reg_ID;  // get current reg
             
         if(reg_assign == 33){               // if no reg assign, find one  
-            reg_assign = context.get_free_reg();
+            reg_assign = get_free_reg();
             if(reg_assign == 33){        // no free available
-                context.free_up_reg();          // free up the registers by loading them onto the stack for use
-                reg_assign = context.get_free_reg();
+                free_up_reg();          // free up the registers by loading them onto the stack for use
+                reg_assign = get_free_reg();
             }
 
             tmp_binding.reg_ID = reg_assign;
         }
 
-        context.scopes[context.scope_index][context.expr_result] = tmp_binding; //updating the binding stored in our vectors of map-> no more updates to reg_assign
+        scopes[scope_index][expr_result] = tmp_binding; //updating the binding stored in our vectors of map-> no more updates to reg_assign
         
     }
 
