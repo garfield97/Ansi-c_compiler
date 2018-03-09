@@ -129,7 +129,7 @@ class expr_assignment : public Node {
             exp->compile(dst,context);
             update = context.update_variable(); // don't care about result
             
-            if(context.erv_index >= 0){
+            if(context.erv_index > 0){
                
                 context.expr_result = context.expr_result_vector[context.erv_index - 1];
                 
