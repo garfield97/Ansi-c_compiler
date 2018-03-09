@@ -103,7 +103,11 @@ struct CompileContext{
 
     std::vector<std::string> expr_result_vector; // deal with recursion and passing registers
     uint erv_index;
-    
+
+    void reset_erv(){
+        
+    }
+
     std::string expr_result;        // literal values
 };
 

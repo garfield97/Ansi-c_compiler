@@ -538,21 +538,29 @@ class expr_add : public Node {
         {
             rec->compile(dst, context); // store variable into expression result
             
-            int temp_register = context.get_free_reg(); //storing result of the addition into this register.
-            
-            
-            // store first operand of RHS into temp reg
-            if(regex_match(context.expr_result, context.reNum)){ // literal
-                dst<<"\taddi\t"<<"$"<<temp_register<<",$0,"<<context.expr_result<<'\n';  
-            }
-            else{   // variable
-                if(context.update_variable()){  // is stored in a reg already
-                    dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
-                }
-                dst<<"\tadd\t"<<"$"<<temp_register<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
-            }
+            if(context.erv_index == 0){ // base case
+
+                std::string temp_register = std::to_string( context.get_free_reg() ); //storing result of the addition into this register.
                 
-            exp->compile(dst,context);
+                // store first operand of RHS into temp reg
+                if(regex_match(context.expr_result, context.reNum)){ // literal
+                    dst<<"\taddi\t"<<"$"<<temp_register<<",$0,"<<context.expr_result<<'\n';  
+                }
+                else{   // variable
+                    if(context.update_variable()){  // is stored in a reg already
+                        dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                    }
+                    dst<<"\tadd\t"<<"$"<<temp_register<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                }
+
+            }
+            else{
+                temp_register = context.expr_result_vector[context.erv_index];
+                context.erv_index--;
+            }
+
+                
+            exp->compile(dst,context); // compile right most term
             
             
             if(op == "+"){
@@ -584,9 +592,9 @@ class expr_add : public Node {
             }
             
             
-                     context.expr_result = "$"+std::to_string(temp_register);    //return temp register   
-                     context.expr_result_vector.push_back(context.expr_result);
-                     context.erv_index++;
+            context.expr_result = "$"+std::to_string(temp_register);    //return temp register   
+            context.expr_result_vector.push_back(context.expr_result);
+            context.erv_index++;
                      
         }
 
