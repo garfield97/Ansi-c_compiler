@@ -25,6 +25,7 @@ bin/c_compiler : src/c_compiler.o src/c_parser.tab.o src/c_lexer.yy.o src/c_pars
 
 clean :
 	rm src/*.o
-	rm bin/*
 	rm src/*.tab.cpp
 	rm src/*.yy.cpp
+	rm -r -f tmp/
+	rm -r -f bin/
