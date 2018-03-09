@@ -42,7 +42,7 @@ for i in ${input_dir}/*.c ; do
     if [[ ${have_compiler} -ne 0 ]] ; then
         echo "$base, Fail, No C compiler/translator"
     elif [[ $REF_C_OUT -ne $GOT_C_OUT ]] ; then
-        echo "$base, Fail, Expected ${REF_C_OUT}, got ${GOT_P_OUT}"
+        echo "$base, Fail, Expected ${REF_C_OUT}, got ${GOT_C_OUT}"
     else
         echo "$base, Pass"
     fi
