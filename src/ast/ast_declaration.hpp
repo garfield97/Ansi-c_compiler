@@ -299,7 +299,7 @@ class list_declaration : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             
-            list_declaration->compile(dst,context);
+            list_declaration1->compile(dst,context);
             
             declaration->compile(dst,context);
             
