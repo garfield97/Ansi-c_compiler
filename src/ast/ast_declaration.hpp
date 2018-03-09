@@ -298,8 +298,14 @@ class list_declaration : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            
+            list_declaration->compile(dst,context);
+            
+            declaration->compile(dst,context);
+            
+            
+            
+
         }
 };
 
@@ -333,7 +339,6 @@ class declarator_init_list : public Node{
         /*
             if(next != null) next->print();
             declaration->PrettyPrintp();
-            //MEHEDI IS TRIGGERE
             dst<<'(';
         */
             dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
@@ -351,8 +356,13 @@ class declarator_init_list : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+
+            declarator_init->compile(dst,context);
+            
+            declarator_init1->compile(dst,context);
+            
+
+
         }
 };
 
