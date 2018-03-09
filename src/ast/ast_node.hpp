@@ -80,7 +80,7 @@ struct CompileContext{
         if(local == 33){    // unassigned
             local = get_free_reg();
             scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
-            dstStream<<"\tlw\t$"<<local<<","<<scopes[scope_index][expr_result].stack_position*4<<"($fp)";
+            dstStream<<"\tlw\t$"<<local<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)\n";
             return true;
         }    
 
