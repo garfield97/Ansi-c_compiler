@@ -10,110 +10,11 @@
 #include <regex>
 #include <stdio.h>
 #include <fstream>
-
 #include <memory>
 
-extern std::ofstream dstStream;
 
 // abstarct class for any node of the AST
 class Node;
-
-struct binding{
-    uint reg_ID;        // register number
-    std::string type;   // C type being stored
-    uint stack_position;
-};
-
-struct CompileContext{
-
-    bool reg_free[32];              // check if reg available
-
-    uint get_free_reg(){
-        for(uint i=0u; i<32u; i++){
-            if(reg_free[i] == true && ( i >= 8u && i <= 15u ) ){ // register to be saved by calling function
-                reg_free[i] = false;
-                return i;
-            }
-        }
-
-        // no free reg found in 8-15
-        /*
-        //give one in range 16-23
-        for(int i=0; i<32; i++){
-            if(reg_free[i] == true && ( i >= 16 && i <= 23 ) ){ // register to be saved by called function
-                    // check for unsaved regs
-                reg_free[i] = false;
-                return i;
-            }
-        }
-        */
-
-        // all reg occupied
-        free_up_reg();  // free up a reg from $8-$15
-        return get_free_reg(); // now get a free reg - guaranteed
-    }
-
-    uint reg_counter;
-    void free_up_reg(){
-        uint s_pos;
-
-        // search through map to find variable stored in the reg to be replaced
-        for(std::map<std::string, binding>::iterator it= scopes[scope_index].begin(); it !=scopes[scope_index].end(); ++it){
-            if(it->second.reg_ID == reg_counter){
-                s_pos = it->second.stack_position;
-                break;
-            } 
-        }
-
-        // store variable in reg back onto stack
-        dstStream<<"\tsw\t$"<<reg_counter<<","<<s_pos*4<<"($fp)";
-
-        if(++reg_counter == 16u) reg_counter = 8u; // loop back for next replacement
-
-    }
-
-    
-    bool update_variable(){ // return true when given a new reg - i.e. loaded from the stack
-
-        uint local = scopes[scope_index][expr_result].reg_ID; // store reg ID locally
-            
-        if(local == 33){    // unassigned
-            local = get_free_reg();
-            scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
-            dstStream<<"\tlw\t$"<<local<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)\n";
-            return true;
-        }    
-
-        return false;   // no update made
-    }
-    
-
-    // used to check if variable is a literal
-    std::regex reNum;
-    std::regex reChar;
-    std::regex is_reg;
-
-    uint stack_size;                // dealing with stack pointer
-
-    std::vector<std::map<std::string, binding> > scopes; // vector of bindings for each scope
-                                                      // map - variable name to register number
-    uint scope_index;       // use to access orrect map in vector
-
-    std::string current_func;
-    std::string tmp_v;              // used to transfer variable name across nodes
-
-    std::vector<std::string> expr_result_vector; // deal with recursion and passing registers
-    uint erv_index;
-
-    void reset_erv(){
-        
-    }
-
-    std::string expr_result;        // literal values
-};
-
-
-
 
 struct TranslateContext{
     int indent;
@@ -156,10 +57,6 @@ public:
     }
     
 };
-
-
-
-
 
 
 #endif

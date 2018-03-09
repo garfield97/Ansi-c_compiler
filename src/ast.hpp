@@ -8,6 +8,8 @@
 #include "ast/ast_statement.hpp"
 #include "ast/ast_expression.hpp"
 
+#include "ast/compile_context.hpp"
+
 extern const Node *parseAST(char* in);
 
 #endif

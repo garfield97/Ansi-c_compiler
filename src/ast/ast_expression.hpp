@@ -129,22 +129,8 @@ class expr_assignment : public Node {
             exp->compile(dst,context);
             update = context.update_variable(); // don't care about result
             
-            if(context.erv_index > 0){
-               
-                context.expr_result = context.expr_result_vector[context.erv_index - 1];
-                
-                for(int i = 0; i<context.expr_result_vector.size(); i++){
-                 
-                    context.expr_result_vector.pop_back();
-                
-                }
-                
-                context.erv_index = 0;
-                    
-            }
-            
-            
-                
+
+            context.reset_erv(); // check if an expression was evaluated - stores reg ID into expr_result
 
             if( regex_match(context.expr_result,context.is_reg) ){
                 dst<<"\tadd\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;
@@ -539,36 +525,10 @@ class expr_add : public Node {
         {
             rec->compile(dst, context); // store variable into expression result
 
-            std::string temp_register;
+            std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
             
-            if(context.erv_index == 0){ // base case
 
-                temp_register = std::to_string( context.get_free_reg() ); //storing result of the addition into this register.
-                
-                // store first operand of RHS into temp reg
-                if(regex_match(context.expr_result, context.reNum)){ // literal
-                    dst<<"\taddi\t"<<"$"<<temp_register<<",$0,"<<context.expr_result<<'\n';  
-                }
-                else{   // variable
-                    if(context.update_variable()){  // is stored in a reg already
-                        dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
-                    }
-                    dst<<"\tadd\t"<<"$"<<temp_register<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
-                }
-
-            }
-            else{
-                int reg;
-                sscanf(context.expr_result_vector[context.erv_index-1].c_str(),"$%d", &reg);
-
-                temp_register = std::to_string(reg);
-                context.expr_result_vector.pop_back();
-                context.erv_index--;
-            }
-
-                
             exp->compile(dst,context); // compile right most term
-            
             
             if(op == "+"){
                 if(regex_match(context.expr_result, context.reNum)){ // literal
@@ -580,11 +540,9 @@ class expr_add : public Node {
                     }
                     dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
                 }            
-            
             }
             
-            
-            else{
+            else{ // subtraction
                 if(regex_match(context.expr_result, context.reNum)){ // literal
                     dst<<"\tsubi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  
                 }
@@ -594,16 +552,10 @@ class expr_add : public Node {
                     }
                     dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
                 }            
-            
-            
             }
             
-            if(context.erv_index == 0) context.expr_result = "$"+temp_register;    //return temp register
-            else context.expr_result = temp_register; 
-            
-            context.expr_result_vector.push_back(context.expr_result);
-            context.erv_index++;
-                     
+
+            context.set_erv_reg(temp_register); // to pass back reg used to store result          
         }
 
 };
