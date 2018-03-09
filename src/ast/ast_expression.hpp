@@ -559,8 +559,8 @@ class expr_add : public Node {
             }
             else{
                 int reg;
-                sscanf(context.expr_result_vector[context.erv_index-1], %d, reg);
-                
+                sscanf(context.expr_result_vector[context.erv_index-1],"$%d", &reg);
+
                 temp_register = std::to_string(reg);
                 context.expr_result_vector.pop_back();
                 context.erv_index--;
