@@ -102,6 +102,8 @@ struct CompileContext{
     std::string tmp_v;              // used to transfer variable name across nodes
 
     std::vector<std::string> expr_result_vector; // deal with recursion and passing registers
+    uint erv_index;
+    
     std::string expr_result;        // literal values
 };
 

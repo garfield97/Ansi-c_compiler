@@ -51,6 +51,8 @@ int main(int argc, char* argv[])
         }
         CC.scope_index=0; //default global
 
+        CC.erv_index = 0; // defualt 0, used to manage passing reg on recursion
+
         // set regex's
         CC.reNum = ("[1-9][0-9]*");
         CC.reChar = ("L?['][.]+[']");
