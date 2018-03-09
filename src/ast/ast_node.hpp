@@ -12,7 +12,6 @@
 #include <fstream>
 #include <memory>
 
-
 #include "compile_context.hpp"
 
 // abstarct class for any node of the AST
