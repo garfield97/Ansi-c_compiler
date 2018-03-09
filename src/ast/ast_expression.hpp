@@ -594,7 +594,7 @@ class expr_add : public Node {
             }
             
             
-            context.expr_result = "$"+std::to_string(temp_register);    //return temp register   
+            context.expr_result = "$"+temp_register;    //return temp register   
             context.expr_result_vector.push_back(context.expr_result);
             context.erv_index++;
                      
