@@ -398,6 +398,13 @@ class statement_jump : public Node{
                     dst<<"\taddi\t$2,$0,"<<temp_int<<'\n';
                 }
                 
+                
+                else if(regex_match(context.expr_result, context.is_reg)){
+                    
+                    dst<<"\tadd\t$2,$0,"<<context.scopes[context.scope_index][context.expr_result]<<std::endl;
+                    
+                }  
+                
                 else{
                 
                     context.update_variable();
