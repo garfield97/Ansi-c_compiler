@@ -134,7 +134,9 @@ class expr_assignment : public Node {
             }
             else { // literal                   
             dst<<"\taddi\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;    // move results into assignment register. Mips Mov STORE RESULT FROM EXPRESSION INTO REGISTER THAT WAS ASSIGNED - Good comment OK                    
-            }    
+            dst<<"137"<<'\n';
+            }   
+             
                 
         
         }
@@ -527,7 +529,6 @@ class expr_add : public Node {
             // store first operand of RHS into temp reg
             if(regex_match(context.expr_result, context.reNum)){ // literal
                 dst<<"\taddi\t"<<"$"<<temp_register<<",$0,"<<context.expr_result<<'\n';  
-                dst<<"530"<<std::endl;
             }
             else{   // variable
                 if(context.update_variable()){  // is stored in a reg already
@@ -542,7 +543,6 @@ class expr_add : public Node {
             if(op == "+"){
                 if(regex_match(context.expr_result, context.reNum)){ // literal
                     dst<<"\taddi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  
-                    dst<<"545"<<std::endl;
                 }
                 else{   // variable
                     if(context.update_variable()){  // is stored in a reg already
