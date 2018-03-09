@@ -129,7 +129,7 @@ class expr_assignment : public Node {
             exp->compile(dst,context);
             update = context.update_variable(); // don't care about result
 
-            if( regex_match(context.expr_result,context.is_reg) ){  // this is the broken part
+            if( regex_match(context.expr_result,context.is_reg) ){
                 dst<<"\tadd\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;
             }
             else { // literal                   
