@@ -368,8 +368,6 @@ class declarator_init_list : public Node{
 
 class declarator_init : public Node{
 
-    ////////////////////////?Trust in my co pilot mahadu97
-
     //DECLARATOR_INIT : DECLARATOR                        { $$ = $1;}
     //                | DECLARATOR ASSIGN INITIALIZER     { $$ = declarator_init( $1,"=" , $3);}
 
@@ -436,7 +434,13 @@ class declarator_init : public Node{
             
             
             initializer->compile(dst,context); //if its a constant it stores into expression_results
-            dst<<"\taddi\t$15,$0,"<<context.expr_result<<'\n';
+            if(regex_match(context.expr_result,context.is_reg)){
+             
+                dst<<"\tadd\t$15,$0,"<<context.expr_result<<'\n';
+            
+            }
+            else dst<<"\taddi\t$15,$0,"<<context.expr_result<<'\n';
+            
             uint temp_variable;
             temp_variable = context.stack_size;  //access the binding struct to get the position of the variable on the stack and put it into temp_variable
             dst<<"\tsw\t$15,"<<temp_variable*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
