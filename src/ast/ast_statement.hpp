@@ -401,7 +401,7 @@ class statement_jump : public Node{
                 
                 else if(regex_match(context.expr_result, context.is_reg)){
                     
-                    dst<<"\tadd\t$2,$0,"<<context.scopes[context.scope_index][context.expr_result]<<std::endl;
+                    dst<<"\tadd\t$2,$0,"<<context.expr_result<<std::endl;
                     
                 }  
                 
