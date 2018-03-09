@@ -595,8 +595,9 @@ class expr_add : public Node {
             
             }
             
+            if(context.erv_index == 0) context.expr_result = "$"+temp_register;    //return temp register
+            else context.expr_result = temp_register; 
             
-            context.expr_result = "$"+temp_register;    //return temp register   
             context.expr_result_vector.push_back(context.expr_result);
             context.erv_index++;
                      
