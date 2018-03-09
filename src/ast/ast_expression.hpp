@@ -135,7 +135,7 @@ class expr_assignment : public Node {
                 
                 for(int i = 0; i<context.expr_result_vector.size(); i++){
                  
-                  //  context.expr_result_vector[i] ;
+                    context.expr_result_vector.pop_back();
                 
                 }
                 
