@@ -128,6 +128,22 @@ class expr_assignment : public Node {
             // evaluates RHS
             exp->compile(dst,context);
             update = context.update_variable(); // don't care about result
+            
+            if(context.erv_index >0){
+                context.expr_result = context.expr_result_vector[context.erv_index];
+                
+                for(int i = 0; i<context.expr_result_vector.size(); i++){
+                 
+                    context.expr_result_vector.pop_back();
+                
+                }
+                
+                context.erv_index = 0;
+                    
+            }
+            
+            
+                
 
             if( regex_match(context.expr_result,context.is_reg) ){
                 dst<<"\tadd\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;
@@ -569,6 +585,9 @@ class expr_add : public Node {
             
             
                      context.expr_result = "$"+std::to_string(temp_register);    //return temp register   
+                     context.expr_result_vector.push_back(context.expr_result);
+                     context.erv_index++;
+                     
         }
 
 };
