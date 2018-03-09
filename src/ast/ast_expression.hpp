@@ -134,7 +134,6 @@ class expr_assignment : public Node {
             }
             else { // literal                   
             dst<<"\taddi\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;    // move results into assignment register. Mips Mov STORE RESULT FROM EXPRESSION INTO REGISTER THAT WAS ASSIGNED - Good comment OK                    
-            dst<<"137"<<'\n';
             }   
              
                 
