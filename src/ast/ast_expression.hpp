@@ -537,10 +537,12 @@ class expr_add : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             rec->compile(dst, context); // store variable into expression result
+
+            std::string temp_register;
             
             if(context.erv_index == 0){ // base case
 
-                std::string temp_register = std::to_string( context.get_free_reg() ); //storing result of the addition into this register.
+                temp_register = std::to_string( context.get_free_reg() ); //storing result of the addition into this register.
                 
                 // store first operand of RHS into temp reg
                 if(regex_match(context.expr_result, context.reNum)){ // literal
