@@ -558,8 +558,10 @@ class expr_add : public Node {
 
             }
             else{
-                temp_register = context.expr_result_vector[context.erv_index-1];
-                temp_register = temp_register.substr(1,temp_regiser.size()-1); // get rid of $ - only has reg_ID - [0-9]+
+                int reg;
+                sscanf(context.expr_result_vector[context.erv_index-1], %d, reg);
+                
+                temp_register = std::to_string(reg);
                 context.expr_result_vector.pop_back();
                 context.erv_index--;
             }
