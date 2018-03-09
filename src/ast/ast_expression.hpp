@@ -539,10 +539,10 @@ class expr_add : public Node {
             
             
             if(op == "+"){
-                if(regex_match(context.expr_result, context.reNum)){ // literal
-                    dst<<"\taddi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  
-                }
-                else{   // variable
+                
+                
+                if(!regex_match(context.expr_result, context.reNum)){   // variable
+                   
                     if(context.update_variable()){  // is stored in a reg already
                         dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
@@ -553,10 +553,7 @@ class expr_add : public Node {
             
             
             else{
-                if(regex_match(context.expr_result, context.reNum)){ // literal
-                    dst<<"\tsubi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  
-                }
-                else{   // variable
+                if(!regex_match(context.expr_result, context.reNum)){   // variable
                     if(context.update_variable()){  // is stored in a reg already
                         dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
@@ -567,7 +564,11 @@ class expr_add : public Node {
             }
             
             
+            if(!regex_match(context.expr_result, context.reNum)){
+            
+            
                      context.expr_result = "$"+std::to_string(temp_register);    //return temp register   
+            }
         }
 
 };
