@@ -558,7 +558,8 @@ class expr_add : public Node {
 
             }
             else{
-                temp_register = context.expr_result_vector[context.erv_index];
+                temp_register = context.expr_result_vector[context.erv_index-1];
+                context.expr_result_vector.pop_back();
                 context.erv_index--;
             }
 
