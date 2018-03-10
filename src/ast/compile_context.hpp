@@ -20,6 +20,17 @@ struct binding{
     uint stack_position;
 };
 
+// use to identify tpye a primary expression is
+typedef enum{
+    Sval,   // string
+    Ival,   // integer
+    UIval,  // unsigned integer
+    LIval,  // long integer
+    ULval,  // unsigned long
+    Cval,   // character
+    Fval    // float
+} LITERAL_TYPE;
+
 struct CompileContext{
 
     bool reg_free[32];              // check if reg available
@@ -155,13 +166,11 @@ struct CompileContext{
     }
     
 
-    // used to check if variable is a literal
+    // used to check if variable is a literal - set in int main
     std::regex reNum;
     std::regex reChar;
     std::regex is_reg;
-
-    // maybe add API fn's to check against these - bools
-
+    std::regex reFloat;
 
     uint stack_size;                // dealing with stack pointer
 
@@ -174,6 +183,7 @@ struct CompileContext{
     std::string tmp_v;              // used to transfer variable name across nodes
 
     std::string expr_result;        // literal values
+    LITERAL_TYPE expr_primary_type;
 };
 
 

@@ -1013,12 +1013,30 @@ class expr_primary : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            if(Sbool)  context.expr_result = Sval;    
-            else if(Ibool)  context.expr_result = std::to_string(Ival);
-            else if(UIbool) context.expr_result = std::to_string(UIval);
-            else if(LIbool) context.expr_result = std::to_string(LIval);
-            else if(ULbool) context.expr_result = std::to_string(ULval);
-            else if(Cbool)  context.expr_result = std::to_string(Cval);
+            if(Sbool){
+                context.expr_result = Sval;
+                context.expr_primary_type = Sval; // enum val
+            } 
+            else if(Ibool){
+                context.expr_result = std::to_string(Ival);
+                context.expr_primary_type = Ival;
+            }
+            else if(UIbool){
+                context.expr_result = std::to_string(UIval);
+                context.expr_primary_type = UIval;
+            }
+            else if(LIbool){
+                context.expr_result = std::to_string(LIval);
+                context.expr_primary_type = LIval;
+            }
+            else if(ULbool){
+                context.expr_result = std::to_string(ULval);
+                context.expr_primary_type = ULval;
+            } 
+            else if(Cbool){
+                context.expr_result = std::to_string(Cval);
+                context.expr_primary_type = Cval;
+            }
             else if(exp != NULL){
                 exp->compile(dst, context);
             }        
