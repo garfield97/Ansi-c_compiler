@@ -2,7 +2,6 @@
 #define ast_expression_hpp
 
 #include "ast_node.hpp"
-#include "literal_type.hpp"
 
 class expr : public Node {
     // EXPR : EXPR_ASSIGNMENT
