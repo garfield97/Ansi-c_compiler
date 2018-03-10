@@ -368,7 +368,7 @@ class declarator_init_list : public Node{
 
 class declarator_init : public Node{
 
-    //DECLARATOR_INIT : DECLARATOR                        { $$ = $1;}
+    //DECLARATOR_INIT : DECLARATOR                        { $$ = new declarator_init_list($1);    }
     //                | DECLARATOR ASSIGN INITIALIZER     { $$ = declarator_init( $1,"=" , $3);}
 
     private:
