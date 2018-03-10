@@ -24,7 +24,7 @@ struct binding{
 typedef enum{
     S,   // string
     I,   // integer
-    U,  // unsigned integer
+    UI,  // unsigned integer
     LI,  // long integer
     UL,  // unsigned long
     C,   // character
