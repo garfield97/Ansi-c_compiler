@@ -12,6 +12,8 @@
 #include <fstream>
 #include <memory>
 
+#include "literal_type.hpp"
+
 extern std::ofstream dstStream;
 
 struct binding{
@@ -20,16 +22,6 @@ struct binding{
     uint stack_position;
 };
 
-// use to identify tpye a primary expression is
-typedef enum{
-    S,   // string
-    I,   // integer
-    U,  // unsigned integer
-    LI,  // long integer
-    UL,  // unsigned long
-    C,   // character
-    F    // float
-} LITERAL_TYPE;
 
 struct CompileContext{
 
