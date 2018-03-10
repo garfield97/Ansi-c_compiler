@@ -1015,27 +1015,27 @@ class expr_primary : public Node {
         {
             if(Sbool){
                 context.expr_result = Sval;
-                context.expr_primary_type = Sval; // enum val
+                context.expr_primary_type = S; // enum val
             } 
             else if(Ibool){
                 context.expr_result = std::to_string(Ival);
-                context.expr_primary_type = Ival;
+                context.expr_primary_type = I;
             }
             else if(UIbool){
                 context.expr_result = std::to_string(UIval);
-                context.expr_primary_type = UIval;
+                context.expr_primary_type = UI;
             }
             else if(LIbool){
                 context.expr_result = std::to_string(LIval);
-                context.expr_primary_type = LIval;
+                context.expr_primary_type = LI;
             }
             else if(ULbool){
                 context.expr_result = std::to_string(ULval);
-                context.expr_primary_type = ULval;
+                context.expr_primary_type = UL;
             } 
             else if(Cbool){
                 context.expr_result = std::to_string(Cval);
-                context.expr_primary_type = Cval;
+                context.expr_primary_type = C;
             }
             else if(exp != NULL){
                 exp->compile(dst, context);

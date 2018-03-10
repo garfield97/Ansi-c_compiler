@@ -22,13 +22,13 @@ struct binding{
 
 // use to identify tpye a primary expression is
 typedef enum{
-    Sval,   // string
-    Ival,   // integer
-    UIval,  // unsigned integer
-    LIval,  // long integer
-    ULval,  // unsigned long
-    Cval,   // character
-    Fval    // float
+    S,   // string
+    I,   // integer
+    U,  // unsigned integer
+    LI,  // long integer
+    UL,  // unsigned long
+    C,   // character
+    F    // float
 } LITERAL_TYPE;
 
 struct CompileContext{
