@@ -417,14 +417,14 @@ class declarator_init : public Node{
                 context.globalVar.push_back(context.tmp_v);
             }
 
+            dst<<"=";
             if(symbol == '='){
-                dst<<"=";
                 initializer->translate(dst,context);
-                dst<<"\n";
             }
             else{
-                dst<<"=0\n";        // initial 
+                dst<<"0";        // initial 
             }
+            dst<<"\n";
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
