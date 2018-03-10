@@ -417,14 +417,14 @@ class declarator_init : public Node{
                 context.globalVar.push_back(context.tmp_v);
             }
 
-            dst<<"=";
             if(symbol == '='){
+                dst<<"=";
                 initializer->translate(dst,context);
+                dst<<"\n";
             }
             else{
-                dst<<"0";        // initial 
+                dst<<"=0\n";        // initial 
             }
-            dst<<"\n";
         }
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
@@ -432,22 +432,15 @@ class declarator_init : public Node{
             
             declarator->compile(dst,context);   //stores into tmp_V (variable name)
             
-            
-            initializer->compile(dst,context); //if its a constant it stores into expression_results
-            if(regex_match(context.expr_result,context.is_reg)){
-             
-                dst<<"\tadd\t$15,$0,"<<context.expr_result<<'\n';
-            
+            if( initializer != NULL){
+                initializer->compile(dst,context); //if its a constant it stores into expression_results
+                if(regex_match(context.expr_result,context.is_reg)){
+                    dst<<"\tadd\t$15,$0,"<<context.expr_result<<'\n';
+                }
+                else dst<<"\taddi\t$15,$0,"<<context.expr_result<<'\n';
             }
-            else dst<<"\taddi\t$15,$0,"<<context.expr_result<<'\n';
-            
-            uint temp_variable;
-            temp_variable = context.stack_size;  //access the binding struct to get the position of the variable on the stack and put it into temp_variable
-            dst<<"\tsw\t$15,"<<temp_variable*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
 
-            
-            
-            
+            dst<<"\tsw\t$15,"<<context.stack_size*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
             
         }
 };

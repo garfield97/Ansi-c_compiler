@@ -213,7 +213,7 @@ SPECIFIER_DECLARATION : SPECIFIER_STORE_CLASS                         { $$ = $1;
                        | QUALIFIER_TYPE SPECIFIER_DECLARATION         { $$ = new specifier_declaration($1, $2); }
  
  
-DECLARATOR_INIT_LIST : DECLARATOR_INIT                              { $$ = $1;}
+DECLARATOR_INIT_LIST : DECLARATOR_INIT                              { $$ = new declarator_init_list($1);    }
                      | DECLARATOR_INIT_LIST ',' DECLARATOR_INIT     { $$ = new declarator_init_list($1, $3);}
 
 

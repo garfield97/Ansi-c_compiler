@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
         CC.reNum = ("[1-9][0-9]*");
         CC.reChar = ("L?['][.]+[']");
         CC.is_reg = ("\\$[0-9]+");
-        CC.reFloat = ("-?([0-9]+|[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?)");
+        CC.reFloat = ("-?([0-9]+|[0-9]*\\.[0-9]+([eE][-+]?[0-9]+)?)");
 
         CC.reg_counter = 8; // initialise reg to be replaced when no free reg's
 
