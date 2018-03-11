@@ -49,6 +49,9 @@ int main(int argc, char* argv[])
         for(int i=8; i<=23; i++){
             CC.reg_free[i] = true;
         }
+
+        CC.UNARY_OP_MINUS_CHECK = false; // 
+        
         CC.scope_index=0; //default global
 
         CC.erv_index = 0; // defualt 0, used to manage passing reg on recursion

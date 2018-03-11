@@ -184,6 +184,8 @@ struct CompileContext{
 
     std::string expr_result;        // literal values
     LITERAL_TYPE expr_primary_type;
+
+    bool UNARY_OP_MINUS_CHECK;
 };
 
 
