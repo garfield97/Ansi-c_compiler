@@ -136,7 +136,7 @@ struct CompileContext{
     std::string get_erv_reg(){ // retruns reg which current evaluation is using - format [0-9]+ 
 
             std::string result;
-
+            dstStream<<erv_flag<<std::endl;
             if(erv_flag == 0){ // base case of an expression             
                 // store first operand of RHS into temp reg
                 if(regex_match(expr_result, reNum)){ // literal int
@@ -206,6 +206,27 @@ struct CompileContext{
 
     std::string expr_result;        // literal values
     LITERAL_TYPE expr_primary_type;
+
+    void set_expr_result_type(){
+        std::string type = scopes[scope_index][expr_result].type;
+            if(type == "int"){
+                expr_primary_type = I;
+            }
+            else if(type == "unsigned int"){
+                expr_primary_type = UI;
+            }
+            else if(type == "long int"){
+                expr_primary_type = LI;
+            }
+            else if(type == "unsigned long"){
+                expr_primary_type = UL;
+            } 
+            else if(type == "char"){
+                expr_primary_type = C;
+            }
+    }
+
+
 
     bool UNARY_OP_MINUS_CHECK;
     void UNARY_OP_MINUS_UPDATE(){

@@ -188,6 +188,7 @@ class declaration : public Node{
                 
                 specifier_declaration->compile(dst,context); // assigns tmp_v with C type
                 temp.type = context.tmp_v;
+                context.set_expr_result_type(); // use for assign cases on type
                 temp.reg_ID = 33;    // forgot to initialise reg_ID into 33 -> not empty
                 
                 this->push_stack(dst,context); //stack size is changed here.(incremented)

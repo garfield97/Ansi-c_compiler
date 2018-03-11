@@ -117,8 +117,10 @@ class expr_assignment : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             unary->compile(dst,context);                                //Find the name of the variable stored in expression_result
-            bool update = context.update_variable(); // true if loaded from stack                     
-            
+            bool update = context.update_variable(); // true if loaded from stack
+
+            context.set_expr_result_type();
+          
             binding tmp = context.scopes[context.scope_index][context.expr_result];
                 
             if(update) dst<<"\tlw\t"<<"$"<<tmp.reg_ID<<","<<tmp.stack_position*4<<"($sp)"<<std::endl; //this loads from stack into register.      
@@ -640,7 +642,7 @@ class expr_mul : public Node {
             // EXPR_MUL
             rec->compile(dst, context); // store variable into expression result
             std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
-       
+
             // EXPR_CAST
             exp->compile(dst,context); // compile right most term // expr_result has expr_cast value
             context.UNARY_UPDATE();
@@ -648,6 +650,8 @@ class expr_mul : public Node {
             // check literal
             uint cast_reg;
             if(regex_match(context.expr_result, context.reNum)) cast_reg = context.set_literal_reg();
+            // check if reg
+            else if(regex_match(context.expr_result, context.is_reg)) sscanf(context.expr_result.c_str(),"$%d", &cast_reg);
             // variable
             else{
                 cast_reg = context.scopes[context.scope_index][context.expr_result].reg_ID;
@@ -1144,27 +1148,21 @@ class expr_primary : public Node {
         {
             if(Sbool){
                 context.expr_result = Sval;
-                context.expr_primary_type = S; // enum val
             } 
             else if(Ibool){
                 context.expr_result = std::to_string(Ival);
-                context.expr_primary_type = I;
             }
             else if(UIbool){
                 context.expr_result = std::to_string(UIval);
-                context.expr_primary_type = UI;
             }
             else if(LIbool){
                 context.expr_result = std::to_string(LIval);
-                context.expr_primary_type = LI;
             }
             else if(ULbool){
                 context.expr_result = std::to_string(ULval);
-                context.expr_primary_type = UL;
             } 
             else if(Cbool){
                 context.expr_result = std::to_string(Cval);
-                context.expr_primary_type = C;
             }
             else if(exp != NULL){
                 exp->compile(dst, context);
