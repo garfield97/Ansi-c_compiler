@@ -726,9 +726,22 @@ class expr_unary : public Node {
                 exp->compile(dst,context);
                 
                 if(tmp_op == "-"){
+                    
+                    if(regex_match(context.expr_result,context.reNum){          //literal matching to append - in front
+                        
+                        context.expr_result = "-" + context.expr_result;
+                    
+                    }
+                        
                 
-                    dst<<"\tsub\t$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n';
+                    else{
+                    
+                        if(context.update_variable()){}
+                            
+                        dst<<"\tsub\t$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n';
+
                 
+                    }
                 }
     
                 if(tmp_op == "+"){
