@@ -717,8 +717,29 @@ class expr_unary : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            if(O_U =! NULL){
+            
+                std::string tmp_op;
+                tmp_op = O_U.getOpr();    
+                
+                exp->compile(dst,context);
+                
+                if(tmp_op == "-"){
+                
+                    dst<<"\tsub\t$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n';
+                
+                }
+    
+                if(tmp_op == "+"){
+                
+                }
+                
+                
+            
+            }
+            
+            
+
         }
 };
 
