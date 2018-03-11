@@ -673,7 +673,7 @@ class expr_unary : public Node {
     //           | SIZEOF L_BRACKET NAME_TYPE R_BRACKET  
     private:
         std::string terminal;
-		opr_unary* O_U;
+		NodePtr O_U;
         NodePtr exp;
         
     public:
@@ -785,8 +785,7 @@ class opr_unary: public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            context.expr_result = opr;
         }
 };
 
