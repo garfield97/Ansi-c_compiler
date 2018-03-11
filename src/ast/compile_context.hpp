@@ -187,12 +187,12 @@ struct CompileContext{
     LITERAL_TYPE expr_primary_type;
 
     bool UNARY_OP_MINUS_CHECK;
-    void UNARY_OP_MINUS_UPDATE{
+    void UNARY_OP_MINUS_UPDATE(){
         expr_result = "-" + expr_result;
         UNARY_OP_MINUS_CHECK = false;
     }
 
-    void UNARY_UPDATE{
+    void UNARY_UPDATE(){
         if(UNARY_OP_MINUS_CHECK) UNARY_OP_MINUS_UPDATE();
     }
 
