@@ -631,9 +631,8 @@ class expr_mul : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             rec->compile(dst, context); // store variable into expression result
-           dst<< context.erv_index<<std::endl;
             std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
-                dst<< context.erv_index<<std::endl;       
+       
             exp->compile(dst,context); // compile right most term // expr_result has expr_cast value
             context.UNARY_UPDATE();
             
@@ -661,7 +660,7 @@ class expr_mul : public Node {
                 dst<<"\tmflo\t$"<<temp_register<<"\n";
             }
           
-            context.set_erv_reg(temp_register); // to pass back reg used to store result
+            context.set_erv_reg(temp_register); // to pass back reg used to store result // leaves at 1 on top case
         }
 };
 
