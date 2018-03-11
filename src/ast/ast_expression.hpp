@@ -543,7 +543,7 @@ class expr_add : public Node {
                     if(context.update_variable()){  // is stored in a reg already
                         dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
-                    if(context.expr_primary_type = UI){
+                    if(context.expr_primary_type == UI){
                         dst<<"\taddu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage  unsigned register add
                     }
                     else{
@@ -574,6 +574,7 @@ class expr_add : public Node {
                         dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
                     }
                }
+            }
             
 
             context.set_erv_reg(temp_register); // to pass back reg used to store result          
