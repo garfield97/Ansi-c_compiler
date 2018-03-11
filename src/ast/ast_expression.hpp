@@ -530,10 +530,13 @@ class expr_add : public Node {
 
             exp->compile(dst,context); // compile right most term
             
+            context.UNARY_UPDATE();
+
+            
             if(op == "+"){
+            
                 if(regex_match(context.expr_result, context.reNum)){ // literal
                     
-                    context.UNARY_UPDATE();
                                         
                     if(context.expr_primary_type == UI){
                         dst<<"\taddiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';      //implementation for unsigned litearal
@@ -544,6 +547,7 @@ class expr_add : public Node {
                 }
                 else{   // variable
                     if(context.update_variable()){  // is stored in a reg already
+                        
                         dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
                     if(context.expr_primary_type == UI){
@@ -559,7 +563,6 @@ class expr_add : public Node {
                 
                 if(regex_match(context.expr_result, context.reNum)){ // literal
                     
-                    context.UNARY_UPDATE();
                     
                     if(context.expr_primary_type == UI){
                         dst<<"\tsubiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  //unsigned subtract - immediate
