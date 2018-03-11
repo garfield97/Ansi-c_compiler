@@ -101,6 +101,7 @@ struct CompileContext{
 
         uint local = get_free_reg(); //  assign literal a register
         dstStream<<"\taddi\t$"<<local<<",$0,"<<expr_result;
+        return local;
         
     }
     
