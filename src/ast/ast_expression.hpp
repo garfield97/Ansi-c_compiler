@@ -532,13 +532,22 @@ class expr_add : public Node {
             
             if(op == "+"){
                 if(regex_match(context.expr_result, context.reNum)){ // literal
-                    dst<<"\taddi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  
+                    if(context.expr_primary_type == UI){
+                        dst<<"\taddiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';      //implementation for unsigned litearal
+                    }
+                    else{
+                        dst<<"\taddi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';       //signed literal
+                    }   
                 }
                 else{   // variable
                     if(context.update_variable()){  // is stored in a reg already
                         dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
-                    dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                    if(context.expr_primary_type = UI){
+                        dst<<"\taddu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                    }
+                    else{
+                        dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
                 }            
             }
             

@@ -11,7 +11,7 @@ test competency with parsers, and also that Python doesn't directly
 support everything that C does.
 
 Variables
-- Local integer variables (though not nested scopes)
+- Local integer variables (though not nested scopes)                                                        //done
 - Global integer variables
 - You are *not* required to handle any [shadowing of variables](https://en.wikipedia.org/wiki/Variable_shadowing), e.g.
   a local variable with the same name as a global variable
