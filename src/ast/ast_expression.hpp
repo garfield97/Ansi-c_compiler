@@ -634,37 +634,60 @@ class expr_mul : public Node {
         {
             bool top = context.set_am_i_top();     // check if i'm top node;
 
-
+            // EXPR_MUL
             rec->compile(dst, context); // store variable into expression result
-
             std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
        
+            // EXPR_CAST
             exp->compile(dst,context); // compile right most term // expr_result has expr_cast value
             context.UNARY_UPDATE();
+
+            // check literal
+            uint cast_reg;
+            if(regex_match(context.expr_result, context.reNum)) cast_reg = context.set_literal_reg();
+            // variable
+            else{
+                cast_reg = context.scopes[context.scope_index][context.expr_result].reg_ID;
+
+                if(context.update_variable()){  // is a vairbale stored in a reg already
+                    dst<<"\tlw\t"<<"$"<<cast_reg<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                }
+            }
             
+
             if(op == "*"){
-                // check literal
-                uint cast_reg;
-                if(regex_match(context.expr_result, context.reNum)) cast_reg = context.set_literal_reg();
-                // variable
-                else{
-                    cast_reg = context.scopes[context.scope_index][context.expr_result].reg_ID;
-
-                    if(context.update_variable()){  // is a vairbale stored in a reg already
-                        dst<<"\tlw\t"<<"$"<<cast_reg<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
-                    }
-                }
-
                 if(context.expr_primary_type == UI){
-                    dst<<"\tmultu\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // register addition -> storage  unsigned register add
+                    dst<<"\tmultu\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // unsigned mul
                 }
                 else{
-                    dst<<"\tmult\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // register addition -> storage  signed register add
+                    dst<<"\tmult\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // mul
                 }
-
 
                 dst<<"\tmflo\t$"<<temp_register<<"\n";
             }
+
+            if(op == "/"){ //LO has quotient
+                if(context.expr_primary_type == UI){
+                    dst<<"\tdivu\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // unsigned div
+                }
+                else{
+                    dst<<"\tdiv\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // div
+                }
+
+                dst<<"\tmflo\t$"<<temp_register<<"\n"; 
+            }
+
+            if(op == "%"){ //HI has remainder
+                if(context.expr_primary_type == UI){
+                    dst<<"\tdivu\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // unsigned div
+                }
+                else{
+                    dst<<"\tdiv\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // div
+                }
+
+                dst<<"\tmfhi\t$"<<temp_register<<"\n"; 
+            }
+          
           
             if(!top)context.set_erv_reg(temp_register); // to pass back reg used to store result // leaves at 1 on top case
             else context.check_am_i_top(temp_register);
