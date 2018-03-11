@@ -631,6 +631,7 @@ class expr_mul : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             rec->compile(dst, context); // store variable into expression result
+            dst<<context.expr_result<<"is in "<<temp_register<<"\n"; // give x reg
             std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
             dst<<context.expr_result<<"is in "<<temp_register<<"\n"; // give x reg
             
