@@ -262,7 +262,7 @@ class specifier_declaration : public Node{
                 
                 }
                 
-                else if(present.tmp_v == "long"){
+                else if(context.tmp_v == "long"){
                 
                 
                 
