@@ -631,9 +631,9 @@ class expr_mul : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             rec->compile(dst, context); // store variable into expression result
-            dst<<context.expr_result<<"is in "<<temp_register<<"\n"; // give x reg
+            dst<<context.expr_result<<"is in "<<context.scopes[context.scope_index][context.expr_result].reg_ID<<"\n"; // give x reg
             std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
-            dst<<context.expr_result<<"is in "<<temp_register<<"\n"; // give x reg
+            dst<<context.expr_result<<"is in "<<context.scopes[context.scope_index][context.expr_result].reg_ID<<"\n"; // give x reg
             
             exp->compile(dst,context); // compile right most term // expr_result has expr_cast value
             context.UNARY_UPDATE();
