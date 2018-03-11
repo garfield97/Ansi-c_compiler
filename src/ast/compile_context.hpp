@@ -111,6 +111,7 @@ struct CompileContext{
                 // store first operand of RHS into temp reg
 
                 if(regex_match(expr_result, reNum)){ // literal int
+                    UNARY_UPDATE(); // check for unary opr
                     dstStream<<"\taddi\t"<<"$"<<result<<",$0,"<<expr_result<<'\n';  
                 }
                 else{   // variable
@@ -186,6 +187,16 @@ struct CompileContext{
     LITERAL_TYPE expr_primary_type;
 
     bool UNARY_OP_MINUS_CHECK;
+    void UNARY_OP_MINUS_UPDATE(){
+        expr_result = "-" + expr_result;
+        UNARY_OP_MINUS_CHECK = false;
+    }
+
+    void UNARY_UPDATE(){
+        if(UNARY_OP_MINUS_CHECK) UNARY_OP_MINUS_UPDATE();
+    }
+
+
 };
 
 
