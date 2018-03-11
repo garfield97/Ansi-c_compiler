@@ -132,6 +132,7 @@ struct CompileContext{
                         dstStream<<"\tlw\t"<<"$"<<result<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
                     result = scopes[scope_index][expr_result].reg_ID;
+                    dst<<"its a var "<<result<<std::endl;
                     dstStream<<"\tadd\t"<<"$"<<result<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
                 }
 
