@@ -533,8 +533,8 @@ class expr_add : public Node {
             if(op == "+"){
                 if(regex_match(context.expr_result, context.reNum)){ // literal
                     
-                    if(context.UNARY_OP_MINUS_CHECK) context.expr_result = "-" + context.expr_result;
-                    
+                    context.UNARY_UPDATE();
+                                        
                     if(context.expr_primary_type == UI){
                         dst<<"\taddiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';      //implementation for unsigned litearal
                     }
@@ -559,8 +559,8 @@ class expr_add : public Node {
                 
                 if(regex_match(context.expr_result, context.reNum)){ // literal
                     
-                    if(context.UNARY_OP_MINUS_CHECK) context.expr_result = "-" + context.expr_result;
-                
+                    context.UNARY_UPDATE();
+                    
                     if(context.expr_primary_type == UI){
                         dst<<"\tsubiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  //unsigned subtract - immediate
                     }
