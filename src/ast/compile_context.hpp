@@ -100,7 +100,7 @@ struct CompileContext{
     uint set_literal_reg(){ // give a register to literal value for temperorary usage later
 
         uint local = get_free_reg(); //  assign literal a register
-        dst<<"\taddi\t$"<<local<<",$0,"<<expr_result;
+        dstStream<<"\taddi\t$"<<local<<",$0,"<<expr_result;
         
     }
     
