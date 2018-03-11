@@ -544,24 +544,36 @@ class expr_add : public Node {
                         dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
                     if(context.expr_primary_type = UI){
-                        dst<<"\taddu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                        dst<<"\taddu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage  unsigned register add
                     }
                     else{
-                        dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                        dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage  signed register add
                 }            
             }
             
             else{ // subtraction
                 if(regex_match(context.expr_result, context.reNum)){ // literal
-                    dst<<"\tsubi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  
+                    if(context.expr_primary_type == UI){
+                        dst<<"\tsubiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  //unsigned subtract - immediate
+                    }
+                    else{
+                        dst<<"\tsubi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';   //signed subtract - immediate
+                    }
+                    
                 }
                 else{   // variable
                     if(context.update_variable()){  // is stored in a reg already
                         dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
-                    dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
-                }            
-            }
+                    
+                    if(context.expr_primary_type == UI){
+                        dst<<"\tsubu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                    }
+                    
+                    else{
+                        dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                    }
+               }
             
 
             context.set_erv_reg(temp_register); // to pass back reg used to store result          
