@@ -529,8 +529,8 @@ class expr_add : public Node {
 
             rec->compile(dst, context); // store variable into expression result
 
-            std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
-            
+            std::string temp_register = context.am_i_bottom();
+
 
             exp->compile(dst,context); // compile right most term
             
@@ -594,8 +594,8 @@ class expr_add : public Node {
                }
             }
             
-            if(!top)context.set_erv_reg(temp_register); // to pass back reg used to store result // leaves at 1 on top case
-            else context.check_am_i_top(temp_register);        
+
+            if(top)context.i_am_top(temp_register);        
         }
 
 };
@@ -641,7 +641,9 @@ class expr_mul : public Node {
 
             // EXPR_MUL
             rec->compile(dst, context); // store variable into expression result
-            std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
+
+            std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
 
             // EXPR_CAST
             exp->compile(dst,context); // compile right most term // expr_result has expr_cast value
@@ -696,8 +698,7 @@ class expr_mul : public Node {
             }
           
 
-            if(!top)context.set_erv_reg(temp_register); // to pass back reg used to store result // leaves at 1 on top case
-            else context.check_am_i_top(temp_register);
+            if(top)context.i_am_top(temp_register);
 
         }
 };

@@ -113,78 +113,54 @@ struct CompileContext{
     
     
     std::string expr_result_reg; // deal with recursion and passing registers
-    uint erv_flag;
-    bool erv_top;
+    bool err_top;
+    bool err_bottom;
+
+    std::string am_i_bottom(){
+        if(err_bottom == false){
+            err_bottom = true; //
+
+            if(regex_match(expr_result, reNum)){ // literal int
+                expr_result_reg = std::to_string( get_free_reg() ); // find a free reg - format [0-9]+
+                UNARY_UPDATE(); // check for unary opr
+                dstStream<<"\taddi\t"<<"$"<<expr_result_reg<<",$0,"<<expr_result<<'\n';  
+            }
+            else{   // variable
+                if(update_variable()){  // isn't stored in a reg already
+                    // load from stack
+                    dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                }
+                expr_result_reg = std::to_string(scopes[scope_index][expr_result].reg_ID);
+                dstStream<<"\tadd\t"<<"$"<<expr_result_reg<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
+            }
+        }
+
+        return expr_result_reg;
+
+    }
 
     bool set_am_i_top(){
-        if(erv_top == false){
-            erv_top = true; // a node is top
+        if(err_top == false){
+            err_top = true; // a node is top
             return true;
         }
         return false;
 
     }
 
-    void check_am_i_top(std::string ri){
-        if(erv_top == true){
-            erv_top = false;
-            erv_flag = 0;
+    void i_am_top(std::string ri){
+        if(err_top == true){
+            err_top = false;
+            err_bottom = false;
             expr_result = "$"+ri;
         }
     }
 
-    std::string get_erv_reg(){ // retruns reg which current evaluation is using - format [0-9]+ 
-
-            std::string result;
-            dstStream<<erv_flag<<std::endl;
-            if(erv_flag == 0){ // base case of an expression             
-                // store first operand of RHS into temp reg
-                if(regex_match(expr_result, reNum)){ // literal int
-                    result = std::to_string( get_free_reg() ); // find a free reg - format [0-9]+
-                    UNARY_UPDATE(); // check for unary opr
-                    dstStream<<"\taddi\t"<<"$"<<result<<",$0,"<<expr_result<<'\n';  
-                }
-                else{   // variable
-                    if(update_variable()){  // isn't stored in a reg already
-                        // load from stack
-                        dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
-                    }
-                    result = std::to_string(scopes[scope_index][expr_result].reg_ID);
-                    dstStream<<"\tadd\t"<<"$"<<result<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
-                }
-
-            }
-            else{ // returning to another expression above in the tree
-                int reg;
-                sscanf(expr_result_reg.c_str(),"$%d", &reg); //strip $ from string
-
-                result = std::to_string(reg);
-
-                erv_flag--;
-
-            }
-
-            return result;
-
-    }
-
-    void set_erv_reg(std::string ri){
-        if(erv_flag == 0) expr_result = "$"+ri; // base case - append to $ for top case
-        else expr_result = ri; // pass through to upper level
-     
-        expr_result_reg = expr_result;
-        erv_flag++;
-    }
   
     void reset_erv(){ // pops last reg from erv and stores it intop expr_result
         // used when need to clear erv - finsihed evaluating an expr - if not cleared correctly yet - will ensure a clear
 
-        if(erv_flag > 0u){ // should be 1 whenever called..
-
-            expr_result = expr_result_reg; // store // return value
-
-            erv_flag = 0u;   // reset
-        }       
+     
     }
     
 
