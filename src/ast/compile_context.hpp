@@ -118,11 +118,8 @@ struct CompileContext{
 
             std::string result;
 
-            dstStream<<"booogalo  "<<expr_result<<"\n";
-
             if(erv_index == 0){ // base case of an expression             
                 // store first operand of RHS into temp reg
-            dstStream<<"booogalasdasdo  "<<expr_result<<"\n";
                 if(regex_match(expr_result, reNum)){ // literal int
                     result = std::to_string( get_free_reg() ); // find a free reg - format [0-9]+
                     UNARY_UPDATE(); // check for unary opr
