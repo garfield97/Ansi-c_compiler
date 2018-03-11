@@ -56,6 +56,7 @@ int main(int argc, char* argv[])
 
         CC.erv_flag = 0; // defualt 0, used to manage passing reg on recursion
         CC.erv_top = false;
+        
         // set regex's
         CC.reNum = ("[1-9][0-9]*");
         CC.reChar = ("L?['][.]+[']");
