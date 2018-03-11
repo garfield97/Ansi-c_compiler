@@ -717,9 +717,8 @@ class expr_unary : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-
-            if(O_U =! NULL){
-        
+            if(O_U != NULL){
+                
                 O_U->compile(dst,context);
                 std::string tmp_op = context.expr_result;                 
                 exp->compile(dst,context);
@@ -771,7 +770,8 @@ class opr_unary: public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            context.expr_result = opr;
+            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+            exit(1);
         }
 };
 
