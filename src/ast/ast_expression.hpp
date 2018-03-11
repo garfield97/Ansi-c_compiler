@@ -673,7 +673,7 @@ class expr_unary : public Node {
     //           | SIZEOF L_BRACKET NAME_TYPE R_BRACKET  
     private:
         std::string terminal;
-		NodePtr O_U;
+		opr_unary* O_U;
         NodePtr exp;
         
     public:
