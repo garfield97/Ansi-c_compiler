@@ -534,29 +534,36 @@ class expr_add : public Node {
             
             context.UNARY_UPDATE();
 
+            // check result type
+            std::string mul_reg;
+            if(regex_match(context.expr_result, context.reNum)) mul_reg = context.expr_result;
+            // reg
+            else if(regex_match(context.expr_result, context.is_reg)) mul_reg = context.expr_result;
+            // variable
+            else{
+                if(context.update_variable()){ } // is stored in a reg already 
+                mul_reg = "$" + std::to_string(context.scopes[context.scope_index][context.expr_result].reg_ID);
+            }
+
             
             if(op == "+"){
             
                 if(regex_match(context.expr_result, context.reNum)){ // literal
-                    
-                                        
+                                               
                     if(context.expr_primary_type == UI){
-                        dst<<"\taddiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';      //implementation for unsigned litearal
+                        dst<<"\taddiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n';      //implementation for unsigned litearal
                     }
                     else{
-                        dst<<"\taddi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';       //signed literal
+                        dst<<"\taddi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n';       //signed literal
                     }   
                 }
                 else{   // variable
-                    if(context.update_variable()){  // is stored in a reg already
-                        
-                        dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
-                    }
+
                     if(context.expr_primary_type == UI){
-                        dst<<"\taddu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage  unsigned register add
+                        dst<<"\taddu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n'; // register addition -> storage  unsigned register add
                     }
                     else{
-                        dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage  signed register add
+                        dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n'; // register addition -> storage  signed register add
                     }
                 }            
             }
@@ -565,26 +572,22 @@ class expr_add : public Node {
                 
                 if(regex_match(context.expr_result, context.reNum)){ // literal
                     
-                    
                     if(context.expr_primary_type == UI){
-                        dst<<"\tsubiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';  //unsigned subtract - immediate
+                        dst<<"\tsubiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n';  //unsigned subtract - immediate
                     }
                     else{
-                        dst<<"\tsubi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.expr_result<<'\n';   //signed subtract - immediate
+                        dst<<"\tsubi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n';   //signed subtract - immediate
                     }
                     
                 }
                 else{   // variable
-                    if(context.update_variable()){  // is stored in a reg already
-                        dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
-                    }
-                    
+
                     if(context.expr_primary_type == UI){
-                        dst<<"\tsubu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                        dst<<"\tsubu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n'; // register addition -> storage 
                     }
                     
                     else{
-                        dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage 
+                        dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n'; // register addition -> storage 
                     }
                }
             }
@@ -688,7 +691,7 @@ class expr_mul : public Node {
                 dst<<"\tmfhi\t$"<<temp_register<<"\n"; 
             }
           
-          
+
             if(!top)context.set_erv_reg(temp_register); // to pass back reg used to store result // leaves at 1 on top case
             else context.check_am_i_top(temp_register);
 

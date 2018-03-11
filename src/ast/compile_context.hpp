@@ -36,7 +36,7 @@ struct CompileContext{
     bool reg_free[32];              // check if reg available
     uint get_free_reg(){
         for(uint i=0u; i<32u; i++){
-            if(reg_free[i] == true && ( i >= 8u && i <= 15u ) ){ // register to be saved by calling function
+            if(reg_free[i] == true && ( i >= 8u && i <= 23u ) ){ // register to be saved by calling function
                 reg_free[i] = false;
                 return i;
             }
@@ -69,16 +69,17 @@ struct CompileContext{
                 // store it back to stack
                 s_pos = it->second.stack_position;
 
+                // free up
+                reg_free[reg_counter] = true;
+
                 //un-assign the reg
                 it->second.reg_ID = 33;
 
-                reg_free[it->second.reg_ID] = true;
-                break;
             } 
         }
 
         // store variable in reg back onto stack
-        dstStream<<"\tsw\t$"<<reg_counter<<","<<s_pos*4<<"($fp)";
+        if(!regex_match(expr_result, reNum)) dstStream<<"\tsw\t$"<<reg_counter<<","<<s_pos*4<<"($fp)";
 
         if(++reg_counter == 16u) reg_counter = 8u; // loop back for next replacement
 
