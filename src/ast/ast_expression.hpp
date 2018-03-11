@@ -548,6 +548,7 @@ class expr_add : public Node {
                     }
                     else{
                         dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage  signed register add
+                    }
                 }            
             }
             
