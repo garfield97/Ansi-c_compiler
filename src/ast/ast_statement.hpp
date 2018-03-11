@@ -197,7 +197,6 @@ class statement_expr : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             current->compile(dst,context);
-            context.erv_index = 0; // reset recusrion for expression
         }
 };
         

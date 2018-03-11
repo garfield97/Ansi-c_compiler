@@ -111,14 +111,31 @@ struct CompileContext{
     
     
     
-    std::vector<std::string> expr_result_vector; // deal with recursion and passing registers
-    uint erv_index;
+    std::string expr_result_reg; // deal with recursion and passing registers
+    uint erv_flag;
+    bool erv_top;
+
+    bool set_am_i_top(){
+        if(erv_top == false){
+            erv_top = true; // a node is top
+            return true;
+        }
+        return false;
+
+    }
+
+    void check_am_i_top(){
+        if(erv_top == true){
+            erv_top = false;
+            erv_flag = 0;
+        }
+    }
 
     std::string get_erv_reg(){ // retruns reg which current evaluation is using - format [0-9]+ 
 
             std::string result;
 
-            if(erv_index == 0){ // base case of an expression             
+            if(erv_flag == 0){ // base case of an expression             
                 // store first operand of RHS into temp reg
                 if(regex_match(expr_result, reNum)){ // literal int
                     result = std::to_string( get_free_reg() ); // find a free reg - format [0-9]+
@@ -137,15 +154,10 @@ struct CompileContext{
             }
             else{ // returning to another expression above in the tree
                 int reg;
-                sscanf(expr_result_vector[erv_index-1].c_str(),"$%d", &reg); //strip $ from string
+                sscanf(expr_result_reg.c_str(),"$%d", &reg); //strip $ from string
 
                 result = std::to_string(reg);
 
-                // remove reg from erv - also free up
-
-                reg_free[reg] = true; // frees up reg for use
-
-                expr_result_vector.pop_back(); // remove off the tmp reg stack
                 erv_index--;
 
             }
@@ -155,11 +167,11 @@ struct CompileContext{
     }
 
     void set_erv_reg(std::string ri){
-        if(erv_index == 0) expr_result = "$"+ri; // base case - append to $ for top case
+        if(erv_flag == 0) expr_result = "$"+ri; // base case - append to $ for top case
         else expr_result = ri; // pass through to upper level
-        
-        expr_result_vector.push_back(expr_result); // store to erv stack
-        erv_index++;
+     
+        expr_result_reg = expr_result;
+        erv_flag++;
     }
   
     void reset_erv(){ // pops last reg from erv and stores it intop expr_result

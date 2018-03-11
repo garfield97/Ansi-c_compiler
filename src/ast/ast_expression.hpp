@@ -523,6 +523,8 @@ class expr_add : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+            bool top = context.set_am_i_top();     // check if i'm top node;
+
             rec->compile(dst, context); // store variable into expression result
 
             std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
@@ -587,8 +589,8 @@ class expr_add : public Node {
                }
             }
             
-
-            context.set_erv_reg(temp_register); // to pass back reg used to store result          
+            if(!top)context.set_erv_reg(temp_register); // to pass back reg used to store result // leaves at 1 on top case
+            else context.check_am_i_top();ntext.set_erv_reg(temp_register); // to pass back reg used to store result          
         }
 
 };
@@ -630,7 +632,11 @@ class expr_mul : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+            bool top = context.set_am_i_top();     // check if i'm top node;
+
+
             rec->compile(dst, context); // store variable into expression result
+
             std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
        
             exp->compile(dst,context); // compile right most term // expr_result has expr_cast value
@@ -660,7 +666,9 @@ class expr_mul : public Node {
                 dst<<"\tmflo\t$"<<temp_register<<"\n";
             }
           
-            context.set_erv_reg(temp_register); // to pass back reg used to store result // leaves at 1 on top case
+            if(!top)context.set_erv_reg(temp_register); // to pass back reg used to store result // leaves at 1 on top case
+            else context.check_am_i_top();
+
         }
 };
 
