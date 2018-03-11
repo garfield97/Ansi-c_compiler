@@ -644,6 +644,8 @@ class expr_mul : public Node {
                 else{
                     cast_reg = context.scopes[context.scope_index][context.expr_result].reg_ID;
 
+                    dst<<cast_reg<<"\n";
+
                     if(context.update_variable()){  // is a vairbale stored in a reg already
                         dst<<"\tlw\t"<<"$"<<cast_reg<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
@@ -655,6 +657,7 @@ class expr_mul : public Node {
                 else{
                     dst<<"\tmult\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // register addition -> storage  signed register add
                 }
+
 
                 dst<<"\tmflo\t$"<<temp_register<<"\n";
             }

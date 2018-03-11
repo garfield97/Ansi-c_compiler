@@ -71,6 +71,8 @@ struct CompileContext{
 
                 //un-assign the reg
                 it->second.reg_ID = 33;
+
+                reg_free[it->second.reg_ID] = true;
                 break;
             } 
         }
