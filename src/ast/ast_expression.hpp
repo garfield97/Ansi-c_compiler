@@ -632,6 +632,7 @@ class expr_mul : public Node {
         {
             rec->compile(dst, context); // store variable into expression result
             std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
+            dst<<context.scopes[context.scope_index][context.expr_result]<<"is in "<<temp_register<<"\n"; // give x reg
             
             exp->compile(dst,context); // compile right most term // expr_result has expr_cast value
             context.UNARY_UPDATE();
@@ -643,8 +644,6 @@ class expr_mul : public Node {
                 // variable
                 else{
                     cast_reg = context.scopes[context.scope_index][context.expr_result].reg_ID;
-
-                    dst<<cast_reg<<"\n";
 
                     if(context.update_variable()){  // is a vairbale stored in a reg already
                         dst<<"\tlw\t"<<"$"<<cast_reg<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
