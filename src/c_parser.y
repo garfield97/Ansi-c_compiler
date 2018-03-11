@@ -116,7 +116,7 @@ EXPR_UNARY : EXPR_POSTFIX                           { $$ = $1;                  
 OPR_UNARY : OP_BAND     { $$ = new opr_unary("&"); }
           | OP_MUL      { $$ = new opr_unary("*"); }
           | OP_PLUS     { $$ = new opr_unary("+"); }
-          | OP_MINUS    { $$ = new opr_unary("-"); }
+          | OP_MINUS    { $$ = new opr_unary("-"); } // implemented
           | OP_B_ONESC  { $$ = new opr_unary("~"); }
           | OP_LNOT     { $$ = new opr_unary("!"); }
 
