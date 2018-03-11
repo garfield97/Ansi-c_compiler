@@ -249,6 +249,21 @@ class specifier_declaration : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+            present->compile(dst,context);
+            
+            if(context.tmp_v == "unsigned"){
+                
+                next->compile(dst,context);
+                
+                context.tmp_v = "unsigned " + context.tmp_v;
+            }
+            
+            
+            
+            
+            
+            
+            
             
         
         
