@@ -590,7 +590,7 @@ class expr_add : public Node {
             }
             
             if(!top)context.set_erv_reg(temp_register); // to pass back reg used to store result // leaves at 1 on top case
-            else context.check_am_i_top();        
+            else context.check_am_i_top(temp_register);        
         }
 
 };
@@ -667,7 +667,7 @@ class expr_mul : public Node {
             }
           
             if(!top)context.set_erv_reg(temp_register); // to pass back reg used to store result // leaves at 1 on top case
-            else context.check_am_i_top();
+            else context.check_am_i_top(temp_register);
 
         }
 };

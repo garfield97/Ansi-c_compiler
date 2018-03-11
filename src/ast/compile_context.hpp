@@ -124,10 +124,11 @@ struct CompileContext{
 
     }
 
-    void check_am_i_top(){
+    void check_am_i_top(std::string ri){
         if(erv_top == true){
             erv_top = false;
             erv_flag = 0;
+            expr_result = "$"+ri;
         }
     }
 
