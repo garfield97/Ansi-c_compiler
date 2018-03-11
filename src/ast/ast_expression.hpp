@@ -630,8 +630,28 @@ class expr_mul : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            rec->compile(dst, context); // store variable into expression result
+            std::string temp_register = context.get_erv_reg(); // obtian relevant reg_ID - format [0-9]+
+            
+            exp->compile(dst,context); // compile right most term // expr_result has expr_cast value
+            context.UNARY_UPDATE();
+            
+            if(op == "*"){
+
+                if(context.update_variable()){  // is it stored in a reg already
+                    dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                }
+                if(context.expr_primary_type == UI){
+                    dst<<"\tmultu\t"<<"$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage  unsigned register add
+                }
+                else{
+                    dst<<"\tmult\t"<<"$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage  signed register add
+                }
+
+                dst<<"\tmflo\t$"<<temp_register<<"\n";
+            }
+          
+            context.set_erv_reg(temp_register); // to pass back reg used to store result
         }
 };
 
