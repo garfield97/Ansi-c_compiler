@@ -727,7 +727,7 @@ class expr_unary : public Node {
                 
                 if(tmp_op == "-"){
                     
-                    if(regex_match(context.expr_result,context.reNum){          //literal matching to append - in front
+                    if(regex_match(context.expr_result,context.reNum)){          //literal matching to append - in front
                         
                         context.expr_result = "-" + context.expr_result;
                     
