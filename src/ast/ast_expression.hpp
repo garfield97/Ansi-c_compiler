@@ -717,10 +717,10 @@ class expr_unary : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            if(O_U =! NULL){
+            if(O_U != NULL){
             
                 std::string tmp_op;
-                tmp_op = O_U.getOpr();    
+                tmp_op = O_U->getOpr();    
                 
                 exp->compile(dst,context);
                 
