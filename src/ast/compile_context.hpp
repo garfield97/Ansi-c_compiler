@@ -145,7 +145,7 @@ struct CompileContext{
                 else{   // variable
                     if(update_variable()){  // isn't stored in a reg already
                         // load from stack
-                        dstStream<<"\tlw\t"<<"$"<<result<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                        dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
                     }
                     result = std::to_string(scopes[scope_index][expr_result].reg_ID);
                     dstStream<<"\tadd\t"<<"$"<<result<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
