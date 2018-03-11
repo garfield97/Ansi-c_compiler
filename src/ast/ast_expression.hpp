@@ -637,15 +637,23 @@ class expr_mul : public Node {
             context.UNARY_UPDATE();
             
             if(op == "*"){
+                // check literal
+                uint cast_reg;
+                if(regex_match(context.expr_result, context.reNum)) cast_reg = context.set_literal_reg();
+                // variable
+                else{
+                    cast_reg = context.scopes[context.scope_index][context.expr_result].reg_ID;
 
-                if(context.update_variable()){  // is it stored in a reg already
-                    dst<<"\tlw\t"<<"$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                    if(context.update_variable()){  // is a vairbale stored in a reg already
+                        dst<<"\tlw\t"<<"$"<<cast_reg<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                    }
                 }
+
                 if(context.expr_primary_type == UI){
-                    dst<<"\tmultu\t"<<"$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage  unsigned register add
+                    dst<<"\tmultu\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // register addition -> storage  unsigned register add
                 }
                 else{
-                    dst<<"\tmult\t"<<"$"<<temp_register<<",$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n'; // register addition -> storage  signed register add
+                    dst<<"\tmult\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // register addition -> storage  signed register add
                 }
 
                 dst<<"\tmflo\t$"<<temp_register<<"\n";
