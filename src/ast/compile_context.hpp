@@ -158,7 +158,7 @@ struct CompileContext{
 
                 result = std::to_string(reg);
 
-                erv_index--;
+                erv_flag--;
 
             }
 
@@ -177,16 +177,11 @@ struct CompileContext{
     void reset_erv(){ // pops last reg from erv and stores it intop expr_result
         // used when need to clear erv - finsihed evaluating an expr - if not cleared correctly yet - will ensure a clear
 
-        if(erv_index > 0u){ // should be 1 whenever called..
+        if(erv_flag > 0u){ // should be 1 whenever called..
 
-            expr_result = expr_result_vector[erv_index - 1]; // store // return value
+            expr_result = expr_result_reg; // store // return value
 
-            // clear stack
-            for(uint i = 0u; i<expr_result_vector.size(); i++){
-                expr_result_vector.pop_back();
-            }
-
-            erv_index = 0u;   // reset
+            erv_flag = 0u;   // reset
         }       
     }
     
