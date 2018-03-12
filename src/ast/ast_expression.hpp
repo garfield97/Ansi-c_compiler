@@ -548,8 +548,40 @@ class expr_equality : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            bool top = context.am_i_top();     // check if i'm top node;
+
+            // EXPR_EQUALITY
+            rec->compile(dst, context); // store variable into expression result
+
+            std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
+
+            // free bools for rhs
+            bool t = context.err_top, b = context.err_bottom; // save state locally
+            std::string r = context.expr_result_reg;
+            context.err_top = false;
+            context.err_bottom = false;
+
+            exp->compile(dst,context); // compile right most term 
+            context.UNARY_UPDATE();
+
+            context.err_top = t;        // restore state
+            context.err_bottom = b;
+            context.expr_result_reg = r;
+
+
+            // get RH term register
+            uint logic_and_reg = context.extract_expr_reg();
+
+            if(op == "=="){
+                dst<<"\tbeq\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
+            }
+            
+            else{
+                dst<<"\tbne\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
+            }
+
+            if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
         }
 };
 
