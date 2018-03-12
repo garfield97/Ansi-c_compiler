@@ -554,11 +554,12 @@ class expr_equality : public Node {
 };
 
 class expr_relational : public Node {
-    //EXPR_RELATIONAL : EXPR_SHIFT
-    //            | EXPR_RELATIONAL OP_L EXPR_SHIFT
-    //            | EXPR_RELATIONAL OP_G EXPR_SHIFT
-    //            | EXPR_RELATIONAL OP_LE EXPR_SHIFT
-    //            | EXPR_RELATIONAL OP_GE EXPR_SHIFT
+                
+//EXPR_RELATIONAL : EXPR_SHIFT                        { $$ = $1;                                }
+//                | EXPR_RELATIONAL OP_L EXPR_SHIFT   { $$ = new expr_relational($1, "<", $3);  }
+//                | EXPR_RELATIONAL OP_G EXPR_SHIFT   { $$ = new expr_relational($1, ">", $3);  }
+//                | EXPR_RELATIONAL OP_LE EXPR_SHIFT  { $$ = new expr_relational($1, "<=", $3); }
+//                | EXPR_RELATIONAL OP_GE EXPR_SHIFT  { $$ = new expr_relational($1, ">=", $3); }
     private:
         NodePtr rec;
         std::string op;
@@ -614,17 +615,23 @@ class expr_relational : public Node {
 
 
             // get RH term register
-            uint shift_reg = context.extract_expr_reg();
+            uint relational_reg = context.extract_expr_reg();
 
 
-            if(op == "<<"){
+            if(op == "<"){
+                dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
+            }
+            else if(op == ">"){
+                dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
+            }
+            else if(op == "<="){
+                dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
+            }
+            else if(op == ">="){
                 dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
             }
             
-            else{
-                dst<<"\tsrl\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
-
-            }
+ 
 
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
         }
