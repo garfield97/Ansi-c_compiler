@@ -1109,42 +1109,38 @@ class expr_unary : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+            bool top = context.am_i_top();     // check if i'm top node;
+
+            exp->compile(dst,context); // compile right most term 
+            context.UNARY_UPDATE();
+
+            context.internal_expr_value = context.internal_temp_value;           
+            std::string exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
+
+            // Operations
+
+            // OPR_UNARY
             if(O_U != NULL){
-            
-
                 O_U->compile(dst,context);
-                std::string tmp_op = context.expr_result;
-                                
-                exp->compile(dst,context);
-                
-                if(tmp_op == "-"){
-                    
-                    if(regex_match(context.expr_result,context.reNum)){          //literal matching to append - in front
-                        
-                        context.UNARY_OP_MINUS_CHECK = true;                    
-                    }
-                        
-                
-                    else{
-                    
-                        if(context.update_variable()){}
-                            
-                        dst<<"\tsub\t$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<",$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<'\n';
-
-                
-                    }
+                std::string tmp_op = context.expr_result;        
+                if(tmp_op == "-"){                 
+                    if(context.update_variable()){}                           
+                    dst<<"\tsub\t$"<<exp_reg<<",$0,$"<<exp_reg<<'\n';              
                 }
-    
                 if(tmp_op == "+"){
                 
-                }
-                
-                
-            
+                }            
             }
-            
-            
 
+               
+
+
+            // end of operations code
+
+            context.internal_temp_value = context.internal_expr_value;
+            if(top) context.i_am_top(exp_reg); // send to above node that isnt recursive
+                
         }
 };
 
