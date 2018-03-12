@@ -235,7 +235,7 @@ class expr_logic_or : public Node {
             uint logic_or_reg = context.extract_expr_reg();
 
 
-            dst<<"\or\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_or_reg<<'\n';
+            //dst<<"\or\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_or_reg<<'\n';
             
 
 
@@ -301,7 +301,7 @@ class expr_logic_and : public Node {
             uint logic_and_reg = context.extract_expr_reg();
 
 
-                dst<<"\tand\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
+            //dst<<"\tand\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
    
 
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
@@ -442,7 +442,7 @@ class expr_xor : public Node {
             context.internal_expr_value ^= context.internal_temp_value;
             dst<<"\txor\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<and_reg<<'\n';
         
-            context.internal_temp_value = context.internal_expr_value
+            context.internal_temp_value = context.internal_expr_value;
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
 
         }
@@ -510,7 +510,7 @@ class expr_and : public Node {
 
 
             // bitwise AND
-            context.internal_expr_value &= context.internal_tmp_value;
+            context.internal_expr_value &= context.internal_temp_value;
             dst<<"\tand\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<eq_reg<<'\n';
         
             context.internal_temp_value = context.internal_expr_value;
@@ -657,7 +657,7 @@ class expr_relational : public Node {
             // get RH term register
             uint relational_reg = context.extract_expr_reg();
 
-            if(context.expr_primary_type == UI){  
+        if(context.expr_primary_type == UI){  
                 if(op == "<"){
                     dst<<"\tsltu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
                 }
@@ -756,13 +756,14 @@ class expr_shift : public Node {
 
             if(op == "<<"){
                 context.internal_expr_value <<= context.internal_temp_value;
-                dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.internal_temp_value<<'\n';
+                dst<<"\tsllv\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
             }
             
             else{
                 context.internal_expr_value >>= context.internal_temp_value;
-                dst<<"\tsrl\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.internal_temp_value<<'\n';
+                dst<<"\tsrlv\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
             }
+
 
             context.internal_temp_value = context.internal_expr_value;
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive

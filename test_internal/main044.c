@@ -1,5 +1,5 @@
 int main(){
     int x = 8;
-	x = x<<2;
+	x = x<<4;
 	return x;
 }
