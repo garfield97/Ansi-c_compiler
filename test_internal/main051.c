@@ -1,5 +1,4 @@
 int main(){
-	int x = 2;
-	x = x>>34;
+	int x = 1 >= 3;
 	return x;
 }
