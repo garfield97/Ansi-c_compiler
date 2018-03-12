@@ -1358,8 +1358,85 @@ class expr_postfix : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+     bool top = context.am_i_top();     // check if i'm top node;
+
+            exp->compile(dst,context); // compile right most term 
+            context.UNARY_UPDATE();
+
+            context.internal_expr_value = context.internal_temp_value;           
+            std::string exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
+
+            // Operations
+
+            // INC and DEC
+            if(terminal == "++"){
+                if(context.update_variable()){
+                    uint local = context.scopes[context.scope_index][context.expr_result].reg_ID; //get x into loca
+                }
+                 if(context.expr_primary_type == UI){
+                    dst<<"\tmove\t$"<<exp_reg<<",$"<<exp_reg<<std::endl; // set y = x 
+                    dst<<"\taddiu\t$"<<local<<",$"<<exp_reg<<",1\n";            // increment x by 1  
+                }
+                else{
+                    dst<<"\tmove\t$"<<exp_reg<<",$"<<exp_reg<<std::endl;      //same as before but for signed
+                    dst<<"\taddi\t$"<<local<<",$"<<exp_reg<<",1\n";                 
+                }
+                dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";   //saves values back onto stack
+
+            }
+
+            else if(terminal == "--"){
+                if(context.update_variable()){
+                    uint local = context.scopes[context.scope_index][context.expr_result].reg_ID; //get x into loca
+                }
+                 if(context.expr_primary_type == UI){
+                    dst<<"\tmove\t$"<<exp_reg<<",$"<<exp_reg<<std::endl; // set y = x 
+                    dst<<"\taddiu\t$"<<local<<",$"<<exp_reg<<",-1\n";            // decrement x by 1  
+                }
+                else{
+                    dst<<"\tmove\t$"<<exp_reg<<",$"<<exp_reg<<std::endl;      //same as before but for signed
+                    dst<<"\taddi\t$"<<local<<",$"<<exp_reg<<",-1\n";                 
+                }
+                dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";   //saves values back onto stack
+
+            }
+                
+
+            // OPR_UNARY
+            if(O_U != NULL){
+                O_U->compile(dst,context);
+                std::string tmp_op = context.expr_result;        
+                if(tmp_op == "-"){
+                    context.internal_expr_value = -context.internal_temp_value;             
+                    if(context.update_variable()){}                           
+                    dst<<"\tsub\t$"<<exp_reg<<",$0,$"<<exp_reg<<'\n';              
+                }
+                if(tmp_op == "+"){
+                
+                }
+                if(tmp_op == "!"){
+                    if(context.update_variable()){} 
+                    if(context.internal_temp_value == 0){
+                        dst<<"\taddi\t$"<<exp_reg<<",$0,1"<<'\n'; // set to one
+                    }
+                    else dst<<"\taddi\t$"<<exp_reg<<",$0,0"<<'\n';
+                    context.internal_expr_value = !context.internal_temp_value;                
+                }
+                if(tmp_op == "~"){ 
+                    context.internal_expr_value = ~context.internal_temp_value;                
+                    if(context.update_variable()){}                           
+                    dst<<"\tnot\t$"<<exp_reg<<",$"<<exp_reg<<'\n';              
+                }       
+            }
+
+               
+
+
+            // end of operations code
+
+            context.internal_temp_value = context.internal_expr_value;
+            if(top) context.i_am_top(exp_reg); // send to above node that isnt recursive
         }
 };
 
