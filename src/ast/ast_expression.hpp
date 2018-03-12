@@ -986,7 +986,7 @@ class expr_mul : public Node {
           
 
 
-            context.internal_temp_value = context.internal_expr_valiue;
+            context.internal_temp_value = context.internal_expr_value;
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
 
         }
