@@ -1120,6 +1120,29 @@ class expr_unary : public Node {
 
             // Operations
 
+
+            if(terminal == "++"){
+                if(context.expr_primary_type == UI){
+                     dst<<"/taddiu/t$"<<expr_reg<<",$"<<expr_reg<<",1"<<std::endl;
+                }
+                else{
+                            dst<<"/taddi/t$"<<expr_reg<<",$"<<expr_reg<<",1"<<std::endl;
+                        }
+                           
+                    }
+
+                    else if(terminal == "--"){
+                    
+                        if(context.expr_primary_type == UI){
+                            dst<<"/tsubiu/t$"<<expr_reg<<",$"<<expr_reg<<",1"<<std::endl;
+                        }
+                        else{
+                            dst<<"/tsubi/t$"<<expr_reg<<",$"<<expr_reg<<",1"<<std::endl;
+                        }
+
+                    }
+                
+
             // OPR_UNARY
             if(O_U != NULL){
                 O_U->compile(dst,context);
