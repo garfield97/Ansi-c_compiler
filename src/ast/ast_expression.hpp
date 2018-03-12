@@ -649,7 +649,7 @@ class expr_relational : public Node {
             context.err_bottom = false;
 
             exp->compile(dst,context); // compile right most term 
-            context.interal_expr_value = context.internal_temp_value;
+            context.internal_expr_value = context.internal_temp_value;
             context.UNARY_UPDATE();
 
             context.err_top = t;        // restore state
@@ -662,35 +662,43 @@ class expr_relational : public Node {
 
         if(context.expr_primary_type == UI){  
                 if(op == "<"){
+                    context.internal_expr_value = context.internal_expr_value < context.internal_temp_value;
                     dst<<"\tsltu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
                 }
                 else if(op == ">"){
+                    context.internal_expr_value = context.internal_expr_value > context.internal_temp_value;
                     dst<<"\tsgtu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
                 }
                 else if(op == "<="){
+                    context.internal_expr_value = context.internal_expr_value <= context.internal_temp_value;
                     dst<<"\tsleu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
                 }
                 else if(op == ">="){
+                    context.internal_expr_value = context.internal_expr_value >= context.internal_temp_value;
                     dst<<"\tsgeu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
                 }
             }
             
             else{
                 if(op == "<"){
+                    context.internal_expr_value = context.internal_expr_value < context.internal_temp_value;
                     dst<<"\tslt\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
                 }
                 else if(op == ">"){
+                    context.internal_expr_value = context.internal_expr_value > context.internal_temp_value;
                     dst<<"\tsgt\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
                 }
                 else if(op == "<="){
+                    context.internal_expr_value = context.internal_expr_value <= context.internal_temp_value;
                     dst<<"\tsle\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
                 }
                 else if(op == ">="){
+                    context.internal_expr_value = context.internal_expr_value >= context.internal_temp_value;
                     dst<<"\tsge\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
                 }
             }       
  
-            context.interal_temp_value = context.internal_expr_value;
+            context.internal_temp_value = context.internal_expr_value;
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
         }
 };
