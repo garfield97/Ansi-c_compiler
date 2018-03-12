@@ -345,6 +345,7 @@ class expr_inclusive_or : public Node {
 
             // EXPR_INCLUSIVE_OR
             rec->compile(dst, context); // store variable into expression result
+            context.internal_expr_value = context.internal_temp_value; // get internal value form rec
 
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
@@ -368,9 +369,10 @@ class expr_inclusive_or : public Node {
 
 
             // bitwise OR
+            context.internal_expr_value |= context.internal_temp_value; 
             dst<<"\tor\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<xor_reg<<'\n';
         
-
+            context.internal_temp_value = context.internal_expr_value; 
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
 
         }
@@ -413,6 +415,7 @@ class expr_xor : public Node {
 
             // EXPR_AND
             rec->compile(dst, context); // store variable into expression result
+            context.internal_expr_value = context.internal_temp_value; // get internal value form rec
 
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
@@ -436,9 +439,10 @@ class expr_xor : public Node {
 
 
             // bitwise OR
+            context.internal_expr_value ^= context.internal_temp_value;
             dst<<"\txor\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<and_reg<<'\n';
         
-
+            context.internal_temp_value = context.internal_expr_value
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
 
         }
@@ -585,13 +589,12 @@ class expr_equality : public Node {
         }
 };
 
-class expr_relational : public Node {
-                
-//EXPR_RELATIONAL : EXPR_SHIFT                        { $$ = $1;                                }
-//                | EXPR_RELATIONAL OP_L EXPR_SHIFT   { $$ = new expr_relational($1, "<", $3);  }
-//                | EXPR_RELATIONAL OP_G EXPR_SHIFT   { $$ = new expr_relational($1, ">", $3);  }
-//                | EXPR_RELATIONAL OP_LE EXPR_SHIFT  { $$ = new expr_relational($1, "<=", $3); }
-//                | EXPR_RELATIONAL OP_GE EXPR_SHIFT  { $$ = new expr_relational($1, ">=", $3); }
+class expr_relational : public Node {             
+    //EXPR_RELATIONAL : EXPR_SHIFT                        { $$ = $1;                                }
+    //                | EXPR_RELATIONAL OP_L EXPR_SHIFT   { $$ = new expr_relational($1, "<", $3);  }
+    //                | EXPR_RELATIONAL OP_G EXPR_SHIFT   { $$ = new expr_relational($1, ">", $3);  }
+    //                | EXPR_RELATIONAL OP_LE EXPR_SHIFT  { $$ = new expr_relational($1, "<=", $3); }
+    //                | EXPR_RELATIONAL OP_GE EXPR_SHIFT  { $$ = new expr_relational($1, ">=", $3); }
     private:
         NodePtr rec;
         std::string op;
@@ -709,7 +712,7 @@ class expr_shift : public Node {
 
             // EXPR_SHIFT
             rec->compile(dst, context); // store variable into expression result
-
+            context.internal_expr_value += context.internal_temp_value;
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
 
@@ -783,6 +786,7 @@ class expr_add : public Node {
             bool top = context.am_i_top();     // check if i'm top node;
 
             rec->compile(dst, context); // store variable into expression result
+            context.internal_expr_value = context.internal_temp_value; // get internal value form rec
 
             std::string temp_register = context.am_i_bottom();
 
@@ -815,7 +819,7 @@ class expr_add : public Node {
 
             
             if(op == "+"){
-            
+                context.internal_expr_value += context.internal_temp_value;
                 if(regex_match(context.expr_result, context.reNum)){ // literal
                                                
                     if(context.expr_primary_type == UI){
@@ -837,7 +841,7 @@ class expr_add : public Node {
             }
             
             else{ // subtraction
-                
+                context.internal_expr_value -= context.internal_temp_value;
                 if(regex_match(context.expr_result, context.reNum)){ // literal
                     
                     if(context.expr_primary_type == UI){
@@ -861,7 +865,7 @@ class expr_add : public Node {
             }
             
 
-
+            context.internal_temp_value = context.internal_expr_value; //overwrite ITV to ITV 
             if(top) context.i_am_top(temp_register); // if top after rec calls // send to above node that isnt recursive       
         }
 
@@ -1416,21 +1420,27 @@ class expr_primary : public Node {
         {
             if(Sbool){
                 context.expr_result = Sval;
+                context.internal_temp_value = context.scopes[context.scope_index][Sval].internal_value;
             } 
             else if(Ibool){
                 context.expr_result = std::to_string(Ival);
+                context.internal_temp_value = Ival;
             }
             else if(UIbool){
                 context.expr_result = std::to_string(UIval);
+                context.internal_temp_value = UIval;
             }
             else if(LIbool){
                 context.expr_result = std::to_string(LIval);
+                context.internal_temp_value = LIval;
             }
             else if(ULbool){
                 context.expr_result = std::to_string(ULval);
+                context.internal_temp_value = ULval;
             } 
             else if(Cbool){
                 context.expr_result = std::to_string(Cval);
+                context.internal_temp_value = Cval;
             }
             else if(exp != NULL){
                 exp->compile(dst, context);

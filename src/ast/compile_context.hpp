@@ -18,6 +18,7 @@ struct binding{
     uint reg_ID;        // register number
     std::string type;   // C type being stored
     uint stack_position;
+    long int internal_value;
 };
 
 // use to identify tpye a primary expression is
@@ -191,7 +192,11 @@ struct CompileContext{
 
      
     }
-    
+
+
+    long int internal_expr_value;
+    long int internal_temp_value;
+
 
     // used to check if variable is a literal - set in int main
     std::regex reNum;
