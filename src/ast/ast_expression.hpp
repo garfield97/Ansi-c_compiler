@@ -581,14 +581,15 @@ class expr_equality : public Node {
             // get RH term register
             uint logic_and_reg = context.extract_expr_reg();
             if(op == "=="){
+                context.internal_expr_value = context.internal_expr_value == context.internal_temp_value;
                 dst<<"\tsequ\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
             }
             
             else{
+                context.internal_expr_value = context.internal_expr_value != context.internal_temp_value;
                 dst<<"\tsneu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
             }
             
-        
          
             context.internal_temp_value = context.internal_expr_value;
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
