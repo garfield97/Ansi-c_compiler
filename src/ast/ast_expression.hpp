@@ -715,11 +715,7 @@ class expr_shift : public Node {
             bool top = context.am_i_top();     // check if i'm top node;
 
             // EXPR_SHIFT
-<<<<<<< HEAD
             rec->compile(dst, context); // store variable into expression result
-=======
-            rec->compile(dst, context); // store variable into expression result            
->>>>>>> a0e6c390e345985b5ef1021a66843a6dd9feba70
             context.internal_expr_value = context.internal_temp_value;
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
