@@ -582,12 +582,12 @@ class expr_equality : public Node {
             uint logic_and_reg = context.extract_expr_reg();
             if(op == "=="){
                 context.internal_expr_value = context.internal_expr_value == context.internal_temp_value;
-                dst<<"\tsequ\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
+                dst<<"\tseq\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
             }
             
             else{
                 context.internal_expr_value = context.internal_expr_value != context.internal_temp_value;
-                dst<<"\tsneu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
+                dst<<"\tsne\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
             }
             
          
