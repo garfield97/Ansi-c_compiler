@@ -1127,7 +1127,12 @@ class expr_unary : public Node {
                 }
                 else{
                     dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
-                }          
+                }
+                if(context.update_variable()){
+                    uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
+                    dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
+                    dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
+                }
             }
 
             else if(terminal == "--"){
@@ -1137,6 +1142,11 @@ class expr_unary : public Node {
                 else{
                     dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",-1"<<std::endl;
                 }
+                if(context.update_variable()){
+                    uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
+                    dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
+                    dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
+                }
             }
                 
 
@@ -1144,13 +1154,27 @@ class expr_unary : public Node {
             if(O_U != NULL){
                 O_U->compile(dst,context);
                 std::string tmp_op = context.expr_result;        
-                if(tmp_op == "-"){                 
+                if(tmp_op == "-"){
+                    context.internal_expr_value = -context.internal_temp_value;             
                     if(context.update_variable()){}                           
                     dst<<"\tsub\t$"<<exp_reg<<",$0,$"<<exp_reg<<'\n';              
                 }
                 if(tmp_op == "+"){
                 
-                }            
+                }
+                if(tmp_op == "!"){
+                    if(context.update_variable()){} 
+                    if(context.internal_temp_value == 0){
+                        dst<<"\taddi\t$"<<exp_reg<<",$0,1"<<'\n'; // set to one
+                    }
+                    else dst<<"\taddi\t$"<<exp_reg<<",$0,0"<<'\n';
+                    context.internal_expr_value = !context.internal_temp_value;                
+                }
+                if(tmp_op == "~"){ 
+                    context.internal_expr_value = ~context.internal_temp_value;                
+                    if(context.update_variable()){}                           
+                    dst<<"\tnot\t$"<<exp_reg<<",$"<<exp_reg<<'\n';              
+                }       
             }
 
                
