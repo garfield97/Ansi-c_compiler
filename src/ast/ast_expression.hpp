@@ -646,6 +646,7 @@ class expr_relational : public Node {
             context.err_bottom = false;
 
             exp->compile(dst,context); // compile right most term 
+            context.interal_expr_variable = context.internal_temp_variable;
             context.UNARY_UPDATE();
 
             context.err_top = t;        // restore state
@@ -656,22 +657,37 @@ class expr_relational : public Node {
             // get RH term register
             uint relational_reg = context.extract_expr_reg();
 
-            /*
-            if(op == "<"){
-                dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
+        if(context.expr_primary_type == UI){  
+                if(op == "<"){
+                    dst<<"\tsltu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
+                }
+                else if(op == ">"){
+                    dst<<"\tsgtu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
+                }
+                else if(op == "<="){
+                    dst<<"\tsleu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
+                }
+                else if(op == ">="){
+                    dst<<"\tsgeu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
+                }
             }
-            else if(op == ">"){
-                dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
-            }
-            else if(op == "<="){
-                dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
-            }
-            else if(op == ">="){
-                dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
-            }*/
             
+            else{
+                if(op == "<"){
+                    dst<<"\tslt\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
+                }
+                else if(op == ">"){
+                    dst<<"\tsgt\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
+                }
+                else if(op == "<="){
+                    dst<<"\tsle\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
+                }
+                else if(op == ">="){
+                    dst<<"\tsge\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
+                }
+            }       
  
-
+            context.interal_temp_variable = context.internal_expr_variable;
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
         }
 };
