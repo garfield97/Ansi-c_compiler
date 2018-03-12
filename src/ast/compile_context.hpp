@@ -99,6 +99,14 @@ struct CompileContext{
         return false;   // no update made
     }
 
+    void force_update_variable(){ // return true when given a new reg - i.e. loaded from the stack // only for variables
+            
+        uint local = get_free_reg();
+        scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
+        dstStream<<"\tlw\t$"<<local<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)\n";
+
+    }
+
 
     uint set_literal_reg(){ // give a register to literal value for temperorary usage later
 
@@ -116,11 +124,13 @@ struct CompileContext{
         else if(regex_match(expr_result, is_reg)) sscanf(expr_result.c_str(),"$%d", &reg);
         // variable
         else{
-            reg = scopes[scope_index][expr_result].reg_ID;
+            uint reg_save = scopes[scope_index][expr_result].reg_ID;
 
-            if(update_variable()){  // is a vairbale stored in a reg already
-                dstStream<<"\tlw\t"<<"$"<<reg<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
-            }
+            force_update_variable();  // force the variable a new reg
+            reg = scopes[scope_index][expr_result].reg_ID;
+            dstStream<<"\tlw\t"<<"$"<<reg<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
+
+            scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
         }
 
         return reg;
@@ -142,12 +152,15 @@ struct CompileContext{
                 dstStream<<"\taddi\t"<<"$"<<expr_result_reg<<",$0,"<<expr_result<<'\n';  
             }
             else{   // variable
-                if(update_variable()){  // isn't stored in a reg already
+                uint reg_save = scopes[scope_index][expr_result].reg_ID;
+                force_update_variable();  // froce a new reg
                     // load from stack
-                    dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
-                }
+                dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                
                 expr_result_reg = std::to_string(scopes[scope_index][expr_result].reg_ID);
                 dstStream<<"\tadd\t"<<"$"<<expr_result_reg<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
+            
+                scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
             }
         }
 
