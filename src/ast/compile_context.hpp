@@ -108,7 +108,23 @@ struct CompileContext{
         
     }
     
-    
+    uint extract_expr_reg(){
+        uint reg;
+        //literal
+        if(regex_match(expr_result, reNum)) reg = set_literal_reg();
+        // check if reg
+        else if(regex_match(expr_result, is_reg)) sscanf(expr_result.c_str(),"$%d", &reg);
+        // variable
+        else{
+            reg = scopes[scope_index][expr_result].reg_ID;
+
+            if(update_variable()){  // is a vairbale stored in a reg already
+                dstStream<<"\tlw\t"<<"$"<<reg<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
+            }
+        }
+
+        return reg;
+    }
     
     
     

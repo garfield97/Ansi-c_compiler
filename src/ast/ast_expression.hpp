@@ -284,8 +284,38 @@ class expr_inclusive_or : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            bool top = context.am_i_top();     // check if i'm top node;
+
+            // EXPR_INCLUSIVE_OR
+            rec->compile(dst, context); // store variable into expression result
+
+            std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
+
+            // free bools for rhs
+            bool t = context.err_top, b = context.err_bottom; // save state locally
+            std::string r = context.expr_result_reg;
+            context.err_top = false;
+            context.err_bottom = false;
+
+            exp->compile(dst,context); // compile right most term 
+            context.UNARY_UPDATE();
+
+            context.err_top = t;        // restore state
+            context.err_bottom = b;
+            context.expr_result_reg = r;
+
+
+            // get RH term register
+            uint xor_reg = context.extract_expr_reg();
+
+
+            // bitwise OR
+            dst<<"\tor\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<xor_reg<<'\n';
+        
+
+            if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
+
         }
 };
 
@@ -670,25 +700,9 @@ class expr_mul : public Node {
             context.expr_result_reg = r;
 
 
-
-
             // check literal
-            uint cast_reg;
-            if(regex_match(context.expr_result, context.reNum)) cast_reg = context.set_literal_reg();
-            // check if reg
-            else if(regex_match(context.expr_result, context.is_reg)) sscanf(context.expr_result.c_str(),"$%d", &cast_reg);
-            // variable
-            else{
-                cast_reg = context.scopes[context.scope_index][context.expr_result].reg_ID;
-
-                if(context.update_variable()){  // is a vairbale stored in a reg already
-                    dst<<"\tlw\t"<<"$"<<cast_reg<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)"<<std::endl;   
-                }
-            }
+            uint cast_reg = context.extract_expr_reg();
             
-
-
-
 
             if(op == "*"){
                 if(context.expr_primary_type == UI){
