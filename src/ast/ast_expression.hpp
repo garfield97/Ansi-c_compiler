@@ -485,7 +485,9 @@ class expr_and : public Node {
 
             // EXPR_EQUALITY
             rec->compile(dst, context); // store variable into expression result
-
+            
+            context.internal_expr_value = context.internal_temp_value;
+            
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
 
@@ -508,8 +510,10 @@ class expr_and : public Node {
 
 
             // bitwise AND
+            context.internal_expr_value &= context.internal_tmp_value;
             dst<<"\tand\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<eq_reg<<'\n';
         
+            context.internal_temp_value = context.internal_expr_value;
 
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
 
@@ -711,7 +715,11 @@ class expr_shift : public Node {
             bool top = context.am_i_top();     // check if i'm top node;
 
             // EXPR_SHIFT
+<<<<<<< HEAD
             rec->compile(dst, context); // store variable into expression result
+=======
+            rec->compile(dst, context); // store variable into expression result            
+>>>>>>> a0e6c390e345985b5ef1021a66843a6dd9feba70
             context.internal_expr_value = context.internal_temp_value;
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
@@ -915,6 +923,8 @@ class expr_mul : public Node {
             // EXPR_MUL
             rec->compile(dst, context); // store variable into expression result
 
+            context.internal_expr_value = context.internal_temp_value;
+            
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
 
@@ -936,6 +946,8 @@ class expr_mul : public Node {
             
 
             if(op == "*"){
+                
+                context.internal_expr_value *= context.internal_temp_value;
                 if(context.expr_primary_type == UI){
                     dst<<"\tmultu\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // unsigned mul
                 }
@@ -947,6 +959,8 @@ class expr_mul : public Node {
             }
 
             if(op == "/"){ //LO has quotient
+            
+                context.internal_expr_value /= context.internal_temp_value;
                 if(context.expr_primary_type == UI){
                     dst<<"\tdivu\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // unsigned div
                 }
@@ -958,6 +972,8 @@ class expr_mul : public Node {
             }
 
             if(op == "%"){ //HI has remainder
+                
+                context.internal_expr_value %= context.internal_temp_value;
                 if(context.expr_primary_type == UI){
                     dst<<"\tdivu\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // unsigned div
                 }
@@ -970,7 +986,7 @@ class expr_mul : public Node {
           
 
 
-
+            context.internal_temp_value = context.internal_expr_valiue;
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
 
         }
