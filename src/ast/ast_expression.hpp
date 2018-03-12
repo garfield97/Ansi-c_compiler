@@ -712,7 +712,7 @@ class expr_shift : public Node {
 
             // EXPR_SHIFT
             rec->compile(dst, context); // store variable into expression result
-            context.internal_expr_value += context.internal_temp_value;
+            context.internal_expr_value = context.internal_temp_value;
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
 
@@ -735,14 +735,16 @@ class expr_shift : public Node {
 
 
             if(op == "<<"){
-                dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
+                context.internal_expr_value <<= context.internal_temp_value;
+                dst<<"\tsll\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.internal_temp_value<<'\n';
             }
             
             else{
-                dst<<"\tsrl\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
-
+                context.internal_expr_value >>= context.internal_temp_value;
+                dst<<"\tsrl\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<context.internal_temp_value<<'\n';
             }
 
+            context.internal_temp_value = context.internal_expr_value;
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
         }
 };
