@@ -646,7 +646,7 @@ class expr_relational : public Node {
             context.err_bottom = false;
 
             exp->compile(dst,context); // compile right most term 
-            context.interal_expr_variable = context.internal_temp_variable;
+            context.interal_expr_value = context.internal_temp_value;
             context.UNARY_UPDATE();
 
             context.err_top = t;        // restore state
@@ -687,7 +687,7 @@ class expr_relational : public Node {
                 }
             }       
  
-            context.interal_temp_variable = context.internal_expr_variable;
+            context.interal_temp_value = context.internal_expr_value;
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
         }
 };
