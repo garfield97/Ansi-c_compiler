@@ -525,16 +525,24 @@ class expr_add : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            bool top = context.set_am_i_top();     // check if i'm top node;
+            bool top = context.am_i_top();     // check if i'm top node;
 
             rec->compile(dst, context); // store variable into expression result
 
             std::string temp_register = context.am_i_bottom();
 
-
+            // check to free for rhs
+            bool t = context.err_top, b = context.err_bottom; // save state locally
+            std::string r = context.expr_result_reg;
+            context.err_top = false;
+            context.err_bottom = false;
             exp->compile(dst,context); // compile right most term
-            
             context.UNARY_UPDATE();
+
+            context.err_top = t;        // restore state
+            context.err_bottom = b;
+            context.expr_result_reg = r;
+
 
             // check result type
             std::string mul_reg;
@@ -546,6 +554,9 @@ class expr_add : public Node {
                 if(context.update_variable()){ } // is stored in a reg already 
                 mul_reg = "$" + std::to_string(context.scopes[context.scope_index][context.expr_result].reg_ID);
             }
+
+
+
 
             
             if(op == "+"){
@@ -575,10 +586,10 @@ class expr_add : public Node {
                 if(regex_match(context.expr_result, context.reNum)){ // literal
                     
                     if(context.expr_primary_type == UI){
-                        dst<<"\tsubiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n';  //unsigned subtract - immediate
+                        dst<<"\taddiu\t"<<"$"<<temp_register<<",$"<<temp_register<<",-"<<mul_reg<<'\n';  //unsigned subtract - immediate
                     }
                     else{
-                        dst<<"\tsubi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n';   //signed subtract - immediate
+                        dst<<"\taddi\t"<<"$"<<temp_register<<",$"<<temp_register<<",-"<<mul_reg<<'\n';   //signed subtract - immediate
                     }
                     
                 }
@@ -595,7 +606,8 @@ class expr_add : public Node {
             }
             
 
-            if(top)context.i_am_top(temp_register);        
+
+            if(top) context.i_am_top(temp_register); // if top after rec calls // send to above node that isnt recursive       
         }
 
 };
@@ -637,7 +649,7 @@ class expr_mul : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            bool top = context.set_am_i_top();     // check if i'm top node;
+            bool top = context.am_i_top();     // check if i'm top node;
 
             // EXPR_MUL
             rec->compile(dst, context); // store variable into expression result
@@ -645,9 +657,20 @@ class expr_mul : public Node {
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
 
-            // EXPR_CAST
-            exp->compile(dst,context); // compile right most term // expr_result has expr_cast value
+            // check to free for rhs
+            bool t = context.err_top, b = context.err_bottom; // save state locally
+            std::string r = context.expr_result_reg;
+            context.err_top = false;
+            context.err_bottom = false;
+            exp->compile(dst,context); // compile right most term // will change reg
             context.UNARY_UPDATE();
+
+            context.err_top = t;        // restore state
+            context.err_bottom = b;
+            context.expr_result_reg = r;
+
+
+
 
             // check literal
             uint cast_reg;
@@ -663,6 +686,9 @@ class expr_mul : public Node {
                 }
             }
             
+
+
+
 
             if(op == "*"){
                 if(context.expr_primary_type == UI){
@@ -698,7 +724,9 @@ class expr_mul : public Node {
             }
           
 
-            if(top)context.i_am_top(temp_register);
+
+
+            if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
 
         }
 };

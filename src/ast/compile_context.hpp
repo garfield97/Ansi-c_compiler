@@ -139,7 +139,7 @@ struct CompileContext{
 
     }
 
-    bool set_am_i_top(){
+    bool am_i_top(){
         if(err_top == false){
             err_top = true; // a node is top
             return true;
@@ -148,11 +148,11 @@ struct CompileContext{
 
     }
 
-    void i_am_top(std::string ri){
+    void i_am_top(std::string r){
         if(err_top == true){
             err_top = false;
             err_bottom = false;
-            expr_result = "$"+ri;
+            expr_result = "$"+r;
         }
     }
 
