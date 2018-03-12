@@ -1357,13 +1357,12 @@ class expr_postfix : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             bool top = context.am_i_top();     // check if i'm top node;
+            next->compile(dst,context); // compile right most term
 
-            next->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
             context.internal_expr_value = context.internal_temp_value;           
             std::string exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-
 
             // Operations
 
