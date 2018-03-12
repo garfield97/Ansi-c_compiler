@@ -1305,7 +1305,7 @@ class expr_postfix : public Node {
             , exp(NULL)
         {}
 
-        expr_postfix(NodePtr _next, std::string _opr) // OP_INC OP_DEC
+        expr_postfix(std::string _opr, NodePtr _next) // OP_INC OP_DEC
             : next(_next)
             , opr(_opr)
             , id(" ")

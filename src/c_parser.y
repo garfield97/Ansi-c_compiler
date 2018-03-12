@@ -97,8 +97,8 @@ EXPR_POSTFIX : EXPR_PRIMARY                                     { $$ = $1;      
              | EXPR_POSTFIX L_BRACKET ARG_EXPR_LIST R_BRACKET   { $$ = new expr_postfix($1, true, $3); }
              | EXPR_POSTFIX '.' IDENTIFIER                      { $$ = new expr_postfix($1, ".", *$3); }
              | EXPR_POSTFIX OP_PTR IDENTIFIER                   { $$ = new expr_postfix($1, "->", *$3);}
-             | EXPR_POSTFIX OP_INC                              { $$ = new expr_postfix($1, "++");     }
-             | EXPR_POSTFIX OP_DEC                              { $$ = new expr_postfix($1, "--");     }
+             | EXPR_POSTFIX OP_INC                              { $$ = new expr_postfix("++", $1);     }
+             | EXPR_POSTFIX OP_DEC                              { $$ = new expr_postfix("--", $1);     }
 
 
 ARG_EXPR_LIST : EXPR_ASSIGNMENT                       { $$ = $1;                        }
