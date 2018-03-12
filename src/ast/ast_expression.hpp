@@ -560,7 +560,7 @@ class expr_equality : public Node {
 
             // EXPR_EQUALITY
             rec->compile(dst, context); // store variable into expression result
-
+            context.internal_expr_value = context.internal_temp_value;
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
 
@@ -580,17 +580,20 @@ class expr_equality : public Node {
 
             // get RH term register
             uint logic_and_reg = context.extract_expr_reg();
-
             if(op == "=="){
-                dst<<"\tbeq\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
+                dst<<"\tsequ\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
             }
             
             else{
-                dst<<"\tbne\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
+                dst<<"\tsneu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
             }
-
+            
+        
+         
+            context.internal_temp_value = context.internal_expr_value;
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
-        }
+        
+         }
 };
 
 class expr_relational : public Node {             
