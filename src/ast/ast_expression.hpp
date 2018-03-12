@@ -141,7 +141,7 @@ class expr_assignment : public Node {
             dst<<"\taddi\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;    // move results into assignment register. Mips Mov STORE RESULT FROM EXPRESSION INTO REGISTER THAT WAS ASSIGNED - Good comment OK                    
             }   
              
-                
+            dst<<"\tsw\t"<<"$"<<tmp.reg_ID<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;    
         
         }
 };
@@ -235,8 +235,30 @@ class expr_logic_or : public Node {
             uint logic_or_reg = context.extract_expr_reg();
 
 
-            //dst<<"\or\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_or_reg<<'\n';
             
+
+            std::string zero = context.makeName("LOR");
+            std::string one = context.makeName("LOR");
+            std::string end = context.makeName("LOR");
+
+            //bne temp 0 - move 1
+            dst<<"\tbne\t$"<<temp_register<<",$0,$"<<one<<"\n";
+            //beq exp 0 - move 0
+            dst<<"\tbeq\t$"<<logic_or_reg<<",$0,$"<<zero<<"\n";
+
+            //move 1
+            dst<<"$"<<one<<":\n";
+            dst<<"\tmove\t$"<<temp_register<<",$1\n";
+            //b end
+            dst<<"\tb\t$"<<end<<"\n";
+
+            //move 0
+            dst<<"$"<<zero<<":\n";
+            dst<<"\tmove\t$"<<temp_register<<",$0\n";
+
+            // end
+            dst<<"$"<<end<<":\n";
+
 
 
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
@@ -300,9 +322,26 @@ class expr_logic_and : public Node {
             // get RH term register
             uint logic_and_reg = context.extract_expr_reg();
 
+            std::string zero = context.makeName("LAND");
+            std::string skip = context.makeName("LAND");
 
-            //dst<<"\tand\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
-   
+            // compare temp_register
+            dst<<"\tbeq\t"<<"$"<<temp_register<<",$0"<<",$"<<zero<<'\n';
+                //if eq branch to move 0
+            // compare l_a_reg
+            dst<<"\tbeq\t"<<"$"<<logic_and_reg<<",$0"<<",$"<<zero<<'\n';
+                // if eq to branch to move 0
+            // move 1
+            dst<<"\tmove\t"<<"$"<<temp_register<<",$1\n";
+            // branch past move 0
+            dst<<"\tb\t"<<"$"<<skip<<'\n';
+
+            //move 0
+            dst<<"$"<<zero<<":\n";
+            dst<<"\tmove\t"<<"$"<<temp_register<<",$0\n";
+
+            //skip
+            dst<<"$"<<skip<<":\n";
 
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
         }
@@ -1017,6 +1056,7 @@ class expr_mul : public Node {
         }
 };
 
+// not done
 class expr_cast : public Node {
     //EXPR_CAST : EXPR_UNARY
     //          | L_BRACKET NAME_TYPE R_BRACKET EXPR_CAST
@@ -1056,6 +1096,7 @@ class expr_cast : public Node {
         }
 };
 
+// missing sizeof - bug for inc / dec - not done pointers
 class expr_unary : public Node {
     //EXPR_UNARY : EXPR_POSTFIX 
     //           | OP_INC EXPR_UNARY
@@ -1128,7 +1169,7 @@ class expr_unary : public Node {
                 else{
                     dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
                 }
-                if(context.update_variable()){}
+                context.force_update_variable();
                 uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
                 dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
                 dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
@@ -1141,7 +1182,7 @@ class expr_unary : public Node {
                 else{
                     dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",-1"<<std::endl;
                 }
-                if(context.update_variable()){}
+                context.force_update_variable();
                 uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
                 dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
                 dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
@@ -1218,6 +1259,7 @@ class opr_unary: public Node {
         }
 };
 
+// for functions
 class arg_expr_list : public Node {
     //ARG_EXPR_LIST : EXPR_ASSIGNMENT
     //              | ARG_EXPR_LIST ',' EXPR_ASSIGNMENT
@@ -1251,11 +1293,41 @@ class arg_expr_list : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            bool top = context.am_i_top();     // check if i'm top node;
+
+            // ARG_EXPR_LIST
+            next->compile(dst, context); // store variable into expression result
+            context.internal_expr_value = context.internal_temp_value;
+            std::string arg_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
+
+            // free bools for rhs
+            bool t = context.err_top, b = context.err_bottom; // save state locally
+            std::string r = context.expr_result_reg;
+            context.err_top = false;
+            context.err_bottom = false;
+
+            exp->compile(dst,context); // compile right most term 
+            context.UNARY_UPDATE();
+
+            context.err_top = t;        // restore state
+            context.err_bottom = b;
+            context.expr_result_reg = r;
+
+
+            // get RH term register
+            uint exp_reg = context.extract_expr_reg();
+
+
+
+
+
+            context.internal_temp_value = context.internal_expr_value;
+            if(top) context.i_am_top(arg_reg); // send to above node that isnt recursive
         }
 };
 
+// only inc and dec
 class expr_postfix : public Node {
     //EXPR_POSTFIX : EXPR_PRIMARY
     //             | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE
@@ -1368,7 +1440,7 @@ class expr_postfix : public Node {
 
             // INC and DEC
             if(opr == "++"){
-                if(context.update_variable()){}
+                context.force_update_variable();
                 uint local = context.scopes[context.scope_index][context.expr_result].reg_ID; //get x into loca
                 
                 if(context.expr_primary_type == UI){
@@ -1384,7 +1456,7 @@ class expr_postfix : public Node {
             }
 
             else if(opr == "--"){
-                if(context.update_variable()){}
+                context.force_update_variable();
                 uint local = context.scopes[context.scope_index][context.expr_result].reg_ID; //get x into loca
                 
                 if(context.expr_primary_type == UI){
@@ -1407,6 +1479,7 @@ class expr_postfix : public Node {
         }
 };
 
+// missing float
 class expr_primary : public Node {
     //EXPR_PRIMARY : IDENTIFIER
     //             | INT_C 

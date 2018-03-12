@@ -237,6 +237,12 @@ struct CompileContext{
     }
 
 
+    int makeNameUnq;
+
+    std::string makeName(std::string base){
+        return base+std::to_string(makeNameUnq++);
+    }
+
 
     bool UNARY_OP_MINUS_CHECK;
     void UNARY_OP_MINUS_UPDATE(){
