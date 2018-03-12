@@ -1120,27 +1120,24 @@ class expr_unary : public Node {
 
             // Operations
 
-
+            // INC and DEC
             if(terminal == "++"){
                 if(context.expr_primary_type == UI){
-                     dst<<"/taddiu/t$"<<expr_reg<<",$"<<expr_reg<<",1"<<std::endl;
+                    dst<<"\taddiu\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
                 }
                 else{
-                            dst<<"/taddi/t$"<<expr_reg<<",$"<<expr_reg<<",1"<<std::endl;
-                        }
-                           
-                    }
+                    dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
+                }          
+            }
 
-                    else if(terminal == "--"){
-                    
-                        if(context.expr_primary_type == UI){
-                            dst<<"/tsubiu/t$"<<expr_reg<<",$"<<expr_reg<<",1"<<std::endl;
-                        }
-                        else{
-                            dst<<"/tsubi/t$"<<expr_reg<<",$"<<expr_reg<<",1"<<std::endl;
-                        }
-
-                    }
+            else if(terminal == "--"){
+                if(context.expr_primary_type == UI){
+                    dst<<"\tsubiu\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
+                }
+                else{
+                    dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",-1"<<std::endl;
+                }
+            }
                 
 
             // OPR_UNARY
