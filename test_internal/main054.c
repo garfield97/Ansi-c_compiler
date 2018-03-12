@@ -1,5 +1,4 @@
 int main(){
-	int x = 2;
-	x = x>>30;
+	int x = 1 == 0;
 	return x;
 }
