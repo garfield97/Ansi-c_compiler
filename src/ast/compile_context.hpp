@@ -38,7 +38,7 @@ struct CompileContext{
     uint get_free_reg(){
 
         for(uint i=0u; i<32u; i++){
-            if(reg_free[i] == true && ( i >= 8u && i <= 15u ) ){ // register to be saved by calling function
+            if(reg_free[i] == true && ( i >= 8u && i <= 15u ) && not_in_err_stack(i) ){ // register to be saved by calling function
                 reg_free[i] = false;
 
                         // EXPR_ASSIGNMENT 
@@ -143,17 +143,31 @@ struct CompileContext{
         return reg;
     }
   
-    
+
     std::string expr_result_reg; // deal with recursion and passing registers
     bool err_top;
     bool err_bottom;
+    std::vector<uint> err_stack;
+
+    bool not_in_err_stack(uint x){
+        for(uint i = 0; i < err_stack.size(); ++i){
+            if(err_stack[i] == x){
+                return false; // found this value in the stack
+            }
+        }
+
+        return true; // free to use this value - its not been preserved
+    }
 
     std::string am_i_bottom(){ // returns reg as num in string
         if(err_bottom == false){
             err_bottom = true; //
 
+            uint err_stack_reg;
+
             if(regex_match(expr_result, reNum)){ // literal int
-                expr_result_reg = std::to_string( get_free_reg() ); // find a free reg - format [0-9]+
+                err_stack_reg = get_free_reg();
+                expr_result_reg = std::to_string( err_stack_reg ); // find a free reg - format [0-9]+
                 UNARY_UPDATE(); // check for unary opr
                 dstStream<<"\taddi\t"<<"$"<<expr_result_reg<<",$0,"<<expr_result<<'\n';  
             }
@@ -163,11 +177,15 @@ struct CompileContext{
                     // load from stack
                 dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
                 
+                err_stack_reg = scopes[scope_index][expr_result].reg_ID;
                 expr_result_reg = std::to_string(scopes[scope_index][expr_result].reg_ID);
                 dstStream<<"\tadd\t"<<"$"<<expr_result_reg<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
             
                 scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
             }
+
+
+            err_stack.push_back(err_stack_reg); // save reg to preserved stack
         }
 
         return expr_result_reg;
@@ -187,9 +205,12 @@ struct CompileContext{
         if(err_top == true){
             err_top = false;
             err_bottom = false;
+            err_stack.pop_back();
             expr_result = "$"+r;
         }
     }
+
+
 
 
     long int internal_expr_value;

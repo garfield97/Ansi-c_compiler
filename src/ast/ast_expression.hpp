@@ -177,7 +177,7 @@ class expr_assignment : public Node {
                     dst<<"\tdivu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
                 }
                 else{
-                    dst<<"\tdivt\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    dst<<"\tdiv\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
                 }
                 dst<<"\tmflo\t"<<"$"<<unary_reg<<"\n";
 
@@ -187,7 +187,7 @@ class expr_assignment : public Node {
                     dst<<"\tdivu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
                 }
                 else{
-                    dst<<"\tdivt\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    dst<<"\tdiv\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
                 }
                 dst<<"\tmfhi\t"<<"$"<<unary_reg<<"\n";
                
@@ -197,7 +197,7 @@ class expr_assignment : public Node {
                     dst<<"\taddu\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
                 }
                 else{
-                    dst<<"\taddt\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    dst<<"\tadd\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
                 }
 
             }
@@ -206,7 +206,7 @@ class expr_assignment : public Node {
                     dst<<"\tsubu\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
                 }
                 else{
-                    dst<<"\tsubt\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    dst<<"\tsub\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
                 }
             }
             if(mode == "<<="){ // left assign

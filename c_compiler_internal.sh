@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm c_compiler_internal-stdout-sterr.txt
+
 if [[ "$1" != "" ]] ; then
     compiler="$1"
 else

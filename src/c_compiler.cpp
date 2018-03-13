@@ -64,6 +64,7 @@ int main(int argc, char* argv[])
         CC.reFloat = ("-?([0-9]+|[0-9]*\\.[0-9]+([eE][-+]?[0-9]+)?)");
 
         CC.reg_counter = 8; // initialise reg to be replaced when no free reg's
+        CC.expr_result_reg = 34;
 
         CC.assign_reg = 0;
         CC.assigning = false; // for expr_assing not to lose its reg
