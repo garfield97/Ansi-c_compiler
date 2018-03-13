@@ -658,7 +658,7 @@ class statement_selection : public Node{
             }
             
             statement->compile(dst,context);
-            dst<<"$"<<
+            dst<<bottom_label<<'\n';
             
             
         }
