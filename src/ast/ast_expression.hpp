@@ -151,11 +151,88 @@ class expr_assignment : public Node {
             uint exp_reg = context.extract_expr_reg();
 
 
-            // This only supports normal assign currently. assuming that opr_assignment is '= ' 
+            // sets tmp_v with operator
+            opr->compile(dst,context);
+            std::string mode = context.tmp_v;
+            // get type
+            std::string type = tmp.type;
 
-            
-            dst<<"\tadd\t"<<"$"<<unary_reg<<",$0,$"<<exp_reg<<std::endl;
-           
+
+            if(mode == "="){ // normal assign
+                dst<<"\tmove\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+
+            }
+            if(mode == "*="){ // mul assign
+                if(type == "unsigned int"){
+                    dst<<"\tmultu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                else{
+                    dst<<"\tmult\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                dst<<"\tmflo\t"<<"$"<<unary_reg<<"\n";
+
+            }
+            if(mode == "/="){ // div assign
+                if(type == "unsigned int"){
+                    dst<<"\tdivu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                else{
+                    dst<<"\tdivt\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                dst<<"\tmflo\t"<<"$"<<unary_reg<<"\n";
+
+            }
+            if(mode == "%="){ // mod assign
+                 if(type == "unsigned int"){
+                    dst<<"\tdivu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                else{
+                    dst<<"\tdivt\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                dst<<"\tmfhi\t"<<"$"<<unary_reg<<"\n";
+               
+            }
+            if(mode == "+="){ // add assign
+                if(type == "unsigned int"){
+                    dst<<"\taddu\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                else{
+                    dst<<"\taddt\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+
+            }
+            if(mode == "-="){ // sub assign
+                if(type == "unsigned int"){
+                    dst<<"\tsubu\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                else{
+                    dst<<"\tsubt\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+            }
+            if(mode == "<<="){ // left assign
+                dst<<"\tsllv\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+
+            }
+            if(mode == ">>="){ // right assign
+                if(type == "unsigned int"){
+                    dst<<"\tsrlv\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                else{
+                    dst<<"\tsrav\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+
+            }
+            if(mode == "&="){ // and assign
+                dst<<"\tand\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+            }
+            if(mode == "^="){ // xor assign
+                dst<<"\txor\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+            }
+            if(mode == "|="){ // or assign
+                dst<<"\tor\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+            }
+
+
              
             dst<<"\tsw\t"<<"$"<<unary_reg<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;  // get s_pos from top of function  
         
@@ -198,8 +275,7 @@ class opr_assignment: public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            context.tmp_v = opr;
         }
 };
 

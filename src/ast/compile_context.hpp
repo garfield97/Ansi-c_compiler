@@ -216,8 +216,8 @@ struct CompileContext{
     std::string expr_result;        // literal values
     LITERAL_TYPE expr_primary_type;
 
-    void set_expr_result_type(){
-        std::string type = scopes[scope_index][expr_result].type;
+    void set_expr_result_type(){        // used in declare
+            std::string type = scopes[scope_index][expr_result].type;
             if(type == "int"){
                 expr_primary_type = I;
             }

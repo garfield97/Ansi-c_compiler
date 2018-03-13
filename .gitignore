@@ -8,7 +8,9 @@
 *.tab.hpp
 *.yy.cpp
 bin/*
-tmp/stderr.txt
+tmp/*
 test_deliverable/bin/*
 test_deliverable/test_results.txt
 test_deliverable/asm/*
+
+c_compiler_internal-stdout-sterr.txt
