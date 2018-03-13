@@ -523,10 +523,10 @@ class statement_iteration : public Node{
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
 
-    //STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
-    //                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';' 
-    //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT
-    //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMEN
+            //STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
+            //                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';' 
+            //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT
+            //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMEN
             
             if(symbol == "while"){
 
@@ -552,14 +552,15 @@ class statement_iteration : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+            
              expr->compile(dst,context);        
          
-             int expr_reg = extract_expr_reg();
+             uint expr_reg = context.extract_expr_reg();
              
              std::string bottom_label = context.makeName("btm");  
              std::string top_label = context.makeName("top");
              
-             dst<<"$"top_label<<'\n';
+             dst<<"$"<<top_label<<":\n";
             
              if(expr_reg == 0){   
                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
@@ -567,12 +568,12 @@ class statement_iteration : public Node{
              }
              
              statement->compile(dst,context);
-             expr_reg = extract_expr_reg();
+             expr_reg = context.extract_expr_reg();             // have'nt revauluted expr yet - Mehedi
              if(expr_reg == 0){
                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<top_label<<'\n';
              }
 
-             dst<<"$"<<bottom_label<<'\n';
+             dst<<"$"<<bottom_label<<":\n";
             
         }  
 };
@@ -664,21 +665,21 @@ class statement_selection : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
         
-            expr->compile(dst,context);
+            expr->compile(dst,context); // eval expr
             
             
-            int expr_reg = extract_expr_reg();
+            uint expr_reg = context.extract_expr_reg(); // - added context. - mehedi
             std::string bottom_label = context.makeName("if_label");
 
             
-            if(expr_reg == 0){
+            if(expr_reg == 0){ // what does this do?? it will never be equal to 0. - Mehedi
                 
                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
             
             }
             
             statement->compile(dst,context);
-            dst<<"$"<<bottom_label<<'\n';
+            dst<<"$"<<bottom_label<<":\n"; // added ':' to end of this line - Mehedi
             
             
         }
