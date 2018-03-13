@@ -36,51 +36,57 @@ struct CompileContext{
 
     bool reg_free[32];              // check if reg available
     uint get_free_reg(){
-        for(uint i=0u; i<32u; i++){
-            if(reg_free[i] == true && ( i >= 8u && i <= 23u ) ){ // register to be saved by calling function
-                reg_free[i] = false;
-                return i;
-            }
-        }
 
-        // no free reg found in 8-15
-        /*
-        //give one in range 16-23
-        for(int i=0; i<32; i++){
-            if(reg_free[i] == true && ( i >= 16 && i <= 23 ) ){ // register to be saved by called function
-                    // check for unsaved regs
+        for(uint i=0u; i<32u; i++){
+            if(reg_free[i] == true && ( i >= 8u && i <= 15u ) ){ // register to be saved by calling function
                 reg_free[i] = false;
+
+                        // EXPR_ASSIGNMENT 
+                if(assigning && !assign_reg_set){ // need to set assign reg
+                    assign_reg = i;
+                    assign_reg_set = true;
+                }
+
                 return i;
             }
         }
-        */
 
         // all reg occupied
         free_up_reg();  // free up a reg from $8-$15
         return get_free_reg(); // now get a free reg - guaranteed
     }
 
+    bool assigning;  // when true - do not free up assign reg
+    bool assign_reg_set;
+    uint assign_reg; // this cannot be freed
+
     uint reg_counter;
+
     void free_up_reg(){
         uint s_pos;
+        bool found = false;
+        if(reg_counter == assign_reg && assigning) ++reg_counter; // avoid freeing assign_reg
 
-        // search through map to find variable stored in the reg to be replaced
+        // first save any varubale stored in reg_counter
+        // search through variables in current scope
         for(std::map<std::string, binding>::iterator it= scopes[scope_index].begin(); it !=scopes[scope_index].end(); ++it){
             if(it->second.reg_ID == reg_counter){ // replace this variable
-                // store it back to stack
+                // save locally
                 s_pos = it->second.stack_position;
+                found = true;
 
-                // free up
-                reg_free[reg_counter] = true;
-
-                //un-assign the reg
+                // update variable to not ina register
                 it->second.reg_ID = 33;
-
             } 
         }
 
-        // store variable in reg back onto stack
-        if(!regex_match(expr_result, reNum)) dstStream<<"\tsw\t$"<<reg_counter<<","<<s_pos*4<<"($fp)";
+        if(found){
+            // store variable in reg back onto stack
+            dstStream<<"\tsw\t$"<<reg_counter<<","<<s_pos*4<<"($fp)";
+        }
+
+        // now free it
+        reg_free[reg_counter] = true; // free the reg
 
         if(++reg_counter == 16u) reg_counter = 8u; // loop back for next replacement
 
@@ -108,7 +114,6 @@ struct CompileContext{
 
     }
 
-
     uint set_literal_reg(){ // give a register to literal value for temperorary usage later
 
         uint local = get_free_reg(); //  assign literal a register
@@ -117,6 +122,7 @@ struct CompileContext{
         
     }
     
+
     uint extract_expr_reg(){
         uint reg;
         //literal
@@ -136,14 +142,13 @@ struct CompileContext{
 
         return reg;
     }
-    
-    
+  
     
     std::string expr_result_reg; // deal with recursion and passing registers
     bool err_top;
     bool err_bottom;
 
-    std::string am_i_bottom(){
+    std::string am_i_bottom(){ // returns reg as num in string
         if(err_bottom == false){
             err_bottom = true; //
 
@@ -186,13 +191,6 @@ struct CompileContext{
         }
     }
 
-  
-    void reset_erv(){ // pops last reg from erv and stores it intop expr_result
-        // used when need to clear erv - finsihed evaluating an expr - if not cleared correctly yet - will ensure a clear
-
-     
-    }
-
 
     long int internal_expr_value;
     long int internal_temp_value;
@@ -213,6 +211,7 @@ struct CompileContext{
 
     std::string current_func;
     std::string tmp_v;              // used to transfer variable name across nodes
+
 
     std::string expr_result;        // literal values
     LITERAL_TYPE expr_primary_type;

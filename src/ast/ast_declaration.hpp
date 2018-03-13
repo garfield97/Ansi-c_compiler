@@ -449,11 +449,10 @@ class declarator_init : public Node{
             declarator->compile(dst,context);   //stores into tmp_V (variable name)
             
             if( initializer != NULL){
+                context.assigning = true;
                 initializer->compile(dst,context); //if its a constant it stores into expression_results
-                if(regex_match(context.expr_result,context.is_reg)){
-                    dst<<"\tadd\t$15,$0,"<<context.expr_result<<'\n';
-                }
-                else dst<<"\taddi\t$15,$0,"<<context.expr_result<<'\n';
+                dst<<"\tadd\t$15,$0,"<<context.expr_result<<'\n';
+                context.assigning = false;
             }
             else{
                 dst<<"\tmove\t$15,$0\n";
