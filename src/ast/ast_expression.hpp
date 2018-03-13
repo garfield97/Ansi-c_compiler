@@ -118,33 +118,57 @@ class expr_assignment : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            unary->compile(dst,context);                                //Find the name of the variable stored in expression_result
-            bool update = context.update_variable(); // true if loaded from stack
-
-            context.set_expr_result_type();
-          
-            binding tmp = context.scopes[context.scope_index][context.expr_result];
-                
-            if(update) dst<<"\tlw\t"<<"$"<<tmp.reg_ID<<","<<tmp.stack_position*4<<"($sp)"<<std::endl; //this loads from stack into register.      
-            
-            // This only supports normal assign currently. assuming that opr_assignment is '= ' 
-            
-            // evaluates RHS
-            exp->compile(dst,context);
-            update = context.update_variable(); // don't care about result
-            
-
-            context.reset_erv(); // check if an expression was evaluated - stores reg ID into expr_result
-
-            if( regex_match(context.expr_result,context.is_reg) ){
-                dst<<"\tadd\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;
+            bool top = context.am_i_top();     // check if i'm top node;
+            if(top){
+                context.assigning = true;
+                context.assign_reg_set = false;
             }
-            else { // literal                   
-            dst<<"\taddi\t"<<"$"<<tmp.reg_ID<<",$0,"<<context.expr_result<<std::endl;    // move results into assignment register. Mips Mov STORE RESULT FROM EXPRESSION INTO REGISTER THAT WAS ASSIGNED - Good comment OK                    
-            }   
+            
+            // EXPR_UNARY
+            unary->compile(dst,context); // store variable into expression result
+            binding tmp = context.scopes[context.scope_index][context.expr_result];
+            std::string var_assigned = context.expr_result;
+
+            std::string unary_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
+
+
+            // free bools for rhs
+            bool t = context.err_top, b = context.err_bottom; // save state locally
+            std::string r = context.expr_result_reg;
+            context.err_top = false;
+            context.err_bottom = false;
+
+            exp->compile(dst,context); // compile right most term 
+            context.UNARY_UPDATE();
+
+            context.err_top = t;        // restore state
+            context.err_bottom = b;
+            context.expr_result_reg = r;
+
+
+            // get RH term register
+            uint exp_reg = context.extract_expr_reg();
+
+
+            // This only supports normal assign currently. assuming that opr_assignment is '= ' 
+
+            
+            dst<<"\tadd\t"<<"$"<<unary_reg<<",$0,$"<<exp_reg<<std::endl;
+           
              
-            dst<<"\tsw\t"<<"$"<<tmp.reg_ID<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;    
+            dst<<"\tsw\t"<<"$"<<unary_reg<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;  // get s_pos from top of function  
         
+            // update reg for variable binding
+            sscanf(unary_reg.c_str(),"$%d", &tmp.reg_ID);
+            context.scopes[context.scope_index][var_assigned] = tmp;
+
+
+            if(top){    
+                context.i_am_top(unary_reg); // send to above node that isnt recursive
+                context.assigning = false;
+                context.assign_reg_set = false;
+            }
         }
 };
 
@@ -1318,7 +1342,7 @@ class arg_expr_list : public Node {
 
 
             // get RH term register
-            uint exp_reg = context.extract_expr_reg();
+            //uint exp_reg = context.extract_expr_reg();
 
 
 

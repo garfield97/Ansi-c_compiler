@@ -65,6 +65,10 @@ int main(int argc, char* argv[])
 
         CC.reg_counter = 8; // initialise reg to be replaced when no free reg's
 
+        CC.assign_reg = 0;
+        CC.assigning = false; // for expr_assing not to lose its reg
+        CC.assign_reg_set = false;
+
         CC.makeNameUnq = 0; // used for creating labels
 
         dstStream<<'\t'<<".text"<<'\n';
