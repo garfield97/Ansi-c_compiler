@@ -552,8 +552,28 @@ class statement_iteration : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+             expr->compile(dst,context);        
+         
+             int expr_reg = extract_expr_reg();
+             
+             std::string bottom_label = context.makeName("btm");  
+             std::string top_label = context.makeName("top");
+             
+             dst<<"$"top_label<<'\n';
+            
+             if(expr_reg == 0){   
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
+            
+             }
+             
+             statement->compile(dst,context);
+             expr_reg = extract_expr_reg();
+             if(expr_reg == 0){
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<top_label<<'\n';
+             }
+
+             dst<<"$"<<bottom_label<<'\n';
+            
         }  
 };
 
@@ -643,8 +663,24 @@ class statement_selection : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+        
+            expr->compile(dst,context);
+            
+            
+            int expr_reg = extract_expr_reg();
+            std::string bottom_label = context.makeName("if_label");
+
+            
+            if(expr_reg == 0){
+                
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
+            
+            }
+            
+            statement->compile(dst,context);
+            dst<<"$"<<bottom_label<<'\n';
+            
+            
         }
 };
 
