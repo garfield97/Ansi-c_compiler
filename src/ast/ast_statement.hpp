@@ -643,8 +643,29 @@ class statement_selection : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+        
+            expr->compile(dst,context);
+            
+            
+            int expr_reg = extract_expr_reg();
+            std::string bottom_label = context.makeName("if_label");
+
+            
+            if(expr_reg == 0){
+                
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
+            
+            }
+                  
+            
+            std::string bottom_label = context.makeName("if_label");
+            
+            
+            
+            statement->compile(dst,context);
+            dst<<"$"<<
+            
+            
         }
 };
 
