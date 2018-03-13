@@ -656,11 +656,6 @@ class statement_selection : public Node{
                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
             
             }
-                  
-            
-            std::string bottom_label = context.makeName("if_label");
-            
-            
             
             statement->compile(dst,context);
             dst<<"$"<<
