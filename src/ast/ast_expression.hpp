@@ -41,6 +41,7 @@ class expr : public Node {
         }
 };
 
+//not done yet
 class expr_conditional : public Node {
     //EXPR_CONDITIONAL : EXPR_LOGIC_OR
     //                 | EXPR_LOGIC_OR '?' EXPR ':' EXPR_CONDITIONAL
@@ -82,6 +83,7 @@ class expr_conditional : public Node {
         }
 };
 
+// adapt for recursion and other assigns
 class expr_assignment : public Node {
     //EXPR_ASSIGNMENT : EXPR_CONDITIONAL
     //                | EXPR_UNARY OPR_ASSIGNMENT EXPR_ASSIGNMENT
@@ -235,7 +237,7 @@ class expr_logic_or : public Node {
             uint logic_or_reg = context.extract_expr_reg();
 
 
-            
+
 
             std::string zero = context.makeName("LOR");
             std::string one = context.makeName("LOR");

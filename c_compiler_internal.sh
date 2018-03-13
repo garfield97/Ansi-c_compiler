@@ -32,7 +32,7 @@ for i in ${input_dir}/*.c ; do
         
         # Create the assembly
         $compiler -S $i -o ${working}/$base-got.s
-		mips-linux-gnu-gcc -static -o ${working}/$base-got ${working}/$base-got.s
+		mips-linux-gnu-gcc -static -o ${working}/$base-got ${working}/$base-got.s &>> c_compiler_internal-stdout-sterr.txt
         
         # Run the new
         qemu-mips ${working}/$base-got
