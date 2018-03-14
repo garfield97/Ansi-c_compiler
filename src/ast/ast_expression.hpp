@@ -1384,10 +1384,28 @@ class expr_unary : public Node {
                 }
                 if(tmp_op == "!"){
                     if(context.update_variable()){} 
-                    if(context.internal_temp_value == 0){
-                        dst<<"\taddi\t$"<<exp_reg<<",$0,1"<<'\n'; // set to one
-                    }
-                    else dst<<"\taddi\t$"<<exp_reg<<",$0,0"<<'\n';
+                    
+                    std::string zero = context.makeName("eq0");
+                    std::string skip = context.makeName("skip");
+
+                    // check if its zero
+                    dst<<"\tbeq\t$"<<exp_reg<<",$0,$"<<zero<<"\n";
+
+                    // set to 0
+                    dst<<"\taddi\t$"<<exp_reg<<",$0,0"<<'\n';
+                    // branch to end
+                    dst<<"\tbeq\t$"<<exp_reg<<",$0,$"<<skip<<"\n";
+                    //dst<<"\tb\t$"<<skip<<":\n"<<"\tnop\n";
+
+
+                    // set to 1
+                    dst<<"$"<<zero<<":\n";
+                    dst<<"\taddi\t$"<<exp_reg<<",$0,1"<<'\n';
+
+                    //end
+                    dst<<"$"<<skip<<":\n";
+
+
                     context.internal_expr_value = !context.internal_temp_value;                
                 }
                 if(tmp_op == "~"){ 
