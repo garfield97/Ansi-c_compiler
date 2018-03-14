@@ -552,15 +552,15 @@ class statement_iteration : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            
+             std::string bottom_label = context.makeName("btm");  
+             std::string top_label = context.makeName("top");        
+             dst<<"$"<<top_label<<":\n";
              expr->compile(dst,context);        
          
              uint expr_reg = context.extract_expr_reg();
              
-             std::string bottom_label = context.makeName("btm");  
-             std::string top_label = context.makeName("top");
+
              
-             dst<<"$"<<top_label<<":\n";
             
              dst<<"\tbne\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
             
