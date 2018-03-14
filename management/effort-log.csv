@@ -12,27 +12,29 @@ Date,Effort,Developers,Milestones
 24/02/2018,6,mh3216,C_parser_AST
 22/02/2018,1,mh3216,c_compiler_framework
 24/02/2018,6,rz1616,C_parser_AST
-26/02/2018,7,rz1616,Python Translator
-26/02/2018,8,mh3216,Python Translator
-05/03/2018,5,rz1616,Code Generator
-05/03/2018,5,mh3216,Code Generator
-06/03/2018,5,rz1616,Code Generator
-06/03/2018,5,mh3216,Code Generator
-07/03/2018,5,rz1616,Code Generator
-07/03/2018,5,mh3216,Code Generator
-08/03/2018,5,rz1616,Code Generator
-08/03/2018,5,mh3216,Code Generator
-09/03/2018,5,rz1616,Code Generator
-09/03/2018,5,mh3216,Code Generator
-10/03/2018,5,rz1616,Code Generator
-10/03/2018,5,mh3216,Code Generator
-11/03/2018,5,rz1616,Code Generator
-11/03/2018,5,mh3216,Code Generator
-12/03/2018,5,rz1616,Code Generator
-12/03/2018,5,mh3216,Code Generator
-13/03/2018,5,rz1616,Code Generator
-13/03/2018,5,mh3216,Code Generator
-14/03/2018,5,rz1616,Code Generator
-14/03/2018,5,mh3216,Code Generator
+26/02/2018,7,rz1616,C_translator_formative
+26/02/2018,8,mh3216,C_translator_formative
+27/02/2018,6,mh3216,C_translator_final
+28/02/2018,6,mh3216,C_translator_final
+05/03/2018,5,rz1616,C_compiler_int_main_return
+05/03/2018,5,mh3216,C_compiler_initial_API
+06/03/2018,5,rz1616,C_compiler_int_main_return
+06/03/2018,5,mh3216,C_compiler_int_main_return
+07/03/2018,5,rz1616,C_compiler_int_main_return
+07/03/2018,5,mh3216,C_compiler_int_main_return
+08/03/2018,5,rz1616,C_compiler_int_main_return;C_compiler_basic_int_expressions
+08/03/2018,5,mh3216,C_compiler_int_main_return;C_compiler_initial_API
+09/03/2018,5,rz1616,C_compiler_basic_int_expressions
+09/03/2018,5,mh3216,C_compiler_upgrade_API
+10/03/2018,5,rz1616,C_compiler_more_int_expressions
+10/03/2018,5,mh3216,C_compiler_more_int_expressions
+11/03/2018,5,rz1616,C_compiler_more_int_expressions
+11/03/2018,5,mh3216,C_compiler_more_int_expressions
+12/03/2018,5,rz1616,C_compiler_more_int_expressions
+12/03/2018,5,mh3216,C_compiler_complete_int_expressions
+13/03/2018,5,rz1616,C_compiler_control_statements
+13/03/2018,5,mh3216,C_compiler_complete_int_expressions
+14/03/2018,5,rz1616,C_compiler_control_statements
+14/03/2018,5,mh3216,C_compiler_statement_API
 15/03/2018,5,rz1616,Code Generator
 15/03/2018,5,mh3216,Code Generator
