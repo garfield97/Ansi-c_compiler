@@ -1331,7 +1331,7 @@ class expr_unary : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
-            context.internal_expr_value = context.internal_temp_value;           
+            context.internal_expr_value = context.internal_temp_value;       
             std::string exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
 
@@ -1367,8 +1367,13 @@ class expr_unary : public Node {
 
             // OPR_UNARY
             if(O_U != NULL){
+                std::string var_save = context.expr_result;
+
                 O_U->compile(dst,context);
-                std::string tmp_op = context.expr_result;        
+                std::string tmp_op = context.expr_result;
+
+                context.expr_result = var_save;
+
                 if(tmp_op == "-"){
                     context.internal_expr_value = -context.internal_temp_value;             
                     if(context.update_variable()){}                           
