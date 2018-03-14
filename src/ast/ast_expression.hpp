@@ -83,9 +83,6 @@ class expr_conditional : public Node {
 
             std::string zero = context.makeName("zero");
             std::string skip = context.makeName("skip");
-            context.err_overide = true;
-            context.err_overide_reg = context.get_free_reg(); // used to force same reg for both expr compile
-
 
             // evaluate expr_logic_or
             eLOR->compile(dst, context); // store variable into expression result
@@ -93,6 +90,10 @@ class expr_conditional : public Node {
 
             // beq zero - zero
             dst<<"\tbeq\t"<<"$"<<cmp_reg<<",$0,"<<"$"<<zero<<"\n";
+
+
+            context.err_overide = true;
+            context.err_overide_reg = context.get_free_reg(); // used to force same reg for both expr compile
 
 
             // ne zero code
@@ -110,7 +111,8 @@ class expr_conditional : public Node {
                 context.expr_result_reg = r;
 
                 // get register to pass back
-                cmp_reg = context.extract_expr_reg();
+                uint extracted_reg = context.extract_expr_reg();
+                dst<<"\tmove\t"<<"$"<<context.err_overide_reg<<",$"<<extracted_reg<<"\n";
             
                 // b skip
                 dst<<"\tb\t"<<"$"<<skip<<"\n";
@@ -134,7 +136,8 @@ class expr_conditional : public Node {
                 context.expr_result_reg = r;
 
                 // get register to pass back
-                cmp_reg = context.extract_expr_reg();
+                extracted_reg = context.extract_expr_reg();
+                dst<<"\tmove\t"<<"$"<<context.err_overide_reg<<",$"<<extracted_reg<<"\n";
 
 
             // skip:
@@ -144,7 +147,7 @@ class expr_conditional : public Node {
 
             context.err_overide = false; // resume normal expr_reg allocation
 
-            if(top) context.i_am_top(cmp_reg); // send to above node that isnt recursive
+            if(top) context.i_am_top(std::to_string(context.err_overide_reg) ); // send to above node that isnt recursive
         }
 };
 
