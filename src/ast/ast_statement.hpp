@@ -562,7 +562,7 @@ class statement_iteration : public Node{
 
              
             
-             dst<<"\tbne\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
             
              
              statement->compile(dst,context);
