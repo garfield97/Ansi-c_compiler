@@ -5,7 +5,7 @@ C_Lexer,Preliminary _C_lexer,4,mh3216,163dc776e053d42ba3ae4ffb00d4af8955724e31,I
 C_parser_framework,C_Lexer,3,mh3216,163dc776e053d42ba3ae4ffb00d4af8955724e31,Produce a skeletal outline of the C parser with all the necessary parameters
 C_parser_grammar,C_parser_framework,5,rz1616,b495090533643b844633f3f56f47e6cfa9c19ef5, parser grammar rules
 build_routine,,1,mh3216,122586530192bf869b2b153e9223b4e1f9f3632c,Decided to dedicate time to creating a makefile for build automaition
-c_compiler_framework,C_Lexer;C_parser_grammar,2,mh3216,3fd67decf6f03c7e0daed7e023e87efbbb83177e,
+c_compiler_framework,C_Lexer;C_parser_grammar,2,mh3216,3fd67decf6f03c7e0daed7e023e87efbbb83177e,main function for the program
 test_suite,,2,mh3216,15976e51c7f95f1e44f169a3248a20cd494b7ee9,create C programs for test suite
 C_parser_AST,C_parser_grammar,8,mh3216,a3a23ca10d9543644f97c5df62bdc91d5b6ba4fe,Create classes for C_parser_AST
 C_translator_formative,C_parser_AST,8,mh3216,5a8555495d11a0a2b207c703a97541ba1fd71ac6,Get basic int main return 0 working and work from there
@@ -17,7 +17,7 @@ C_compiler_upgrade_API,C_compiler_initial_API,6,mh3216,5dcc25cff75c2b7b84c0662c3
 C_compiler_more_int_expressions,C_compiler_basic_int_expressions;C_compiler_upgrade_API,15,rz1616,33074d4f9c03847d3c0f92e04414ab4a6d020de9,more complex C expressions
 C_compiler_complete_int_expressions,C_compiler_more_int_expressions,15,mh3216,,complete all expressions for uint and int
 C_compiler_statement_API,C_compiler_upgrade_API,3,mh3216,e2e21d46c82e411a4da5d3824797b8f5fdb6a132,add support for iteration and conditional statements
-C_compiler_control_statements,C_compiler_statement_API,15,rz1616,,for, while, if and if else statements
+C_compiler_control_statements,C_compiler_statement_API,15,rz1616,,for while if and if else statements
 C_compiler_function_calls,,10,mh3216,,
 C_compiler_global_vars,,,,,
 C_compiler_characters,,,,,
