@@ -562,16 +562,13 @@ class statement_iteration : public Node{
              
              dst<<"$"<<top_label<<":\n";
             
-             if(expr_reg == 0){   
-                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
+             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
             
-             }
              
              statement->compile(dst,context);
-             expr_reg = context.extract_expr_reg();             // have'nt revauluted expr yet - Mehedi
-             if(expr_reg == 0){
-                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<top_label<<'\n';
-             }
+             
+             expr_reg = context.extract_expr_reg();             // haven't revauluted expr yet - Mehedi
+             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<top_label<<'\n';
 
              dst<<"$"<<bottom_label<<":\n";
             
@@ -668,18 +665,16 @@ class statement_selection : public Node{
             expr->compile(dst,context); // eval expr
             
             
-            uint expr_reg = context.extract_expr_reg(); // - added context. - mehedi
+            uint expr_reg = context.extract_expr_reg();
             std::string bottom_label = context.makeName("if_label");
 
             
-            if(expr_reg == 0){ // what does this do?? it will never be equal to 0. - Mehedi
                 
-                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
+            dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
             
-            }
             
             statement->compile(dst,context);
-            dst<<"$"<<bottom_label<<":\n"; // added ':' to end of this line - Mehedi
+            dst<<"$"<<bottom_label<<":\n"; 
             
             
         }
