@@ -562,14 +562,13 @@ class statement_iteration : public Node{
              
              dst<<"$"<<top_label<<":\n";
             
-             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+             dst<<"\tbne\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
             
              
              statement->compile(dst,context);
              
-             expr_reg = context.extract_expr_reg();             // haven't revauluted expr yet - Mehedi
+             expr_reg = context.extract_expr_reg();            
              dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<top_label<<'\n';
-
              dst<<"$"<<bottom_label<<":\n";
             
         }  
@@ -671,6 +670,7 @@ class statement_selection : public Node{
             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
                         
             statement->compile(dst,context);
+            
             dst<<"$"<<bottom_label<<":\n"; 
             
             
