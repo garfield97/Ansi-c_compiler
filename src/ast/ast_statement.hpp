@@ -562,13 +562,13 @@ class statement_iteration : public Node{
              
              dst<<"$"<<top_label<<":\n";
             
-             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
+             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
             
              
              statement->compile(dst,context);
              
              expr_reg = context.extract_expr_reg();             // haven't revauluted expr yet - Mehedi
-             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<top_label<<'\n';
+             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<top_label<<'\n';
 
              dst<<"$"<<bottom_label<<":\n";
             
@@ -667,12 +667,9 @@ class statement_selection : public Node{
             
             uint expr_reg = context.extract_expr_reg();
             std::string bottom_label = context.makeName("if_label");
-
-            
                 
-            dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,"<<bottom_label<<'\n';
-            
-            
+            dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+                        
             statement->compile(dst,context);
             dst<<"$"<<bottom_label<<":\n"; 
             
