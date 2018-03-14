@@ -912,7 +912,6 @@ class expr_relational : public Node {
         }
 };
 
-// needs srav for signed
 class expr_shift : public Node {
     //EXPR_SHIFT : EXPR_ADD
     //       | EXPR_SHIFT OP_BLEFT EXPR_ADD
@@ -982,7 +981,12 @@ class expr_shift : public Node {
             
             else{
                 context.internal_expr_value >>= context.internal_temp_value;
-                dst<<"\tsrlv\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
+                if(context.expr_primary_type == UI){
+                    dst<<"\tsrlv\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
+                }
+                else{
+                    dst<<"\tsrav\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<shift_reg<<'\n';
+                }
             }
 
 
