@@ -148,6 +148,8 @@ struct CompileContext{
     bool err_top;
     bool err_bottom;
     std::vector<uint> err_stack;
+    bool err_overide;
+    uint err_overide_reg;
 
     bool not_in_err_stack(uint x){
         for(uint i = 0; i < err_stack.size(); ++i){
@@ -160,32 +162,39 @@ struct CompileContext{
     }
 
     std::string am_i_bottom(){ // returns reg as num in string
-        if(err_bottom == false){
-            err_bottom = true; //
+        // not conditional
+        if(!err_overide){
+            if(err_bottom == false){
+                err_bottom = true; //
 
-            uint err_stack_reg;
+                uint err_stack_reg;
 
-            if(regex_match(expr_result, reNum)){ // literal int
-                err_stack_reg = get_free_reg();
-                expr_result_reg = std::to_string( err_stack_reg ); // find a free reg - format [0-9]+
-                UNARY_UPDATE(); // check for unary opr
-                dstStream<<"\taddi\t"<<"$"<<expr_result_reg<<",$0,"<<expr_result<<'\n';  
-            }
-            else{   // variable
-                uint reg_save = scopes[scope_index][expr_result].reg_ID;
-                force_update_variable();  // froce a new reg
-                    // load from stack
-                dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                if(regex_match(expr_result, reNum)){ // literal int
+                    err_stack_reg = get_free_reg();
+                    expr_result_reg = std::to_string( err_stack_reg ); // find a free reg - format [0-9]+
+                    UNARY_UPDATE(); // check for unary opr
+                    dstStream<<"\taddi\t"<<"$"<<expr_result_reg<<",$0,"<<expr_result<<'\n';  
+                }
+                else{   // variable
+                    uint reg_save = scopes[scope_index][expr_result].reg_ID;
+                    force_update_variable();  // froce a new reg
+                        // load from stack
+                    dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                    
+                    err_stack_reg = scopes[scope_index][expr_result].reg_ID;
+                    expr_result_reg = std::to_string(scopes[scope_index][expr_result].reg_ID);
+                    dstStream<<"\tadd\t"<<"$"<<expr_result_reg<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
                 
-                err_stack_reg = scopes[scope_index][expr_result].reg_ID;
-                expr_result_reg = std::to_string(scopes[scope_index][expr_result].reg_ID);
-                dstStream<<"\tadd\t"<<"$"<<expr_result_reg<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
-            
-                scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
+                    scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
+                }
+
+
+                err_stack.push_back(err_stack_reg); // save reg to preserved stack
             }
+        }
 
-
-            err_stack.push_back(err_stack_reg); // save reg to preserved stack
+        else{
+            expr_result_reg = std::to_string(err_overide_reg); // use set reg
         }
 
         return expr_result_reg;

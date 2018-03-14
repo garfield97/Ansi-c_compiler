@@ -41,7 +41,6 @@ class expr : public Node {
         }
 };
 
-//not done yet
 class expr_conditional : public Node {
     //EXPR_CONDITIONAL : EXPR_LOGIC_OR
     //                 | EXPR_LOGIC_OR '?' EXPR ':' EXPR_CONDITIONAL
@@ -78,12 +77,77 @@ class expr_conditional : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            //EXPR and EXPR_CONDITONAL send result to same register - fine as only one code path executed
+
+            bool top = context.am_i_top();     // check if i'm top node;
+
+            std::string zero = context.makeName("zero");
+            std::string skip = context.makeName("skip");
+            context.err_overide = true;
+            context.err_overide_reg = context.get_free_reg(); // used to force same reg for both expr compile
+
+
+            // evaluate expr_logic_or
+            eLOR->compile(dst, context); // store variable into expression result
+            std::string cmp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
+            // beq zero - zero
+            dst<<"\tbeq\t"<<"$"<<cmp_reg<<",$0,"<<"$"<<zero<<"\n";
+
+
+            // ne zero code
+                // free up for compile call
+                bool t = context.err_top, b = context.err_bottom; // save state locally
+                std::string r = context.expr_result_reg;
+                context.err_top = false;
+                context.err_bottom = false;
+
+                expr->compile(dst,context); // compile right most term 
+                context.UNARY_UPDATE();
+
+                context.err_top = t;        // restore state
+                context.err_bottom = b;
+                context.expr_result_reg = r;
+
+                // get register to pass back
+                cmp_reg = context.extract_expr_reg();
+            
+                // b skip
+                dst<<"\tb\t"<<"$"<<skip<<"\n";
+            
+            
+
+            // zero:
+            dst<<"$"<<zero<<":\n";
+            // zero code
+                // free up for compile call
+                t = context.err_top, b = context.err_bottom; // save state locally
+                r = context.expr_result_reg;
+                context.err_top = false;
+                context.err_bottom = false;
+
+                eConditional->compile(dst,context); // compile right most term 
+                context.UNARY_UPDATE();
+
+                context.err_top = t;        // restore state
+                context.err_bottom = b;
+                context.expr_result_reg = r;
+
+                // get register to pass back
+                cmp_reg = context.extract_expr_reg();
+
+
+            // skip:
+            dst<<"$"<<skip<<":\n";
+
+            
+
+            context.err_overide = false; // resume normal expr_reg allocation
+
+            if(top) context.i_am_top(cmp_reg); // send to above node that isnt recursive
         }
 };
 
-// adapt for recursion and other assigns
 class expr_assignment : public Node {
     //EXPR_ASSIGNMENT : EXPR_CONDITIONAL
     //                | EXPR_UNARY OPR_ASSIGNMENT EXPR_ASSIGNMENT
@@ -845,6 +909,7 @@ class expr_relational : public Node {
         }
 };
 
+// needs srav for signed
 class expr_shift : public Node {
     //EXPR_SHIFT : EXPR_ADD
     //       | EXPR_SHIFT OP_BLEFT EXPR_ADD
@@ -1723,26 +1788,32 @@ class expr_primary : public Node {
             if(Sbool){
                 context.expr_result = Sval;
                 context.internal_temp_value = context.scopes[context.scope_index][Sval].internal_value;
+                context.set_expr_result_type();
             } 
             else if(Ibool){
                 context.expr_result = std::to_string(Ival);
                 context.internal_temp_value = Ival;
+                context.expr_primary_type = I;
             }
             else if(UIbool){
                 context.expr_result = std::to_string(UIval);
                 context.internal_temp_value = UIval;
+                context.expr_primary_type = UI;
             }
             else if(LIbool){
                 context.expr_result = std::to_string(LIval);
                 context.internal_temp_value = LIval;
+                context.expr_primary_type = LI;
             }
             else if(ULbool){
                 context.expr_result = std::to_string(ULval);
                 context.internal_temp_value = ULval;
+                context.expr_primary_type = UL;
             } 
             else if(Cbool){
                 context.expr_result = std::to_string(Cval);
                 context.internal_temp_value = Cval;
+                context.expr_primary_type = C;
             }
             else if(exp != NULL){
                 exp->compile(dst, context);
