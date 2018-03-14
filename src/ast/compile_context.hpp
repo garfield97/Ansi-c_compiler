@@ -95,11 +95,20 @@ struct CompileContext{
     bool update_variable(){ // return true when given a new reg - i.e. loaded from the stack // only for variables
 
         uint local = scopes[scope_index][expr_result].reg_ID; // store reg ID locally
+
+        uint s_pos = scopes[scope_index][expr_result].stack_position;
+
+        if(!declaring && (s_pos == 0) && (scope_index > 0) && no_match() ){   //var not in this scope
+            binding tmp = out_of_scope(scope_index-1);
+            local = tmp.reg_ID;
+            s_pos = tmp.stack_position;
+        }
             
         if(local == 33){    // unassigned -
             local = get_free_reg();
             scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
-            dstStream<<"\tlw\t$"<<local<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)\n";
+            scopes[scope_index][expr_result].stack_position = s_pos;
+            dstStream<<"\tlw\t$"<<local<<","<<s_pos*4<<"($sp)\n";
             return true;
         }    
 
@@ -107,11 +116,35 @@ struct CompileContext{
     }
 
     void force_update_variable(){ // return true when given a new reg - i.e. loaded from the stack // only for variables
-            
+        
+        uint s_pos = scopes[scope_index][expr_result].stack_position;
+
+        if(!declaring && (s_pos == 0) && (scope_index > 0) && no_match() ){   //var not in this scope
+            s_pos = out_of_scope(scope_index-1).stack_position;
+        }
+
         uint local = get_free_reg();
         scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
-        dstStream<<"\tlw\t$"<<local<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)\n";
+        scopes[scope_index][expr_result].stack_position = s_pos;
+        dstStream<<"\tlw\t$"<<local<<","<<s_pos*4<<"($sp)\n";
 
+    }
+
+    bool declaring;
+
+    binding out_of_scope(uint index){
+        binding res;
+        //iterate through map from scope above
+        for(std::map<std::string, binding>::iterator it= scopes[index].begin(); it !=scopes[index].end(); ++it){
+            if(expr_result == it->first){
+                res = it->second;
+                return res;
+            }
+        }
+
+        if(index == 0) std::exit(EXIT_FAILURE); // safety for invalid C
+        res = out_of_scope(index-1);
+        return res;
     }
 
     uint set_literal_reg(){ // give a register to literal value for temperorary usage later
@@ -142,6 +175,8 @@ struct CompileContext{
 
         return reg;
     }
+
+
   
 
     std::string expr_result_reg; // deal with recursion and passing registers
@@ -231,6 +266,21 @@ struct CompileContext{
     std::regex reChar;
     std::regex is_reg;
     std::regex reFloat;
+
+    bool no_match(){
+        if(
+            !regex_match(expr_result, reNum)
+            &&
+            !regex_match(expr_result, reChar)
+            &&
+            !regex_match(expr_result, is_reg)
+            &&
+            !regex_match(expr_result, reFloat)
+        ){
+            return true;        // is a variable
+        }
+        return false; // not a variable
+    }
 
     uint stack_size;                // dealing with stack pointer
 

@@ -450,7 +450,9 @@ class declarator_init : public Node{
             
             if( initializer != NULL){
                 context.assigning = true;
+                context.declaring = true;
                 initializer->compile(dst,context); //if its a constant it stores into expression_results
+                context.declaring = false;
                 dst<<"\tadd\t$15,$0,"<<context.expr_result<<'\n';
                 context.assigning = false;
             }

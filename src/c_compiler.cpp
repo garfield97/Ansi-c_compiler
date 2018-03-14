@@ -67,6 +67,8 @@ int main(int argc, char* argv[])
         CC.expr_result_reg = 34;
         CC.err_overide = false;
 
+        CC.declaring = false; // distignuish whether to check through scopes above 
+
         CC.assign_reg = 0;
         CC.assigning = false; // for expr_assing not to lose its reg
         CC.assign_reg_set = false;

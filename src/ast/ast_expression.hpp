@@ -193,11 +193,13 @@ class expr_assignment : public Node {
             
             // EXPR_UNARY
             unary->compile(dst,context); // store variable into expression result
-            binding tmp = context.scopes[context.scope_index][context.expr_result];
+            
             std::string var_assigned = context.expr_result;
 
             std::string unary_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-
+            
+            
+            binding tmp = context.scopes[context.scope_index][context.expr_result];
 
 
             // free bools for rhs
