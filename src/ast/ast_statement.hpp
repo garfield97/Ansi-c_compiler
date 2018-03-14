@@ -568,7 +568,7 @@ class statement_iteration : public Node{
              statement->compile(dst,context);
              
              expr_reg = context.extract_expr_reg();            
-             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<top_label<<'\n';
+             dst<<"\tb\t"<<"$"<<top_label<<'\n';
              dst<<"$"<<bottom_label<<":\n";
             
         }  
