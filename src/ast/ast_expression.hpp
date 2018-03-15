@@ -1274,8 +1274,8 @@ class expr_cast : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             
-            exp->compile(dst,context); //sets expr_result_type to correct type to convert to
-            context.expr_cast_type = context.expr_result;
+            exp->compile(dst,context); //sets tmp_v to correct type to convert to (TYPE_NAME)
+            context.expr_cast_type = context.tmp_v;
             context.type_cast = true;
             //check this is expr_assignment
 

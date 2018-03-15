@@ -50,7 +50,6 @@ class specifier_type : public Node {
     //               | UNSIGNED
     //               | SPECIFIER_UNION_OR_STRUCT
     //               | SPECIFIER_ENUM 
-    //               | NAME_TYPE
     private:
         std::string ter;
     public:
@@ -196,8 +195,17 @@ class list_spec_qual : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            std::string res;
+
+            sq->compile(dst,context); // store in tmp_v
+
+            res = context.tmp_v;
+
+            rec->compile(dst,context); // stores in tmp_v
+
+            res = res + " " + context.tmp_v;
+
+            context.tmp_v = res; // send back
         }
 };
 
