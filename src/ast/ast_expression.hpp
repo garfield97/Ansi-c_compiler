@@ -1302,7 +1302,7 @@ class expr_cast : public Node {
         }
 };
 
-// missing sizeof - bug for inc / dec - not done pointers
+// missing sizeof - bug for inc / dec
 class expr_unary : public Node {
     //EXPR_UNARY : EXPR_POSTFIX 
     //           | OP_INC EXPR_UNARY
@@ -1450,7 +1450,7 @@ class expr_unary : public Node {
 
             }
                
-               
+
             // end of operations code
 
             context.internal_temp_value = context.internal_expr_value;
@@ -1559,7 +1559,7 @@ class arg_expr_list : public Node {
         }
 };
 
-// only inc and dec
+// only inc and dec - rest is array / functions and pointers
 class expr_postfix : public Node {
     //EXPR_POSTFIX : EXPR_PRIMARY
     //             | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE

@@ -183,31 +183,13 @@ class declaration : public Node{
         {
         
             if(declarator_list_init != NULL){
-                
-                binding temp;
-                
+
                 specifier_declaration->compile(dst,context); // assigns tmp_v with C type
-                temp.type = context.tmp_v;
-                context.set_expr_result_type(); // use for assign cases on type
-                temp.reg_ID = 33;    // forgot to initialise reg_ID into 33 -> not empty
-                
-                this->push_stack(dst,context); //stack size is changed here.(incremented)
-                temp.stack_position = context.stack_size;
 
-                declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v
-                
-                
-                context.scopes[context.scope_index][context.tmp_v] = temp; // not sure if this map works
-                
-                                
-                                
-           
+
+                declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v            
+
             }
-              
-
-                
-            
-
 
         }
         
@@ -384,8 +366,8 @@ class declarator_init_list : public Node{
 
 class declarator_init : public Node{
 
-    //DECLARATOR_INIT : DECLARATOR                        { $$ = new declarator_init_list($1);    }
-    //                | DECLARATOR ASSIGN INITIALIZER     { $$ = declarator_init( $1,"=" , $3);}
+    //DECLARATOR_INIT : DECLARATOR                       
+    //                | DECLARATOR ASSIGN INITIALIZER     
 
     private:
         NodePtr declarator;
@@ -445,8 +427,23 @@ class declarator_init : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+            binding temp;
+            
+           
+            temp.type = context.tmp_v; // set from declaration
+            
+            context.set_expr_result_type(); // use for assign cases on type
+            temp.reg_ID = 33;    // forgot to initialise reg_ID into 33 -> not empty
+            
+            this->push_stack(dst,context); //stack size is changed here.(incremented)
+            temp.stack_position = context.stack_size;
+
             
             declarator->compile(dst,context);   //stores into tmp_V (variable name)
+
+            context.scopes[context.scope_index][context.tmp_v] = temp; // not sure if this map works
+
+
             
             if( initializer != NULL){
                 context.assigning = true;
@@ -462,6 +459,9 @@ class declarator_init : public Node{
 
             dst<<"\tsw\t$15,"<<context.stack_size*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
             
+
+            
+
         }
 };
 
