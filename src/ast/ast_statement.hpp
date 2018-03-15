@@ -576,7 +576,7 @@ class statement_iteration : public Node{
              }
              
              else{              //for iteration
-                uint tmp_condition_reg;    
+                uint tmp_expr_reg;    
                 std::string top_label = context.makeName("top");
                 std::string bottom_label = context.makeName("bottom");
                
