@@ -1381,7 +1381,7 @@ class expr_unary : public Node {
                 dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
             }
 
-            else if(terminal == "--"){
+            if(terminal == "--"){
                 if(context.expr_primary_type == UI){
                     dst<<"\tsubiu\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
                 }
@@ -1445,9 +1445,12 @@ class expr_unary : public Node {
                 }       
             }
 
+
+            if(terminal == "sizeof"){
+
+            }
                
-
-
+               
             // end of operations code
 
             context.internal_temp_value = context.internal_expr_value;
