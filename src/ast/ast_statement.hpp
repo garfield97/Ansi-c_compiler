@@ -526,7 +526,7 @@ class statement_iteration : public Node{
             //STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
             //                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';' 
             //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR R_BRACKET STATEMENT
-            //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMENT
+            //                    | FOR L_BRACKET STATEMENT_EXPR STATEMENT_EXPR EXPR R_BRACKET STATEMEN
             
             if(symbol == "while"){
 
@@ -552,68 +552,24 @@ class statement_iteration : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+             std::string bottom_label = context.makeName("btm");  
+             std::string top_label = context.makeName("top");        
+             dst<<"$"<<top_label<<":\n";
+             expr->compile(dst,context);        
+         
+             uint expr_reg = context.extract_expr_reg();
+             
+
+             
             
-           //While loop implementation
-             if(statement_expr == NULL){ 
-                 std::string bottom_label = context.makeName("btm");  
-                 std::string top_label = context.makeName("top");        
-                 dst<<"$"<<top_label<<"\n";
-                 expr->compile(dst,context);        
-
-                 uint expr_reg = context.extract_expr_reg();
- 
-
- 
-
-                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
-
- 
-                 statement->compile(dst,context);
- 
-                 expr_reg = context.extract_expr_reg();            
-                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
-                 dst<<"$"<<bottom_label<<"\n";
-             }
+             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+            
              
-             else{
-                
-                std::string top_label = context.makeName("top");
-                dst<<"$"<<top_label<<"\n";
-                uint tmp_expr_reg,tmp_statement_reg,tmp_statement_rep_reg;
-
-
-                statement_expr->compile(dst,context);
-                
-                
-                statement_expr_rep->compile(dst,context);
-                
-                
-                expr->compile(dst,context);
-                tmp_expr_reg = context.extract_expr_reg();
-                
-                
-                
-                
-                
-                
-                
-                statement->compile(dst,context);
-                
-                
-                
-                dst<<"
-                
+             statement->compile(dst,context);
              
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             }
+             expr_reg = context.extract_expr_reg();            
+             dst<<"\tb\t"<<"$"<<top_label<<'\n';
+             dst<<"$"<<bottom_label<<":\n";
             
         }  
 };
