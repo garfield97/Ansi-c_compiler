@@ -572,7 +572,7 @@ class statement_iteration : public Node{
             }
             
             
-        }}
+        }
 };
 
 class statement_selection : public Node{
