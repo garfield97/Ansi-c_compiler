@@ -552,26 +552,27 @@ class statement_iteration : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-             std::string bottom_label = context.makeName("btm");  
-             std::string top_label = context.makeName("top");        
-             dst<<"$"<<top_label<<":\n";
-             expr->compile(dst,context);        
+        
+            if(symbol_1 == " " && statement_expr == NULL){
+                 std::string bottom_label = context.makeName("btm");  
+                 std::string top_label = context.makeName("top");        
+                 dst<<"$"<<top_label<<":\n";
+                 expr->compile(dst,context);        
          
-             uint expr_reg = context.extract_expr_reg();
-             
-
-             
+                 uint expr_reg = context.extract_expr_reg();
             
-             dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
             
              
-             statement->compile(dst,context);
+                 statement->compile(dst,context);
              
-             expr_reg = context.extract_expr_reg();            
-             dst<<"\tb\t"<<"$"<<top_label<<'\n';
-             dst<<"$"<<bottom_label<<":\n";
+                 expr_reg = context.extract_expr_reg();            
+                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
+                 dst<<"$"<<bottom_label<<":\n";
+            }
             
-        }  
+            
+        }}
 };
 
 class statement_selection : public Node{
