@@ -575,44 +575,31 @@ class statement_iteration : public Node{
                  dst<<"$"<<bottom_label<<"\n";
              }
              
-             else{
-                
+             else{              //for iteration
+                uint tmp_expr_reg,tmp_condition_reg     
                 std::string top_label = context.makeName("top");
+                std::string bottom_label = context.makeName("bottom");
+               
+               
                 dst<<"$"<<top_label<<"\n";
-                uint tmp_expr_reg,tmp_statement_reg,tmp_statement_rep_reg;
-
-
-                statement_expr->compile(dst,context);
+                statement_expr->compile(dst,context);           //generate the statement expression for declaration, eg int i
+               
+                statement_expr_rep->compile(dst,context);           //generate the condition statement eg i<10
+                tmp_condition_reg = context.extract_expr_reg();     //extract the condition for the first time
+                
+                expr->compile(dst,context);                             //operate on the variable  eg i++; only after first condition check thopugh
+                tmp_expr_reg = context.extract_expr_reg();              //extract the register value and put it into a temp register, this is after operation
                 
                 
-                statement_expr_rep->compile(dst,context);
+                dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
+                tmp_condition_reg = tmp_expr_reg;
+                dst<<"\tb\t"<<"$"<<top_label<<'\n';
                 
-                
-                expr->compile(dst,context);
-                tmp_expr_reg = context.extract_expr_reg();
-                
-                
-                
-                
-                
-                
-                
-                statement->compile(dst,context);
-                
-                
-                
-                dst<<"
+                statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
+                dst<<"$"<<bottom_label<<":\n"; 
                 
              
-             
-             
-             
-             
-             
-             
-             
-             
-             
+      
              }
             
         }  
