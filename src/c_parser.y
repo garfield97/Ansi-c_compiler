@@ -239,7 +239,6 @@ SPECIFIER_TYPE : VOID                         { $$ = new specifier_type("void");
                | UNSIGNED                     { $$ = new specifier_type("unsigned"); }
                | SPECIFIER_UNION_OR_STRUCT    { $$ = $1;                             }
                | SPECIFIER_ENUM               { $$ = $1;                             }
-               // | TYPE_NAME                    { $$ = $1;                             } // is this valid???
                
              
 SPECIFIER_UNION_OR_STRUCT : UNION_OR_STRUCT IDENTIFIER L_BRACE DECLARATION_LIST_STRUCT R_BRACE  { $$ = new specifier_union_or_struct($1, *$2, $4); }

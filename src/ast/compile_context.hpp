@@ -293,8 +293,10 @@ struct CompileContext{
     std::string tmp_v;              // used to transfer variable name across nodes
 
 
-    std::string expr_result;        // literal values
+    std::string expr_result;
     LITERAL_TYPE expr_primary_type;
+    std::string expr_cast_type;
+    bool type_cast;
 
     void set_expr_result_type(){        // used in declare
             std::string type = scopes[scope_index][expr_result].type;
