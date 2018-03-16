@@ -424,6 +424,7 @@ class statement_jump : public Node{
         
 
             }
+            
             if(symbol == "return"){
                 // push stack
                 dst<<"\taddu\t$sp,$fp,$0\n"; // restore sp
@@ -431,6 +432,13 @@ class statement_jump : public Node{
                 dst<<"\taddiu\t$sp,$sp,"<<context.stack_size*4<<"\n";
                 dst<<"\tj\t$31\n\tnop\n"; // jump to return addr
             }
+            
+            if(symbol == "goto"){
+                
+                dst<<"\tbeq\t$0,$0,$"<<symbol_2<<'\n';
+            }
+            
+            
         }
 };
 
