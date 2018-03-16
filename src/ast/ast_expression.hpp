@@ -309,9 +309,6 @@ class expr_assignment : public Node {
             }
 
 
-            context.flush_PPID(); // print out SW for all post/pre inc/dec
-                                    // this lets the SW below overwrite if on same var
-
              
             dst<<"\tsw\t"<<"$"<<unary_reg<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;  // get s_pos from top of function  
         
@@ -1378,19 +1375,10 @@ class expr_unary : public Node {
                 else{
                     dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
                 }
-
                 context.force_update_variable();
                 uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
                 dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
-
-
-                context.reg_SAVE[local] = true;
-
-                //push this to vector to use last one
-                std::string pre; // pre INC/DEC save
-                pre = "\tsw\t$"+std::to_string(local)+",";
-                pre += std::to_string(context.scopes[context.scope_index][context.expr_result].stack_position*4)+"($sp)\n";
-                context.insert_PPID(pre);
+                dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
             }
 
             if(terminal == "--"){
@@ -1403,15 +1391,7 @@ class expr_unary : public Node {
                 context.force_update_variable();
                 uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
                 dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
-
-
-                context.reg_SAVE[local] = true;
-
-                //push this to vector to use last one
-                std::string pre; // pre INC/DEC save
-                pre = "\tsw\t$"+std::to_string(local)+",";
-                pre += std::to_string(context.scopes[context.scope_index][context.expr_result].stack_position*4)+"($sp)\n";
-                context.insert_PPID(pre);
+                dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
             }
                 
 
