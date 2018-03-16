@@ -729,20 +729,38 @@ class statement_selection : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
         
-            expr->compile(dst,context); // eval expr
+            if(symbol_1 == "IF" && symbol_2 == " "){
             
+                expr->compile(dst,context); // eval expr
             
-            uint expr_reg = context.extract_expr_reg();
-            std::string bottom_label = context.makeName("if_label");
+                uint expr_reg = context.extract_expr_reg();
+                std::string bottom_label = context.makeName("if_label");
                 
-            dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
                         
-            statement->compile(dst,context);
+                statement->compile(dst,context);
             
-            dst<<"$"<<bottom_label<<":\n"; 
+                dst<<"$"<<bottom_label<<":\n"; 
+            }
             
+            if(symbol_1 == "IF" && symbol_2 == "ELSE"){\
+                
+                expr->compile(dst,context); // eval expr
             
-        }
+                uint expr_reg = context.extract_expr_reg();
+                std::string bottom_label = context.makeName("if_label");
+                
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+                
+                statement->compile(dst,context);
+            
+                dst<<"$"<<bottom_label<<":\n"; 
+                
+                statement->compile(dst,context);
+            
+            }
+            
+     }
 };
 
 
