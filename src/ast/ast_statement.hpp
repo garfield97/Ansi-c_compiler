@@ -598,7 +598,6 @@ class statement_iteration : public Node{
             
             
             else if(expr != NULL && statement_expr != NULL){      //for loop 
-                dst<<"for "<<'\n';
                 uint tmp_condition_reg;    
                 std::string top_label = context.makeName("top");
                 std::string bottom_label = context.makeName("bottom");
@@ -622,7 +621,6 @@ class statement_iteration : public Node{
 
             else if(expr == NULL && statement_expr != NULL  ){      //for loop with 2 conditoons
                
-                dst<<"for with 2 conditions"<<'\n';
                 uint tmp_condition_reg;    
                 std::string top_label = context.makeName("top");
                 std::string bottom_label = context.makeName("bottom");
