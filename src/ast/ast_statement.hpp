@@ -91,7 +91,7 @@ class statement_compound : public Node{
         
             context.scope_index--; // decrementing the scope index so we can keep track of which scope we are in
             context.scopes.pop_back(); // pop out
-            
+
 
         }
 };
@@ -243,6 +243,7 @@ class statement : public Node{
         }
 };
 
+//not done
 class statement_labeled :public Node{
     //STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
     //                  | CASE EXPR_CONST ':' STATEMENT
@@ -301,6 +302,7 @@ class statement_labeled :public Node{
 
 };
 
+// GOTO, CONTINUE, BREAK
 class statement_jump : public Node{ 
     //STATEMENT_JUMP : GOTO IDENTIFIER ';'
     //               | CONTINUE ';'
@@ -644,6 +646,7 @@ class statement_iteration : public Node{
         }
 };
 
+// SWITCH
 class statement_selection : public Node{
     //STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT
     //                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT

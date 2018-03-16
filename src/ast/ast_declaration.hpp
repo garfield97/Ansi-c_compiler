@@ -433,13 +433,13 @@ class declarator_init : public Node{
             temp.type = context.tmp_v; // set from declaration
             
             context.set_expr_result_type(); // use for assign cases on type
-            temp.reg_ID = 33;    // forgot to initialise reg_ID into 33 -> not empty
-            
-            this->push_stack(dst,context); //stack size is changed here.(incremented)
+            temp.reg_ID = 33;    // forgot to initialise reg_ID into 33 -> not empty       
             temp.stack_position = context.stack_size;
 
             
             declarator->compile(dst,context);   //stores into tmp_V (variable name)
+
+            this->push_stack(dst,context); //stack size is changed here.(incremented)
 
             context.scopes[context.scope_index][context.tmp_v] = temp; // not sure if this map works
 
