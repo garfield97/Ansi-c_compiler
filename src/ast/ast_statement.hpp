@@ -761,7 +761,7 @@ class statement_selection : public Node{
                 
                 dst<<"$"<<bottom_label<<":\n"; 
                 
-                statement->compile(dst,context);
+                statement_rep->compile(dst,context);
                 
                 dst<<"$"<<exit_label<<":\n"; 
             
