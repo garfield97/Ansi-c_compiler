@@ -609,7 +609,6 @@ class statement_iteration : public Node{
  
                    
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
-                expr->compile(dst,context);                             //operate on the variable  eg i++; only after first condition check thopugh
              
                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
               
