@@ -26,7 +26,7 @@ for i in ${input_dir}/*.c ; do
     mips-linux-gnu-gcc -ansi -static $i -o $working/$base
     
     # Run the reference C version
-    $working/$base
+    qemu-mips $working/$base
     REF_C_OUT=$?
 
     

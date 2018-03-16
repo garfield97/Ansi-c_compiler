@@ -573,7 +573,7 @@ class statement_iteration : public Node{
             
             
             
-            if(symbol_1 =! " " && statement_expr == NULL){              //do while loop
+            if(symbol_1 != " " && statement_expr == NULL){              //do while loop
          
          
                  std::string bottom_label = context.makeName("btm");  
@@ -583,7 +583,7 @@ class statement_iteration : public Node{
                  statement->compile(dst,context);                
                 
                  expr->compile(dst,context);        
-                 expr_reg = context.extract_expr_reg();  
+                 uint expr_reg = context.extract_expr_reg();  
               
                  dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
              
