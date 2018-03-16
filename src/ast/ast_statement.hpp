@@ -295,8 +295,8 @@ class statement_labeled :public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            if(const_expr == NULL){ //default and label
-                dst<<labels<<":\n";
+            if(const_expr == NULL){ // label
+                dst<<"$"<<labels<<":\n";
                 statement->compile(dst,context);
             }
             else{ // case 
@@ -439,7 +439,7 @@ class statement_jump : public Node{
             
             if(symbol == "goto"){
                 
-                dst<<"\tbeq\t$0,$0,$"<<symbol_2<<":\n";
+                dst<<"\tbeq\t$0,$0,$"<<symbol_2<<"\n";
             }
             
             
