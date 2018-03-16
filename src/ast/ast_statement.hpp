@@ -577,20 +577,20 @@ class statement_iteration : public Node{
                 uint tmp_condition_reg;    
                 std::string top_label = context.makeName("top");
                 std::string bottom_label = context.makeName("bottom");
-                dst<<"$"<<top_label<<"\n";
                 statement_expr->compile(dst,context);           //generate the statement expression for declaration, eg int i
+                dst<<"$"<<top_label<<"\n";
                
                 statement_expr_rep->compile(dst,context);           //generate the condition statement eg i<10
                 tmp_condition_reg = context.extract_expr_reg();     //extract the condition for the first time            
                 
-                dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
-                dst<<"\tb\t"<<"$"<<top_label<<'\n';
+                dst<<"\tbne\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
  
                    
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
-            
                 expr->compile(dst,context);                             //operate on the variable  eg i++; only after first condition check thopugh
+             
                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
+              
                 dst<<"$"<<bottom_label<<":\n"; 
             }
             
