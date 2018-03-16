@@ -578,7 +578,7 @@ class statement_iteration : public Node{
                 std::string top_label = context.makeName("top");
                 std::string bottom_label = context.makeName("bottom");
                 statement_expr->compile(dst,context);           //generate the statement expression for declaration, eg int i
-                dst<<"$"<<top_label<<"\n";
+                dst<<"$"<<top_label<<":\n";
                
                 statement_expr_rep->compile(dst,context);           //generate the condition statement eg i<10
                 tmp_condition_reg = context.extract_expr_reg();     //extract the condition for the first time            
