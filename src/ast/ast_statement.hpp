@@ -243,7 +243,7 @@ class statement : public Node{
         }
 };
 
-//not done
+//not even started
 class statement_labeled :public Node{
     //STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
     //                  | CASE EXPR_CONST ':' STATEMENT
@@ -297,7 +297,6 @@ class statement_labeled :public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
         }
 
 };
@@ -776,6 +775,36 @@ class statement_selection : public Node{
                 statement_rep->compile(dst,context);
                  
                 dst<<"$"<<exit_label<<":\n"; 
+            
+            }
+            
+            if(symbol_1 == "switch"){
+                
+                std::string default_case = context.makeName("default");
+                expr->compile(dst,context);
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                //optional default case;
+                
+                dst<<"$"<<default_case<<":\n";
+                statement->compile(dst,context);
+                
+                            
+            
+            
+            
+            
+            
+            
             
             }
             
