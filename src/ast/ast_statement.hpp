@@ -243,7 +243,7 @@ class statement : public Node{
         }
 };
 
-//not even started
+
 class statement_labeled :public Node{
     //STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
     //                  | CASE EXPR_CONST ':' STATEMENT
@@ -296,7 +296,14 @@ class statement_labeled :public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
+
+            if(const_expr == NULL){ // label
+                dst<<"$"<<labels<<":\n";
+                statement->compile(dst,context);
+            }
+            else{ // case 
+
+            }
         }
 
 };
@@ -434,7 +441,7 @@ class statement_jump : public Node{
             
             if(symbol == "goto"){
                 
-                dst<<"\tbeq\t$0,$0,$"<<symbol_2<<'\n';
+                dst<<"\tbeq\t$0,$0,$"<<symbol_2<<"\n";
             }
             
             
