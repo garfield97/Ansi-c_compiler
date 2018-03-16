@@ -605,7 +605,7 @@ class statement_iteration : public Node{
                 statement_expr_rep->compile(dst,context);           //generate the condition statement eg i<10
                 tmp_condition_reg = context.extract_expr_reg();     //extract the condition for the first time            
                 
-                dst<<"\tbne\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
+                dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
  
                    
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
