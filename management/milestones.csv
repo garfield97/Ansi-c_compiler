@@ -18,8 +18,8 @@ C_compiler_more_int_expressions,C_compiler_basic_int_expressions;C_compiler_upgr
 C_compiler_complete_int_expressions,C_compiler_more_int_expressions,15,mh3216,69522511d0b08d020f67a6b42afcd48dc2cdef3f,complete all expressions for uint and int
 C_compiler_statement_API,C_compiler_upgrade_API,3,mh3216,e2e21d46c82e411a4da5d3824797b8f5fdb6a132,add support for iteration and conditional statements
 C_compiler_control_statements,C_compiler_statement_API,15,rz1616,,for while if and if else statements
-C_compiler_function_calls,,10,mh3216,,
-C_compiler_global_vars,,,,,
+C_compiler_global_vars,C_compiler_upgrade_API,3,mh3216,,add supprt for global int and uint types
+C_compiler_function_calls,,10,mh3216,,adapt API as necessary and compile overload for relevant classes
 C_compiler_characters,,,,,
 C_compiler_pointers,,,,,
 C_compiler_arrays,,,,,

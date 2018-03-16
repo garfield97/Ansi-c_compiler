@@ -36,5 +36,7 @@ Date,Effort,Developers,Milestones
 13/03/2018,5,mh3216,C_compiler_complete_int_expressions
 14/03/2018,5,rz1616,C_compiler_control_statements
 14/03/2018,5,mh3216,C_compiler_statement_API
-15/03/2018,5,rz1616,C_compiler_complete_int_expressions
-15/03/2018,5,mh3216,C_compiler_control_statements
+15/03/2018,5,rz1616,C_compiler_control_statements
+15/03/2018,5,mh3216,C_compiler_complete_int_expressions
+16/03/2018,5,rz1616,C_compiler_control_statements
+16/03/2018,5,mh3216,C_compiler_control_statements,C_compiler_global_vars
