@@ -69,6 +69,8 @@ int main(int argc, char* argv[])
 
         CC.declaring = false; // distignuish whether to check through scopes above 
 
+        CC.sizeof_type = false;
+
         CC.assign_reg = 0;
         CC.assigning = false; // for expr_assing not to lose its reg
         CC.assign_reg_set = false;

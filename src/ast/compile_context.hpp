@@ -185,6 +185,7 @@ struct CompileContext{
     std::vector<uint> err_stack;
     bool err_overide;
     uint err_overide_reg;
+    bool sizeof_type;
 
     bool not_in_err_stack(uint x){
         for(uint i = 0; i < err_stack.size(); ++i){
@@ -209,6 +210,10 @@ struct CompileContext{
                     expr_result_reg = std::to_string( err_stack_reg ); // find a free reg - format [0-9]+
                     UNARY_UPDATE(); // check for unary opr
                     dstStream<<"\taddi\t"<<"$"<<expr_result_reg<<",$0,"<<expr_result<<'\n';  
+                }
+                else if(sizeof_type){ // size of type
+                    err_stack_reg = get_free_reg();
+                    expr_result_reg = std::to_string( err_stack_reg );
                 }
                 else{   // variable
                     uint reg_save = scopes[scope_index][expr_result].reg_ID;

@@ -1302,7 +1302,13 @@ class expr_cast : public Node {
         }
 };
 
-// missing sizeof - bug for inc / dec
+// sizeoff not done - come back later
+
+/*bug for inc / dec
+    - can only work for rhs terms, lhs terms don't recieve rhs inc/dec
+    - very hard to determine pre inc/dec before accessing
+    - better to spend dev time elsewhere
+*/
 class expr_unary : public Node {
     //EXPR_UNARY : EXPR_POSTFIX 
     //           | OP_INC EXPR_UNARY
@@ -1314,18 +1320,28 @@ class expr_unary : public Node {
         std::string terminal;
 		NodePtr O_U;
         NodePtr exp;
+        bool brackets;
         
     public:
         expr_unary(std::string _terminal, NodePtr _exp)
             : terminal(_terminal)
 			, O_U(NULL)
 			, exp(_exp)
+            , brackets(false)
+        {}
+
+        expr_unary(std::string _terminal, NodePtr _exp)
+            : terminal(_terminal)
+			, O_U(NULL)
+			, exp(_exp)
+            , brackets(true)
         {}
 		
 		expr_unary(NodePtr _arg1, NodePtr _exp)
             : terminal(" ")
             , O_U(_arg1)
 			, exp(_exp)
+            , brackets(false)
         {}
 
     public:
@@ -1361,11 +1377,39 @@ class expr_unary : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
-            context.internal_expr_value = context.internal_temp_value;       
+            context.internal_expr_value = context.internal_temp_value;
+            if(brackets) context.sizeof_type = true;
+
             std::string exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
 
             // Operations
+
+            if(terminal == "sizeof"){ 
+
+                if(brackets){ // type //tmp_v has type 
+
+                    uint size = 4;
+                    // if tmp_v in map of custom struct
+                        //add supprt later
+
+                    // if char > -3
+
+                    // if long long > +4
+
+                    // if double > +4
+
+                    // if 
+                    
+                    
+                    dst<<"\tmove\t$"<<exp_reg<<","<<size<<std::endl;
+                    context.sizeof_type = false;
+                }
+                else{ //expr
+
+                }
+                
+            }
 
             // INC and DEC
             if(terminal == "++"){
@@ -1446,10 +1490,6 @@ class expr_unary : public Node {
             }
 
 
-            if(terminal == "sizeof"){
-
-            }
-               
 
             // end of operations code
 
@@ -1559,7 +1599,7 @@ class arg_expr_list : public Node {
         }
 };
 
-// only inc and dec - rest is array / functions and pointers
+// missing arrayy / functions and pointers
 class expr_postfix : public Node {
     //EXPR_POSTFIX : EXPR_PRIMARY
     //             | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE
