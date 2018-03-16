@@ -110,7 +110,7 @@ EXPR_UNARY : EXPR_POSTFIX                           { $$ = $1;                  
            | OP_DEC EXPR_UNARY                      { $$ = new expr_unary("--", $2);     } 
            | OPR_UNARY EXPR_CAST                    { $$ = new expr_unary($1, $2);       } 
            | SIZEOF EXPR_UNARY                      { $$ = new expr_unary("sizeof", $2); }  
-           | SIZEOF L_BRACKET TYPE_NAME R_BRACKET   { $$ = new expr_unary("sizeof", $3); }          
+           | SIZEOF L_BRACKET TYPE_NAME R_BRACKET   { $$ = new expr_unary("sizeof", $3, true); }          
 
 
 OPR_UNARY : OP_BAND     { $$ = new opr_unary("&"); }

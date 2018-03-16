@@ -36,8 +36,6 @@ FLOAT_CONSTANT			-?([0-9]+|[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?)
 
 INCLUDE					#[.^\n]
 
-COMMENT_L				"//"[^\n]*
-
 COMMENT					"/*"[^"*/"]*"*/"
 
 WHITESPACE				[ \n\t\v\f\r]
@@ -336,8 +334,6 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 
 
 {INCLUDE}		{ fprintf(stderr, "#include\n"); }
-
-{COMMENT_L}		{ fprintf(stderr, "Line comment\n"); }
 
 {COMMENT}		{ fprintf(stderr, "comment\n"); }
 

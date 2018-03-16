@@ -23,7 +23,7 @@ for i in ${input_dir}/*.c ; do
     base=$(echo $i | sed -E -e "s|${input_dir}/([^.]+)[.]c|\1|g");
     
     # Compile the reference C version
-    gcc $i -o $working/$base
+    mips-linux-gnu-gcc -ansi -static $i -o $working/$base
     
     # Run the reference C version
     $working/$base

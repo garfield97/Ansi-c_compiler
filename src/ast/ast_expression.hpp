@@ -1330,7 +1330,7 @@ class expr_unary : public Node {
             , brackets(false)
         {}
 
-        expr_unary(std::string _terminal, NodePtr _exp)
+        expr_unary(std::string _terminal, NodePtr _exp, bool b)
             : terminal(_terminal)
 			, O_U(NULL)
 			, exp(_exp)
