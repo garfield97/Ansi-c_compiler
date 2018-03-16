@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
         // set regs to free
         for(int i=8; i<=23; i++){
             CC.reg_free[i] = true;
+            CC.reg_SAVE[i] = false;
         }
 
         CC.UNARY_OP_MINUS_CHECK = false; // 
@@ -72,6 +73,8 @@ int main(int argc, char* argv[])
         CC.assign_reg = 0;
         CC.assigning = false; // for expr_assing not to lose its reg
         CC.assign_reg_set = false;
+
+        CC.PPID_index = 0;
 
         CC.makeNameUnq = 0; // used for creating labels
 

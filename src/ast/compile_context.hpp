@@ -35,6 +35,7 @@ typedef enum{
 struct CompileContext{
 
     bool reg_free[32];              // check if reg available
+    bool reg_SAVE[32]; // preserve
     uint get_free_reg(){
 
         for(uint i=0u; i<32u; i++){
@@ -66,6 +67,10 @@ struct CompileContext{
         uint s_pos;
         bool found = false;
         if(reg_counter == assign_reg && assigning) ++reg_counter; // avoid freeing assign_reg
+
+        while(reg_SAVE[reg_counter]){ //  seg fault if 8-15 is set to SAVE - ignore ...
+            ++reg_counter;
+        }
 
         // first save any varubale stored in reg_counter
         // search through variables in current scope
@@ -252,6 +257,63 @@ struct CompileContext{
             err_stack.pop_back();
             expr_result = "$"+r;
         }
+    }
+
+
+    // use to apply last pre (post) inc
+    std::vector< std::vector<std::string> > PPID; // per / post inc / dec - outer vector index by var name
+                                                    // inner vector has relevant MIPS - only used last one
+    std::map<std::string, uint> PPID_map; // use to find index for a variable
+
+    void flush_PPID(){
+        if(PPID.size() == 0) return; // exit if no inc / dec
+
+        for(uint i = 0; i < PPID.size(); ++i){ // for each variable that has had at least one inc/dec
+            print_var_PPID(i);
+        }
+
+        // clear out PPID
+        PPID.clear();
+
+        //free all saved reg
+        for(uint i = 0; i < 32; ++i){
+            reg_SAVE[i] = false;
+        }
+
+        // reset map
+        PPID_index = 0;
+        PPID_map.clear();
+    }
+
+    void print_var_PPID(uint v){    // dst last MIPS inst. that saves new value of var
+
+        uint last = (PPID[v]).size() - 1; //index of last element for this v
+
+        std::string print_this = PPID[v][last]; // last string for this variable
+
+        dstStream<<print_this; //print to out - this should be a MIPS SW instruction
+    }
+
+    uint PPID_index;
+    void insert_PPID(std::string inst){ // expr_result guaranteed to contain Var name
+        std::map<std::string, uint>::iterator it = PPID_map.find(expr_result); // find if in map
+
+        uint outer_index;
+
+        if(it == PPID_map.end()){ // not found Var in map
+            outer_index = PPID_map[expr_result] = PPID_index++;
+
+            std::vector<std::string> local;
+            local.push_back(inst);
+
+            PPID.push_back(local);
+        }
+        else{
+            outer_index = PPID_map[expr_result]; // access vector
+
+            (PPID[outer_index]).push_back(inst);
+        }
+
     }
 
 
