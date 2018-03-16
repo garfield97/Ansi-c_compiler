@@ -748,15 +748,21 @@ class statement_selection : public Node{
                 expr->compile(dst,context); // eval expr
             
                 uint expr_reg = context.extract_expr_reg();
-                std::string bottom_label = context.makeName("if_label");
+                std::string bottom_label = context.makeName("else_label");
+                std::string exit_label = context.makeName("exit_label");
+
                 
                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
                 
                 statement->compile(dst,context);
-            
+                
+                dst<<"\tb\t"<<"$"<<exit_label<<'\n';
+                
                 dst<<"$"<<bottom_label<<":\n"; 
                 
                 statement->compile(dst,context);
+                
+                dst<<"$"<<exit_label<<":\n"; 
             
             }
             
