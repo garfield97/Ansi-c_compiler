@@ -748,6 +748,7 @@ class statement_selection : public Node{
                 expr->compile(dst,context); // eval expr
             
                 uint expr_reg = context.extract_expr_reg();
+                
                 std::string bottom_label = context.makeName("else_label");
                 std::string exit_label = context.makeName("exit_label");
 
@@ -756,7 +757,7 @@ class statement_selection : public Node{
                 
                 statement->compile(dst,context);
                 
-                dst<<"\tb\t"<<"$"<<exit_label<<'\n';
+                dst<<"\tbne\t$"<<expr_reg<<",$0,$"<<exit_label<<'\n';
                 
                 dst<<"$"<<bottom_label<<":\n"; 
                 
