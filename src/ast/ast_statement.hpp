@@ -434,6 +434,7 @@ class statement_jump : public Node{
         }
 };
 
+// need to overhaul declare for this
 class statement_iteration : public Node{
     //STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
     //                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';' 
