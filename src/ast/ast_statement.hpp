@@ -447,7 +447,7 @@ class statement_iteration : public Node{
         NodePtr statement_expr_rep;
 
     public:
-        statement_iteration(std::string name,NodePtr _arg1,NodePtr _arg2)
+        statement_iteration(std::string name,NodePtr _arg1,NodePtr _arg2)   //while loop 
             : expr(_arg1)
             , statement(_arg2)
             , statement_expr(NULL)
@@ -455,7 +455,7 @@ class statement_iteration : public Node{
             , symbol_1(" ")
             , statement_expr_rep(NULL)
         {}
-        statement_iteration(std::string name,NodePtr _arg1,std::string name_1,NodePtr _arg2)
+        statement_iteration(std::string name,NodePtr _arg1,std::string name_1,NodePtr _arg2)  //do wnhile
             : expr(_arg2)
             , statement(_arg1)
             , statement_expr(NULL)
@@ -463,8 +463,8 @@ class statement_iteration : public Node{
             , symbol_1(name_1)
             , statement_expr_rep(NULL)
         {}
-        statement_iteration(std::string name,NodePtr _arg,NodePtr _arg1,NodePtr _arg2)
-            :expr(NULL)
+        statement_iteration(std::string name,NodePtr _arg,NodePtr _arg1,NodePtr _arg2) //for 2 conditions
+            :expr(NULL) 
             ,statement(_arg2)
             ,statement_expr(_arg)
             ,symbol(name)
@@ -472,9 +472,9 @@ class statement_iteration : public Node{
             ,statement_expr_rep(_arg1)
 
         {} 
-        statement_iteration(std::string name,NodePtr _arg,NodePtr _arg1,NodePtr _arg2,NodePtr _arg3)
-            :expr(_arg3)
-            ,statement(_arg2)
+        statement_iteration(std::string name,NodePtr _arg,NodePtr _arg1,NodePtr _arg2,NodePtr _arg3) //for loop  
+            :expr(_arg2)
+            ,statement(_arg3)
             ,statement_expr(_arg)
             ,symbol(name)
             ,symbol_1(" ")
@@ -595,7 +595,7 @@ class statement_iteration : public Node{
             
             
             else if(expr != NULL && statement_expr != NULL){      //for loop 
-            
+                dst<<"for "<<'\n';
                 uint tmp_condition_reg;    
                 std::string top_label = context.makeName("top");
                 std::string bottom_label = context.makeName("bottom");
@@ -609,6 +609,7 @@ class statement_iteration : public Node{
  
                    
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
+               
                 expr->compile(dst,context);                             //operate on the variable  eg i++; only after first condition check thopugh
              
                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
@@ -618,6 +619,7 @@ class statement_iteration : public Node{
 
             else if(expr == NULL && statement_expr != NULL  ){      //for loop with 2 conditoons
                
+                dst<<"for with 2 conditions"<<'\n';
                 uint tmp_condition_reg;    
                 std::string top_label = context.makeName("top");
                 std::string bottom_label = context.makeName("bottom");
@@ -762,7 +764,7 @@ class statement_selection : public Node{
                 dst<<"$"<<bottom_label<<":\n"; 
                 
                 statement_rep->compile(dst,context);
-                
+                 
                 dst<<"$"<<exit_label<<":\n"; 
             
             }
