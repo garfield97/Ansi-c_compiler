@@ -4,7 +4,7 @@ int main(){
     int i;
     int k;
     for(i =0; i<10){
-        i++
+        i++;
         for(k=0;k<10){
             x++;
             k++;
