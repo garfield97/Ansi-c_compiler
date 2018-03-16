@@ -1891,9 +1891,15 @@ class expr_primary : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             if(Sbool){
-                context.expr_result = Sval;
-                context.internal_temp_value = context.scopes[context.scope_index][Sval].internal_value;
-                context.set_expr_result_type();
+                if(regex_match(context.expr_result, context.reFloat)){
+                    dst<<context.expr_result<<std::endl; // C label
+                    context.expr_result = 0; // default
+                }
+                else{
+                    context.expr_result = Sval;
+                    context.internal_temp_value = context.scopes[context.scope_index][Sval].internal_value;
+                    context.set_expr_result_type();
+                }
             } 
             else if(Ibool){
                 context.expr_result = std::to_string(Ival);

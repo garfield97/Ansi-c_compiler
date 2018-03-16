@@ -271,6 +271,7 @@ struct CompileContext{
     std::regex reChar;
     std::regex is_reg;
     std::regex reFloat;
+    std::regex reLabel;
 
     bool no_match(){
         if(
