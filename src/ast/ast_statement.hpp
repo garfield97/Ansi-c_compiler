@@ -553,7 +553,7 @@ class statement_iteration : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
         
-            if(symbol_1 == " " && statement_expr == NULL){
+            if(symbol_1 == " " && statement_expr == NULL){              //while loop
                  std::string bottom_label = context.makeName("btm");  
                  std::string top_label = context.makeName("top");        
                  dst<<"$"<<top_label<<":\n";
@@ -570,6 +570,28 @@ class statement_iteration : public Node{
                  dst<<"\tb\t"<<"$"<<top_label<<'\n';
                  dst<<"$"<<bottom_label<<":\n";
             }
+            
+            
+            
+            if(symbol_1 =! " " && statement_expr == NULL){              //do while loop
+         
+         
+                 std::string bottom_label = context.makeName("btm");  
+                 std::string top_label = context.makeName("top");        
+                 dst<<"$"<<top_label<<":\n";
+
+                 statement->compile(dst,context);                
+                
+                 expr->compile(dst,context);        
+                 expr_reg = context.extract_expr_reg();  
+              
+                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+             
+                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
+             
+                 dst<<"$"<<bottom_label<<":\n";
+            }
+            
             
             
             else if(expr != NULL && statement_expr != NULL){      //for loop 
