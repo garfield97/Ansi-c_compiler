@@ -729,7 +729,7 @@ class statement_selection : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
         
-            if(symbol_1 == "IF" && symbol_2 == " "){
+            if(symbol_1 == "if" && symbol_2 == " "){
             
                 expr->compile(dst,context); // eval expr
             
@@ -743,7 +743,7 @@ class statement_selection : public Node{
                 dst<<"$"<<bottom_label<<":\n"; 
             }
             
-            if(symbol_1 == "IF" && symbol_2 == "ELSE"){\
+            if(symbol_1 == "if" && symbol_2 == "else"){\
                 
                 expr->compile(dst,context); // eval expr
             
