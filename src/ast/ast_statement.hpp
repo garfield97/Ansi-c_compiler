@@ -304,7 +304,7 @@ class statement_labeled :public Node{
            
             else if(labels == "default"){
             
-                std::string unique_label = makeName("default_case");
+                std::string unique_label = context.makeName("default_case");
                 context.default_label = unique_label;
                 dst<<"$"<<unique_label<<":\n";
                 
@@ -314,14 +314,14 @@ class statement_labeled :public Node{
             
             else{
                 
-                expr_const->compile(dst,context);
+                const_expr->compile(dst,context);
 
-                std::string case_label = makeName("case");
+                std::string case_label = context.makeName("case");
                 
-                cases[context.expr_result] = case_label;
+                context.cases[context.expr_result] = case_label;
                                
 
-                dst<<"$"<<case_label<<':\n'
+                dst<<"$"<<case_label<<":\n";
                 
                 statement->compile(dst,context);
                 
@@ -367,21 +367,6 @@ class statement_jump : public Node{
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-        /*
-            if(expr != NULL){
-                symbol->PrettyPrint(dst);
-                expr->PrettyPrint(dst);
-                dst<<';';    
-            }
-            else if(symbol_2 != NULL){
-                symbol->PrettyPrint(dst);
-                symbol_2->PrettyPrint(dst);  
-                dst<<';';        
-            }           
-            else{
-                symbol->PrettyPrint(dst);
-                dst<<';';
-                 */
             dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
             exit(1);
         }
@@ -409,9 +394,6 @@ class statement_jump : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-        
-        
-            
         
             if(expr != NULL) {
                                      
@@ -442,16 +424,6 @@ class statement_jump : public Node{
                     context.update_variable();
                     dst<<"\tadd\t$2,$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<std::endl;
                 }
-                    
-                    
-                    
-                    
-               
-               
-               
-                                    
-                
-        
 
             }
             
@@ -717,25 +689,6 @@ class statement_selection : public Node{
     
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-            /*
-            if(symbol_2 == NULL){
-                symbol_1->PrettyPrint(dst);
-                dst<<'(';
-                expr->PrettyPrint(dst);
-                dst<<')';
-                statement->PrettyPrint(dst);
-            }
-            else{
-                dst<<"if ";
-                dst<<'(';
-                expr->PrettyPrint(dst);
-                dst<<')';
-                statement->PrettyPrint(dst);
-                symbol_2->PrettyPrint(dst);
-                statement_rep--PrettyPrint(dst);
-            
-            }  
-            */
             dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
             exit(1);         
   
@@ -813,7 +766,7 @@ class statement_selection : public Node{
                 
                 
 
-                std::string branch_beyond == context.makeName("branch_beyond");
+                std::string branch_beyond = context.makeName("branch_beyond");
                 context.exit_switch = branch_beyond;
                 
                 uint temp_reg;                
@@ -833,16 +786,7 @@ class statement_selection : public Node{
                                 
                 context.print_cases();
     
-                dst<<"$"<<branch_beyond<<':\n';
-                
-            
-                
-         
-
-
-                
-                    
-            
+                dst<<"$"<<branch_beyond<<":\n";         
             
             }
             
