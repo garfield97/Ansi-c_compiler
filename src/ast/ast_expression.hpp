@@ -1704,10 +1704,17 @@ class expr_postfix : public Node {
             next->compile(dst,context); // compile right most term
 
             context.UNARY_UPDATE();
-
-            context.internal_expr_value = context.internal_temp_value;           
+            
+            context.internal_expr_value = context.internal_temp_value;
+         
+            if(bracket){ // function call
+                binding tmp;
+                tmp.reg_ID = 33;
+                tmp.stack_position = 6969;
+                context.scopes[context.scope_index][context.expr_result] = tmp;
+            }
             std::string exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-
+            
             // Operations
 
             // INC and DEC
@@ -1742,18 +1749,27 @@ class expr_postfix : public Node {
                 dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";   //saves values back onto stack
 
             }             
-
+                        
             // function call of 0 arguments
-            else if (bracket && exp == NULL){
+            else if (bracket && (exp == NULL)){
                 //allocate space on stack for this function
                 this->push_stack(dst,context);
                 uint s_pos = context.stack_size;
 
+                // save $8-$15 to the stack
+                context.save_8_15();
+
+                uint save_size = context.stack_size;
+                context.stack_size = 0;
                 //next is the function name
-                next->compile(dst,context);
                 dst<<"\tjal\t"<<context.expr_result<<"\nnop\n";
 
-                dst<<"\tsw\t$2,"<<s_pos<<"($fp)\n";
+                dst<<"\tsw\t$2,"<<s_pos*4<<"($fp)\n";
+                context.stack_size = save_size;
+
+                // restore $8-15
+                context.restore_8_15();
+
                 dst<<"\tmove\t$"<<exp_reg<<",$2\n";
 
             }

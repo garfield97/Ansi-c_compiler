@@ -116,13 +116,12 @@ struct CompileContext{
     }
 
     void force_update_variable(){ // return true when given a new reg - i.e. loaded from the stack // only for variables
-        
-        uint s_pos = scopes[scope_index][expr_result].stack_position;
 
+        uint s_pos = scopes[scope_index][expr_result].stack_position;
         if(!declaring && (s_pos == 0) && (scope_index > 0) && no_match() ){   //var not in this scope
             s_pos = out_of_scope(scope_index-1).stack_position;
         }
-
+                            
         uint local = get_free_reg();
         scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
         scopes[scope_index][expr_result].stack_position = s_pos;
@@ -232,7 +231,7 @@ struct CompileContext{
                 err_stack.push_back(err_stack_reg); // save reg to preserved stack
             }
         }
-
+        
         else{
             expr_result_reg = std::to_string(err_overide_reg); // use set reg
         }
@@ -348,6 +347,42 @@ struct CompileContext{
     void function_end(){
         stack_size = 0;
         
+    }
+
+
+    void save_8_15(){
+        dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-32"<<'\n';
+        
+        for(uint i = 1; i <= stack_size ; i++){ 
+            dstStream<<"\tlw\t$15,"<<i*4+32<<"($sp)"<<'\n'; 
+            dstStream<<"\tsw\t$15,"<<i*4<<"($sp)"<<'\n';
+        }                    
+
+        for(uint i = 0; i < 8; i++){
+            //store to stack
+            dstStream<<"\tsw\t$"<<i+8<<","<<(i+stack_size+1)*4<<"($sp)"<<'\n';
+        }
+
+        dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl; 
+        stack_size += 8;
+    }
+
+    void restore_8_15(){
+
+        for(uint i = 0; i < 8; i++){
+            //load from stack
+            dstStream<<"\tlw\t$"<<15-i<<","<<(stack_size-i)*4<<"($sp)"<<'\n';
+        }
+
+        // shift up
+        for(uint i = 1; i <= stack_size-8 ; i++){ 
+            dstStream<<"\tlw\t$15,"<<i*4<<"($sp)"<<'\n'; 
+            dstStream<<"\tsw\t$15,"<<i*4+32<<"($sp)"<<'\n';
+        }                   
+
+        dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,32"<<'\n';
+        stack_size -= 8;
+        dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl;  
     }
 
 };
