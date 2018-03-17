@@ -787,30 +787,35 @@ class statement_selection : public Node{
             
             if(symbol_1 == "switch"){
                 
-                std::string default_case = context.makeName("default");
-                expr->compile(dst,context);
+                
+
+                std::string branch_beyond == context.makeName("branch_beyond");
+                
+                uint temp_reg;                
+                expr->compile(dst,context); //evaluating the expression to determine the cases
+              
+                temp_reg = context.extract_expr_reg();  //exctracting the string that is evaluated by the compile, store into temp
+                
+                
+                statement->compile(dst,context); // get all the cases and defaults , labels etc and statement execution
+               
+                //store into vector the label and the corresponding literals eg 'D'
+                
+                context.print_switch_branches(temp_reg);  //this prints out the BEQ instruction to branch to each label cases
+                context.print_case_blocks();            //print out all the case blocks no matter what.
                 
                 
                 
                 
                 
+                dst<<"$"<<branch_beyond<<':\n';
                 
                 
+         
+
+
                 
-                
-                
-                
-                //optional default case;
-                
-                dst<<"$"<<default_case<<":\n";
-                statement->compile(dst,context);
-                
-                            
-            
-            
-            
-            
-            
+                    
             
             
             }
