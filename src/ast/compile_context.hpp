@@ -393,6 +393,11 @@ struct CompileContext{
         dstStream.close();
         dstStream.open(dstOriginal);
     }
+    
+    void function_end(){
+        stack_size = 0;
+        
+    }
 
 };
 
