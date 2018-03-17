@@ -304,28 +304,9 @@ class statement_labeled :public Node{
            
             else if(labels == "default"){
             
-                std::string unique_label = context.makeName("default_case");
-                context.default_label = unique_label;
-                dst<<"$"<<unique_label<<":\n";
-                
-                statement->compile(dst,context);
-            
             }
             
             else{
-                
-                const_expr->compile(dst,context);
-
-                std::string case_label = context.makeName("case");
-                
-                context.cases[context.expr_result] = case_label;
-                               
-
-                dst<<"$"<<case_label<<":\n";
-                
-                statement->compile(dst,context);
-                
-                dst<<"\tbeq\t"<< "$0,$0"<<context.exit_switch<<'\n';
             
             }
         }
@@ -430,6 +411,7 @@ class statement_jump : public Node{
             if(symbol == "return"){
                 // push stack
                 dst<<"\taddu\t$sp,$fp,$0\n"; // restore sp
+                dst<<"\tlw\t$31,8($sp)\n";
                 dst<<"\tlw\t$fp,4($sp)\n";
                 dst<<"\taddiu\t$sp,$sp,"<<context.stack_size*4<<"\n";
                 dst<<"\tj\t$31\n\tnop\n"; // jump to return addr
@@ -762,31 +744,7 @@ class statement_selection : public Node{
             
             }
             
-            if(symbol_1 == "switch"){
-                
-                
-
-                std::string branch_beyond = context.makeName("branch_beyond");
-                context.exit_switch = branch_beyond;
-                
-                uint temp_reg;                
-                expr->compile(dst,context); //evaluating the expression to determine the cases
-              
-                temp_reg = context.extract_expr_reg();  //exctracting the string that is evaluated by the compile, store into temp
-                
-                
-                context.close_dst();
-                
-                statement->compile(dst,context); // get all the cases and defaults , labels etc and statement execution
-               
-                context.restore_dst();
-                //store into vector the label and the corresponding literals eg 'D'
-                
-                context.print_switch_branches(temp_reg);  //this prints out the BEQ instruction to branch to each label cases
-                                
-                context.print_cases();
-    
-                dst<<"$"<<branch_beyond<<":\n";         
+            if(symbol_1 == "switch"){       
             
             }
             

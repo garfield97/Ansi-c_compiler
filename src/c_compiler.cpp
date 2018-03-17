@@ -43,8 +43,6 @@ int main(int argc, char* argv[])
     if( mode == "-S" ){
         CompileContext CC;
 
-        CC.dstOriginal = argv[4];
-
         CC.stack_size = 0;
         std::map<std::string, binding> global;
         CC.scopes.push_back(global);
@@ -80,7 +78,6 @@ int main(int argc, char* argv[])
 
         CC.makeNameUnq = 0; // used for creating labels
 
-        dstStream<<'\t'<<".text"<<'\n';
         ast->compile(dstStream, CC);
     } 
 
