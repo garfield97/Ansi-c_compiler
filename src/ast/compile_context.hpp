@@ -345,6 +345,10 @@ struct CompileContext{
         if(UNARY_OP_MINUS_CHECK) UNARY_OP_MINUS_UPDATE();
     }
 
+    void function_end(){
+        stack_size = 0;
+        
+    }
 
 };
 
