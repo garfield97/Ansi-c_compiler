@@ -344,6 +344,9 @@ struct CompileContext{
     void UNARY_UPDATE(){
         if(UNARY_OP_MINUS_CHECK) UNARY_OP_MINUS_UPDATE();
     }
+    
+    
+    std::vector<string> switch_expressions;
 
 
 

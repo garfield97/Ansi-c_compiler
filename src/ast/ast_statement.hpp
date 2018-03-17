@@ -297,12 +297,36 @@ class statement_labeled :public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
 
-            if(const_expr == NULL){ // label
+            if(const_expr == NULL && labels != "default"){ // label
                 dst<<"$"<<labels<<":\n";
-                statement->compile(dst,context);
+                statement->compile(dst,context);            
             }
-            else{ // case 
+           
+            else if(labels == "default"){
+            
+                std::string unique_label = makeName("default_case");
+                context.default_label = unique_label;
+                dst<<"$"<<unique_label<<":\n";
+                
+                statement->compile(dst,context);
+            
+            }
+            
+            else{
+                
+                expr_const->compile(dst,context);
 
+                std::string case_label = makeName("case");
+                
+                cases[context.expr_result] = case_label;
+                               
+
+                dst<<"$"<<case_label<<':\n'
+                
+                statement->compile(dst,context);
+                
+                dst<<"\tbeq\t"<< "$0,$0"<<context.exit_switch<<'\n';
+            
             }
         }
 
@@ -787,30 +811,37 @@ class statement_selection : public Node{
             
             if(symbol_1 == "switch"){
                 
-                std::string default_case = context.makeName("default");
-                expr->compile(dst,context);
+                
+
+                std::string branch_beyond == context.makeName("branch_beyond");
+                context.exit_switch = branch_beyond;
+                
+                uint temp_reg;                
+                expr->compile(dst,context); //evaluating the expression to determine the cases
+              
+                temp_reg = context.extract_expr_reg();  //exctracting the string that is evaluated by the compile, store into temp
                 
                 
+                context.close_dst();
                 
+                statement->compile(dst,context); // get all the cases and defaults , labels etc and statement execution
+               
+                context.restore_dst();
+                //store into vector the label and the corresponding literals eg 'D'
                 
+                context.print_switch_branches(temp_reg);  //this prints out the BEQ instruction to branch to each label cases
+                                
+                context.print_cases();
+    
+                dst<<"$"<<branch_beyond<<':\n';
                 
-                
-                
-                
-                
-                
-                
-                //optional default case;
-                
-                dst<<"$"<<default_case<<":\n";
-                statement->compile(dst,context);
-                
-                            
             
-            
-            
-            
-            
+                
+         
+
+
+                
+                    
             
             
             }
