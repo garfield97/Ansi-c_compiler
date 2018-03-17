@@ -324,9 +324,8 @@ class statement_labeled :public Node{
                 dst<<"$"<<case_label<<':\n'
                 
                 statement->compile(dst,context);
-            
-            
-            
+                
+                dst<<"\tbeq\t"<< "$0,$0"<<context.exit_switch<<'\n';
             
             }
         }
