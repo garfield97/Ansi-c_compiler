@@ -1599,7 +1599,7 @@ class arg_expr_list : public Node {
         }
 };
 
-// missing arrayy / functions and pointers
+// missing arrayy / functions with args and pointers
 class expr_postfix : public Node {
     //EXPR_POSTFIX : EXPR_PRIMARY
     //             | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE
@@ -1762,7 +1762,7 @@ class expr_postfix : public Node {
                 uint save_size = context.stack_size;
                 context.stack_size = 0;
                 //next is the function name
-                dst<<"\tjal\t"<<context.expr_result<<"\nnop\n";
+                dst<<"\tjal\t"<<context.expr_result<<"\n\tnop\n";
 
                 dst<<"\tsw\t$2,"<<s_pos*4<<"($fp)\n";
                 context.stack_size = save_size;

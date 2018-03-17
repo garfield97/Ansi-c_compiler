@@ -1,24 +1,24 @@
 
 int main () {
 
-   char grade = 'B';
+   int grade = 5;
    int x;
 
    switch(grade) {
    
-      case 'A' :
+      case 1 :
             x=1;
             
-      case 'B' :
+      case 2 :
             x=2;
       
-      case 'C' :
+      case 3 :
             x=3;
             
-      case 'D' :
+      case 4 :
             x=4;
 
-      case 'F' :
+      case 5 :
             x=5;
 
 

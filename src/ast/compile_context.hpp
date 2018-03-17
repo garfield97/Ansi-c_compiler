@@ -259,7 +259,9 @@ struct CompileContext{
     }
 
 
-
+    std::string break_label;
+    std::string continue_label;
+    std::string switch_end_label;
 
     long int internal_expr_value;
     long int internal_temp_value;

@@ -364,6 +364,7 @@ STATEMENT : STATEMENT_LABELED       { $$ = $1; }
           | STATEMENT_SELECTION     { $$ = $1; }
           | STATEMENT_ITERATION     { $$ = $1; }
           | STATEMENT_JUMP          { $$ = $1; }
+          | LIST_DECLARATION        { $$ = $1; }
 
          
 STATEMENT_LABELED : IDENTIFIER ':' STATEMENT       { $$ = new statement_labeled(*$1, $3);}

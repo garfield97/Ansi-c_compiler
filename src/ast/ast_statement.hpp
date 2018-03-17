@@ -207,6 +207,7 @@ class statement : public Node{
     //          | STATEMENT_SELECTION
     //          | STATEMENT_ITERATION
     //          | STATEMENT_JUMP
+    //          | LIST_DECLARATION
 
     private:
         NodePtr next_statement;
@@ -242,7 +243,6 @@ class statement : public Node{
             exit(1);
         }
 };
-
 
 class statement_labeled :public Node{
     //STATEMENT_LABELED : IDENTIFIER ':' STATEMENT
@@ -303,17 +303,36 @@ class statement_labeled :public Node{
             }
            
             else if(labels == "default"){
-            
+                // will have gone through all cases
+                // now just compile default
+                statement->compile(dst,context);
+                // switch_label would be printed here
             }
             
-            else{
+            else{ // case
+                std::string skip = context.makeName("skip");
+
+                // eval const_expr
+                const_expr->compile(dst,context);
+                uint ce_reg = context.extract_expr_reg();
+
+                // load switch expr
+                context.expr_result = context.switch_end_label;
+                uint sw_reg = context.extract_expr_reg();
+
+                // compare to switch expr - bne to skip
+                dst<<"\tbne\t$"<<ce_reg<<",$"<<sw_reg<<",$"<<skip<<"\n";
+
+                    statement->compile(dst,context);
+
+                dst<<"$"<<skip<<":\n";
             
             }
         }
 
 };
 
-// GOTO, CONTINUE, BREAK
+// CONTINUE
 class statement_jump : public Node{ 
     //STATEMENT_JUMP : GOTO IDENTIFIER ';'
     //               | CONTINUE ';'
@@ -421,6 +440,16 @@ class statement_jump : public Node{
                 
                 dst<<"\tbeq\t$0,$0,$"<<symbol_2<<"\n";
             }
+
+            if(symbol == "break"){
+                
+                dst<<"\tbeq\t$0,$0,$"<<context.break_label<<"\n";
+            }
+
+            if(symbol == "continue"){
+                
+                dst<<"\tbeq\t$0,$0,$"<<context.continue_label<<"\n";
+            }
             
             
         }
@@ -480,37 +509,6 @@ class statement_iteration : public Node{
    
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-        /*
-            if(symbol_1!= NULL){
-                symbol->PrettyPrint(dst);
-                statement->PrettyPrint(dst);
-                symbol_1->PrettyPrint(dst);
-                expr->PrettyPrint(dst);
-                dst<<';';
-            }
-            else if(expr == NULL){
-                symbol->PrettyPrint(dst);
-                statement_expr->PrettyPrint(dst);
-                statement_expr_rep->PrettyPrint(dst);
-                statement->PrettyPrint(dst);
-                dst<';';
-            }           
-            else if(symbol_1 == NULL && statement_expr == NULL) {
-                symbol->PrettyPrint(dst);
-                dst<<'(';
-                expr->PrettyPrint(dst);
-                dst<<')'<<';';
-            }
-            else{
-                symbol->PrettyPrint(dst);
-                dst<<'(';
-                statement_expr->PrettyPrint(dst);
-                statement_expr_rep->PrettyPrint(dst);
-                expr->PrettyPrint(dst);
-                dst<<')';
-                statement->PrettyPrint(dst);
-            }
-            */
             dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
             exit(1);
         }
@@ -549,21 +547,25 @@ class statement_iteration : public Node{
         {
         
             if(symbol_1 == " " && statement_expr == NULL){              //while loop
-                 std::string bottom_label = context.makeName("btm");  
-                 std::string top_label = context.makeName("top");        
-                 dst<<"$"<<top_label<<":\n";
-                 expr->compile(dst,context);        
-         
-                 uint expr_reg = context.extract_expr_reg();
+                std::string bottom_label = context.makeName("btm");
+                context.break_label = bottom_label;
+
+                std::string top_label = context.makeName("top");
+                context.continue_label = top_label;
+
+                dst<<"$"<<top_label<<":\n";
+                expr->compile(dst,context);        
+        
+                uint expr_reg = context.extract_expr_reg();
+        
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+        
             
-                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+                statement->compile(dst,context);
             
-             
-                 statement->compile(dst,context);
-             
-                 expr_reg = context.extract_expr_reg();            
-                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
-                 dst<<"$"<<bottom_label<<":\n";
+                expr_reg = context.extract_expr_reg();            
+                dst<<"\tb\t"<<"$"<<top_label<<'\n';
+                dst<<"$"<<bottom_label<<":\n";
             }
             
             
@@ -571,20 +573,25 @@ class statement_iteration : public Node{
             if(symbol_1 != " " && statement_expr == NULL){              //do while loop
          
          
-                 std::string bottom_label = context.makeName("btm");  
-                 std::string top_label = context.makeName("top");        
-                 dst<<"$"<<top_label<<":\n";
+                std::string bottom_label = context.makeName("btm");
+                context.break_label = bottom_label;
 
-                 statement->compile(dst,context);                
-                
-                 expr->compile(dst,context);        
-                 uint expr_reg = context.extract_expr_reg();  
-              
-                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
-             
-                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
-             
-                 dst<<"$"<<bottom_label<<":\n";
+                std::string top_label = context.makeName("top");
+                context.continue_label = top_label;       
+
+
+                dst<<"$"<<top_label<<":\n";
+
+                statement->compile(dst,context);                
+            
+                expr->compile(dst,context);        
+                uint expr_reg = context.extract_expr_reg();  
+            
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+            
+                dst<<"\tb\t"<<"$"<<top_label<<'\n';
+            
+                dst<<"$"<<bottom_label<<":\n";
             }
             
             
@@ -592,7 +599,12 @@ class statement_iteration : public Node{
             else if(expr != NULL && statement_expr != NULL){      //for loop 
                 uint tmp_condition_reg;    
                 std::string top_label = context.makeName("top");
+                context.continue_label = top_label;
+
                 std::string bottom_label = context.makeName("bottom");
+                context.break_label = bottom_label;
+
+
                 statement_expr->compile(dst,context);           //generate the statement expression for declaration, eg int i
                 dst<<"$"<<top_label<<":\n";
                
@@ -615,7 +627,12 @@ class statement_iteration : public Node{
                
                 uint tmp_condition_reg;    
                 std::string top_label = context.makeName("top");
+                context.continue_label = top_label;
+
                 std::string bottom_label = context.makeName("bottom");
+                context.break_label = bottom_label;
+
+
                 statement_expr->compile(dst,context);           //generate the statement expression for declaration, eg int i
                 dst<<"$"<<top_label<<":\n";
                
@@ -637,7 +654,7 @@ class statement_iteration : public Node{
         }
 };
 
-// SWITCH
+
 class statement_selection : public Node{
     //STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT
     //                    | IF L_BRACKET EXPR R_BRACKET STATEMENT ELSE STATEMENT
@@ -744,8 +761,32 @@ class statement_selection : public Node{
             
             }
             
-            if(symbol_1 == "switch"){       
-            
+            if(symbol_1 == "switch"){
+                std::string switch_label = context.makeName("0switch");
+
+                std::string SWE_save = context.switch_end_label;
+                context.switch_end_label = switch_label;
+                context.break_label = switch_label;
+
+                expr->compile(dst,context); // eval expr
+                uint expr_reg = context.extract_expr_reg();
+
+                // internal variable
+                this->push_stack(dst,context);
+                binding switch_expr;
+                switch_expr.reg_ID = expr_reg;
+                switch_expr.stack_position = context.stack_size;
+                context.scopes[context.scope_index][switch_label] = switch_expr;
+                dst<<"\tsw\t$"<<expr_reg<<","<<switch_expr.stack_position*4<<"($fp)\n";
+
+                //compile cases
+                statement->compile(dst,context);
+
+                context.switch_end_label = SWE_save;
+
+
+                //print switch end
+                dst<<"$"<<switch_label<<":\n";
             }
             
      }
