@@ -1743,6 +1743,20 @@ class expr_postfix : public Node {
 
             }             
 
+            // function call of 0 arguments
+            else if (bracket && exp == NULL){
+                //allocate space on stack for this function
+                this->push_stack(dst,context);
+                uint s_pos = context.stack_size;
+
+                //next is the function name
+                next->compile(dst,context);
+                dst<<"\tjal\t"<<context.expr_result<<"\nnop\n";
+
+                dst<<"\tsw\t$2,"<<s_pos<<"($fp)\n";
+                dst<<"\tmove\t$"<<exp_reg<<",$2\n";
+
+            }
 
             // end of operations code
 

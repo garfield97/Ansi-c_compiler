@@ -107,7 +107,6 @@ class definition_function : public Node{
                 for(int i=0; i<context.indent ; i++){
                     dst<<"\t";
                 }
-                dst<<'\t'<<".text"<<'\n';
                 dst<<"global "<<*myVector<<std::endl;    
             }     
                 
@@ -119,21 +118,23 @@ class definition_function : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-        
-        declarator->compile(dst,context);
-        // presevre return address
-        dst<<"\taddiu\t$sp,$sp,-8\n"; // pushed stack down
-        context.stack_size++;
-        context.stack_size++;
-        dst<<"\tsw\t$31,8($sp)\n"; // preseverve return addr
-        dst<<"\tsw\t$fp,4($sp)\n"; // stores value of fp intp sp+4
-        dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp
+            dst<<'\t'<<".text"<<'\n';
+            declarator->compile(dst,context);
+            // presevre return address
+            dst<<"\taddiu\t$sp,$sp,-8\n"; // pushed stack down
+            context.stack_size++;
+            context.stack_size++;
+            dst<<"\tsw\t$31,8($sp)\n"; // preseverve return addr
+            dst<<"\tsw\t$fp,4($sp)\n"; // stores value of fp intp sp+4
+            dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp
 
-        // now evaluate compound statement
+            // now evaluate compound statement
 
-        statement_compound->compile(dst, context);
+            statement_compound->compile(dst, context);
 
-        dst<<'\t'<<".end "<<context.current_func<<std::endl;
+            dst<<'\t'<<".end "<<context.current_func<<std::endl;
+            // reset context
+            context.function_end();
         
         }
 };
@@ -847,7 +848,7 @@ class declarator_direct : public Node{
             else if(brackets){
                     current->compile(dst,context);
                     dst<<'\t'<<".ent "<<context.current_func<<'\n';
-                    dst<<"main:"<<'\n';
+                    dst<<context.current_func<<":"<<'\n';
             }
             
             //HEY 
