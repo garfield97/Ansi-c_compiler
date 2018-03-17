@@ -328,6 +328,11 @@ struct CompileContext{
     std::string makeName(std::string base){
         return base+std::to_string(makeNameUnq++);
     }
+    const char* makeNameChar(const char* base){ // use to create new file
+        std::string res = base+std::to_string(makeNameUnq++);
+        const char* ret = res.c_str() + '.' + 's';
+        return ret;
+    }
 
 
     bool UNARY_OP_MINUS_CHECK;
@@ -340,6 +345,54 @@ struct CompileContext{
         if(UNARY_OP_MINUS_CHECK) UNARY_OP_MINUS_UPDATE();
     }
 
+
+
+    std::map<std::string , std::string> cases; // value to label
+    std::string default_label;
+    std::string exit_switch;
+
+    void print_switch_branches(uint reg){
+        std::map<std::string , std::string>::iterator it;
+        uint val_reg = get_free_reg();
+
+        for(it = cases.begin(); it != cases.end(); ++it){           // cases
+            dstStream<<"\tmove\t$"<<val_reg<<","<<it->first<<"\n";
+            dstStream<<"\tbeq\t$"<<reg<<",$"<<val_reg<<",$"<<it->second<<"\n";
+
+        }
+
+        dstStream<<"\tbeq\t$"<<reg<<",$"<<reg<<",$"<<default_label<<"\n"; // default
+
+        cases.clear();
+    }
+
+    void print_cases(){
+        std::ifstream file;
+        file.open(case_file);
+
+        std::string line;
+        while(std::getline(file, line)){
+            dstStream<<line;
+        }
+
+        file.close();
+    }
+
+
+    char* dstOriginal;
+    char* case_file;
+
+    void close_dst(){
+        dstStream.close();
+        const char* new_file = makeNameChar("tmp/files/default");
+        case_file = strdup(new_file);
+        dstStream.open(new_file);
+    }
+
+    void restore_dst(){
+        dstStream.close();
+        dstStream.open(dstOriginal);
+    }
 
 };
 
