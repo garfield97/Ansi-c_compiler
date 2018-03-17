@@ -815,6 +815,7 @@ class statement_selection : public Node{
                 
 
                 std::string branch_beyond == context.makeName("branch_beyond");
+                context.exit_switch = branch_beyond;
                 
                 uint temp_reg;                
                 expr->compile(dst,context); //evaluating the expression to determine the cases
@@ -831,12 +832,11 @@ class statement_selection : public Node{
                 
                 context.print_switch_branches(temp_reg);  //this prints out the BEQ instruction to branch to each label cases
                                 
-                
-                
-                
-                
+                context.print_cases();
+    
                 dst<<"$"<<branch_beyond<<':\n';
                 
+            
                 
          
 
