@@ -7,16 +7,17 @@ int self_recursion(int base);
 */
 
 #define RUNS 1000
-// amount of times to test self_recursion
+/* amount of times to test self_recursion */
 
 int main(){
     int sum = 0;
 
-    // tests self_recursion with base = 0 to 99
-    for(int i = 0; i < RUNS; i++){
-        sum += self_recursion(i); // should be adding 0 to sum
+    /* tests self_recursion with base = 0 to 99 */
+	int i;
+    for(i = 0; i < RUNS; i++){
+        sum += self_recursion(i); /* should be adding 0 to sum */
     }
 
-    // final sum value should be 0
+    /* final sum value should be 0 */
     return sum ? 1:0;
 }

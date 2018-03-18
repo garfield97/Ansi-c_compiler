@@ -7,18 +7,19 @@ int local_array(int index);
 */
 
 #define RUNS 10
-// equal to array size used in local_array
+/* equal to array size used in local_array */
 
 int main(){
 
     int sum = 0;
 
-    // call local_array $RUNS times testing with index = 0 to 9 iteratively
-    for(int i = 0; i < RUNS; i++){
+    /* call local_array $RUNS times testing with index = 0 to 9 iteratively */
+	int i;
+    for(i= 0; i < RUNS; i++){
         sum += local_array(i);
-        // if local_array worked , sum should not change
+        /* if local_array worked , sum should not change */
     }
 
-    // returns 0 if local_array returned 0 $RUNS times
+    /* returns 0 if local_array returned 0 $RUNS times */
     return sum ? 1:0;
 }

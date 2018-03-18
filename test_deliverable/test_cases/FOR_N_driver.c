@@ -10,27 +10,29 @@ int FOR_N(int n);
    - what if compiler works for X loops of while, but not Y loops?
 */
 
-// test FOR_N loop for N = 2 to N = 100
+/* test FOR_N loop for N = 2 to N = 100 */
 #define START 2
 #define END 100
-// ASIZE = END-START + 1
-#define ASIZE 99 // array size to match start,end
+/* ASIZE = END-START + 1 */
+#define ASIZE 99 /* array size to match start,end */
 
 int main(){
     
-    int N [ASIZE]; // store results from FOR_N
+    int N [ASIZE]; /* store results from FOR_N */
 
-    for(int i = START; i <= END; i++){
+	int i;
+    for(i = START; i <= END; i++){
         N[i-START] = FOR_N(i);
     }
 
     int sum = 0;
-    // sum array N - if FOR_N works correctly, sum == 0
+    /* sum array N - if FOR_N works correctly, sum == 0 */
     
-    for(int i = 0; i < ASIZE; i++){
-        sum += N[i];
+	int j;
+    for(j = 0; j < ASIZE; j++){
+        sum += N[j];
     }
 
-    // if sum == 0, return 0
+    /* if sum == 0, return 0 */
     return sum ? 1:0;
 }
