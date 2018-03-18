@@ -1,5 +1,5 @@
-int x;
-int y = 5 || 4;
+int x = 4;
+int y = 5;
 
 int main(){
 	x = y;

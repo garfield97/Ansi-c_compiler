@@ -299,6 +299,7 @@ struct CompileContext{
 
     std::string current_func;
     std::string tmp_v;              // used to transfer variable name across nodes
+    std::string global_var_size;
 
 
     std::string expr_result;
