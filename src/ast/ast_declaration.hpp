@@ -454,7 +454,7 @@ class declarator_init : public Node{
             
             if(context.scope_index == 0){
             
-                dst<<"\t.size\t"<<context.tmp_v<<", "<<context.global_var_size;
+                dst<<"\t.size\t"<<context.tmp_v<<", "<<context.global_var_size<<'\n';
                 dst<<context.tmp_v<<":\n";
             }
             
