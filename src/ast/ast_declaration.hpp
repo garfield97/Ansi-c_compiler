@@ -191,7 +191,7 @@ class declaration : public Node{
                 specifier_declaration->compile(dst,context); // assigns tmp_v with C type
                 
                 context.global_var_size = 4;// default
-                if(tmp_v == "char") context.global_var_size = 1;
+                if(context.tmp_v == "char") context.global_var_size = 1;
              //   if(tmp_v == "long int") context.global_var_size = 1; add supports later
                 
                 declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v            
@@ -483,19 +483,15 @@ class declarator_init : public Node{
             }
             
             else{
-            
                 if( initializer != NULL){
-                    
                     context.assigning = true;
                     context.declaring = true;
                     initializer->compile(dst,context); //if its a constant it stores into expression_results
                     context.declaring = false;
                     context.assigning = false;                    
-                    dst<<"\t.word\t"<<context.internal_expr_value<<'\n';
-                    
-                    
-                    
+                    dst<<"\t.word\t"<<context.internal_expr_value<<'\n';   
                 }
+            }
             
 
         }
