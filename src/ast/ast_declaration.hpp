@@ -187,9 +187,11 @@ class declaration : public Node{
         
             if(declarator_list_init != NULL){
 
+                
                 specifier_declaration->compile(dst,context); // assigns tmp_v with C type
-
-
+                
+                context.global_var_size = tmp_v;
+                
                 declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v            
 
             }
@@ -487,7 +489,7 @@ class declarator_init : public Node{
                     initializer->compile(dst,context); //if its a constant it stores into expression_results
                     context.declaring = false;
                     context.assigning = false;                    
-                    dst<<"\t.word\t"<<context.internal_expr_val<<'\n';
+                    dst<<"\t.word\t"<<context.internal_expr_value<<'\n';
                     
                     
                     
