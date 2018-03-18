@@ -438,35 +438,60 @@ class declarator_init : public Node{
             context.set_expr_result_type(); // use for assign cases on type
             temp.reg_ID = 33;    // forgot to initialise reg_ID into 33 -> not empty 
 
-            this->push_stack(dst,context); //stack size is changed here.(incremented)
             
+            if(context.scope_index != 0) this->push_stack(dst,context); //stack size is changed here.(incremented)
+            
+            else dst<<"\t.data\t"<<'\n'; //global variables
                   
             temp.stack_position = context.stack_size;
 
             
-            declarator->compile(dst,context);   //stores into tmp_V (variable name)
-
-
+            declarator->compile(dst,context);   //stores into tmp_v (variable name)
+            
+            if(context.scope_index != 0){
+            
+                dst<<"\t.size\t"<<context.tmp_v<<", "<<context.global_var_size;
+                dst<<context.tmp_v<<":\n";
+            }
+            
+            
             context.scopes[context.scope_index][context.tmp_v] = temp; // not sure if this map works
 
 
+            if(context.scope_index != 0){
+                if( initializer != NULL){
+                    context.assigning = true;
+                    context.declaring = true;
+                    initializer->compile(dst,context); //if its a constant it stores into expression_results
+                    context.declaring = false;
+                    dst<<"\tadd\t$15,$0,"<<context.expr_result<<'\n';
+                    context.assigning = false;
+
+                }
+                else{
+                    dst<<"\tmove\t$15,$0\n";
+                }
+
+                dst<<"\tsw\t$15,"<<context.stack_size*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
             
-            if( initializer != NULL){
-                context.assigning = true;
-                context.declaring = true;
-                initializer->compile(dst,context); //if its a constant it stores into expression_results
-                context.declaring = false;
-                dst<<"\tadd\t$15,$0,"<<context.expr_result<<'\n';
-                context.assigning = false;
+
+                context.declarations++; // keep track of how many declaration were made in current scope
             }
+            
             else{
-                dst<<"\tmove\t$15,$0\n";
-            }
-
-            dst<<"\tsw\t$15,"<<context.stack_size*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
             
-
-            context.declarations++; // keep track of how many declaration were made in current scope
+                if( initializer != NULL){
+                    
+                    context.assigning = true;
+                    context.declaring = true;
+                    initializer->compile(dst,context); //if its a constant it stores into expression_results
+                    context.declaring = false;
+                    context.assigning = false;                    
+                    dst<<"\t.word\t"<<context.internal_expr_val<<'\n';
+                    
+                    
+                    
+                }
             
 
         }
