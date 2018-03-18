@@ -6,40 +6,24 @@
 class statement_compound : public Node{
     //STATEMENT_COMPOUND : L_BRACE R_BRACE                                  { $$ = new statement_compound(); }
     //                   | L_BRACE LIST_STATEMENT R_BRACE                   { $$ = new statement_compound($2); }
-    //                   | L_BRACE LIST_DECLARATION R_BRACE                 { $$ = new statement_compound($2); }
-    //                   | L_BRACE LIST_DECLARATION LIST_STATEMENT R_BRACE 
+
     private:
-        NodePtr current;
-        NodePtr next;
+        NodePtr list;
 
     public:
         statement_compound()
-            :current(NULL)
-            ,next(NULL)
+            :list(NULL)
         {}
 
         statement_compound(NodePtr _arg)
-            :current(_arg)
-            ,next(NULL)
+            :list(_arg)
         {}
 
-        statement_compound(NodePtr _arg1,NodePtr _arg2)
-            :current(_arg1)
-            ,next(_arg2)
-        {}      
         
         std::string name = "statement_compound";
             
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-        /*  
-            
-            if(rec != NULL){
-                    rec->PrettyPrint(dst);
-                    dst<<'^ ';
-            }
-            exp->PrettyPrint(dst);
-            */
             dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
             exit(1);
 
@@ -47,10 +31,8 @@ class statement_compound : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-      
-           
-            
-            if(current == NULL && next == NULL){
+         
+            if(list == NULL){
                 for(int i=0; i<context.indent ; i++){
                     dst<<"\t";
                 }
@@ -59,15 +41,8 @@ class statement_compound : public Node{
             
             else{
                 
-                current->translate(dst,context);
+                list->translate(dst,context);
             }
-            
-            if(next != NULL){
-                
-                next->translate(dst,context);
-            }
-         
-            
             
         }
 
@@ -82,15 +57,11 @@ class statement_compound : public Node{
             context.declarations = 0;
 
 
-            if(current != NULL){
+            if(list != NULL){
                 
-                current->compile(dst,context);
+                list->compile(dst,context);
             }
             
-            if(next != NULL){
-                
-                next->compile(dst,context);
-            }
         
             // clear stack from this scope - get rid of variables etc
             // context.declarations has amount of declarations

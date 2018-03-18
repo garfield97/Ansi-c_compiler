@@ -375,8 +375,6 @@ STATEMENT_LABELED : IDENTIFIER ':' STATEMENT       { $$ = new statement_labeled(
 
 STATEMENT_COMPOUND : L_BRACE R_BRACE                                  { $$ = new statement_compound(); }
                    | L_BRACE LIST_STATEMENT R_BRACE                   { $$ = new statement_compound($2); }
-                   | L_BRACE LIST_DECLARATION R_BRACE                 { $$ = new statement_compound($2); }
-                   | L_BRACE LIST_DECLARATION LIST_STATEMENT R_BRACE  { $$ = new statement_compound($2, $3); }
                    
 
 LIST_DECLARATION : DECLARATION                          { $$ = $1;}
