@@ -466,6 +466,7 @@ class declarator_init : public Node{
             dst<<"\tsw\t$15,"<<context.stack_size*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
             
 
+            context.declarations++; // keep track of how many declaration were made in current scope
             
 
         }

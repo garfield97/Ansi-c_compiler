@@ -38,7 +38,7 @@ struct CompileContext{
     uint get_free_reg(){
 
         for(uint i=0u; i<32u; i++){
-            if(reg_free[i] == true && ( i >= 8u && i <= 15u ) && not_in_err_stack(i) ){ // register to be saved by calling function
+            if(reg_free[i] == true && ( i >= 8u && i <= 14u ) && not_in_err_stack(i) ){ // register to be saved by calling function
                 reg_free[i] = false;
 
                         // EXPR_ASSIGNMENT 
@@ -88,7 +88,7 @@ struct CompileContext{
         // now free it
         reg_free[reg_counter] = true; // free the reg
 
-        if(++reg_counter == 16u) reg_counter = 8u; // loop back for next replacement
+        if(++reg_counter == 15u) reg_counter = 8u; // loop back for next replacement
 
     }
 
@@ -289,6 +289,8 @@ struct CompileContext{
     }
 
     uint stack_size;                // dealing with stack pointer
+
+    uint declarations;      // keep track of amount of declarations inside a scope
 
     std::vector<std::map<std::string, binding> > scopes; // vector of bindings for each scope
     // map - variable name to register number

@@ -73,11 +73,15 @@ class statement_compound : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-        
+            
             context.scope_index++; // incrementing the scope index
             std::map<std::string,binding>bindings; //create a map for pushing it out at the end.
             context.scopes.push_back(bindings);
             
+            uint declaration_amount_save = context.declarations;
+            context.declarations = 0;
+
+
             if(current != NULL){
                 
                 current->compile(dst,context);
@@ -88,7 +92,20 @@ class statement_compound : public Node{
                 next->compile(dst,context);
             }
         
+            // clear stack from this scope - get rid of variables etc
+            // context.declarations has amount of declarations
+                uint new_size = context.stack_size - context.declarations;
+                for(uint i = new_size ; i > 0; --i){
+                    dst<<"\tlw\t$15,"<<i*4<<"($fp)\n";
+                    dst<<"\tsw\t$15,"<<(i+context.declarations)*4<<"($fp)\n";
+                }
+                dst<<"\taddiu\t$sp,$sp,"<<context.declarations*4<<"\n";
+                dst<<"\tmove\t$fp,$sp\n";
+
+                context.stack_size = new_size;
+                context.declarations = declaration_amount_save;
         
+
             context.scope_index--; // decrementing the scope index so we can keep track of which scope we are in
             context.scopes.pop_back(); // pop out
 
@@ -332,7 +349,6 @@ class statement_labeled :public Node{
 
 };
 
-// CONTINUE
 class statement_jump : public Node{ 
     //STATEMENT_JUMP : GOTO IDENTIFIER ';'
     //               | CONTINUE ';'
@@ -373,9 +389,7 @@ class statement_jump : public Node{
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-    //               | RETURN ';'
-    //               | RETURN EXPR ';'
-                
+              
                 
                 for(int i=0; i<context.indent ; i++){
                     dst<<"\t";

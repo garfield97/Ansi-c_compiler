@@ -44,6 +44,7 @@ int main(int argc, char* argv[])
         CompileContext CC;
 
         CC.stack_size = 0;
+        CC.declarations = 0;
         std::map<std::string, binding> global;
         CC.scopes.push_back(global);
         // set regs to free
