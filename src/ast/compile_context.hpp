@@ -217,6 +217,7 @@ struct CompileContext{
                     }
                     else{   // variable
                         if(!scopes[scope_index][expr_result].is_global){
+                            dstStream<<"not global: "<<expr_result<<"\n";
                             uint reg_save = scopes[scope_index][expr_result].reg_ID;
                             force_update_variable();  // froce a new reg
                                 // load from stack
