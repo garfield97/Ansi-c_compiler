@@ -1,8 +1,10 @@
 	.data	
 	.global x
+	.size	x, x:
 	.word	0
 	.data	
 	.global y
+	.size	y, y:
 	.word	0
 	.text
 	.global main
