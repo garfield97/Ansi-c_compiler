@@ -452,7 +452,7 @@ class declarator_init : public Node{
             
             declarator->compile(dst,context);   //stores into tmp_v (variable name)
 
-            temp.is_global = false;
+            temp.is_global = true;
 
             if(context.scope_index == 0){
             
