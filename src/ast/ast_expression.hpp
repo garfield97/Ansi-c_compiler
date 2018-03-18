@@ -389,10 +389,23 @@ class expr_logic_or : public Node {
         {
             bool top = context.am_i_top();     // check if i'm top node;
 
+
+            std::string zero = context.makeName("LOR");
+            std::string one = context.makeName("LOR");
+            std::string end = context.makeName("LOR");
+
+
+
             // EXPR_LOGIC_OR
             rec->compile(dst, context); // store variable into expression result
 
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
+
+
+            //bne temp 0 - move 1
+            dst<<"\tbne\t$"<<temp_register<<",$0,$"<<one<<"\n";
+
 
 
             // free bools for rhs
@@ -414,13 +427,6 @@ class expr_logic_or : public Node {
 
 
 
-
-            std::string zero = context.makeName("LOR");
-            std::string one = context.makeName("LOR");
-            std::string end = context.makeName("LOR");
-
-            //bne temp 0 - move 1
-            dst<<"\tbne\t$"<<temp_register<<",$0,$"<<one<<"\n";
             //beq exp 0 - move 0
             dst<<"\tbeq\t$"<<logic_or_reg<<",$0,$"<<zero<<"\n";
 
@@ -477,10 +483,17 @@ class expr_logic_and : public Node {
         {
             bool top = context.am_i_top();     // check if i'm top node;
 
+            std::string zero = context.makeName("LAND");
+            std::string skip = context.makeName("LAND");
+
             // EXPR_LOGIC_AND
             rec->compile(dst, context); // store variable into expression result
 
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
+            // compare temp_register
+            dst<<"\tbeq\t"<<"$"<<temp_register<<",$0"<<",$"<<zero<<'\n';
+                //if eq branch to move 0
 
 
             // free bools for rhs
@@ -500,12 +513,7 @@ class expr_logic_and : public Node {
             // get RH term register
             uint logic_and_reg = context.extract_expr_reg();
 
-            std::string zero = context.makeName("LAND");
-            std::string skip = context.makeName("LAND");
 
-            // compare temp_register
-            dst<<"\tbeq\t"<<"$"<<temp_register<<",$0"<<",$"<<zero<<'\n';
-                //if eq branch to move 0
             // compare l_a_reg
             dst<<"\tbeq\t"<<"$"<<logic_and_reg<<",$0"<<",$"<<zero<<'\n';
                 // if eq to branch to move 0
@@ -1061,64 +1069,29 @@ class expr_add : public Node {
 
 
             // check result type
-            std::string mul_reg;
-            if(regex_match(context.expr_result, context.reNum)) mul_reg = context.expr_result;
-            // reg
-            else if(regex_match(context.expr_result, context.is_reg)) mul_reg = context.expr_result;
-            // variable
-            else{
-                if(context.update_variable()){ } // is stored in a reg already 
-                mul_reg = "$" + std::to_string(context.scopes[context.scope_index][context.expr_result].reg_ID);
-            }
-
-
-
+            std::string mul_reg = std::to_string(context.extract_expr_reg());
 
             
             if(op == "+"){
                 context.internal_expr_value += context.internal_temp_value;
-                if(regex_match(context.expr_result, context.reNum)){ // literal
-                                               
-                    if(context.expr_primary_type == UI){
-                        dst<<"\taddiu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n';      //implementation for unsigned litearal
-                    }
-                    else{
-                        dst<<"\taddi\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n';       //signed literal
-                    }   
-                }
-                else{   // variable
 
-                    if(context.expr_primary_type == UI){
-                        dst<<"\taddu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n'; // register addition -> storage  unsigned register add
-                    }
-                    else{
-                        dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n'; // register addition -> storage  signed register add
-                    }
-                }            
+                if(context.expr_primary_type == UI){
+                    dst<<"\taddu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n'; // register addition -> storage  unsigned register add
+                }
+                else{
+                    dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n'; // register addition -> storage  signed register add
+                }         
             }
             
             else{ // subtraction
                 context.internal_expr_value -= context.internal_temp_value;
-                if(regex_match(context.expr_result, context.reNum)){ // literal
-                    
-                    if(context.expr_primary_type == UI){
-                        dst<<"\taddiu\t"<<"$"<<temp_register<<",$"<<temp_register<<",-"<<mul_reg<<'\n';  //unsigned subtract - immediate
-                    }
-                    else{
-                        dst<<"\taddi\t"<<"$"<<temp_register<<",$"<<temp_register<<",-"<<mul_reg<<'\n';   //signed subtract - immediate
-                    }
-                    
+                if(context.expr_primary_type == UI){
+                    dst<<"\tsubu\t"<<"$"<<temp_register<<",$"<<temp_register<<"$"<<mul_reg<<'\n'; // register addition -> storage 
                 }
-                else{   // variable
-
-                    if(context.expr_primary_type == UI){
-                        dst<<"\tsubu\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n'; // register addition -> storage 
-                    }
-                    
-                    else{
-                        dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<","<<mul_reg<<'\n'; // register addition -> storage 
-                    }
-               }
+                
+                else{
+                    dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<"$"<<mul_reg<<'\n'; // register addition -> storage 
+                }
             }
             
 
