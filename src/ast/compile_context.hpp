@@ -212,63 +212,67 @@ struct CompileContext{
     }
 
     std::string am_i_bottom(){ // returns reg as num in string
+
+        if(expr_primary_global_var){
+            expr_result = global_expr_result;
+        }
         // not conditional
-            if(!err_overide){
-                if(err_bottom == false){
-                    err_bottom = true; //
+        if(!err_overide){
+            if(err_bottom == false){
+                err_bottom = true; //
 
-                    uint err_stack_reg;
+                uint err_stack_reg;
 
-                    if(regex_match(expr_result, reNum)){ // literal int
-                        err_stack_reg = get_free_reg();
-                        expr_result_reg = std::to_string( err_stack_reg ); // find a free reg - format [0-9]+
-                        UNARY_UPDATE(); // check for unary opr
-                        dstStream<<"\taddi\t"<<"$"<<expr_result_reg<<",$0,"<<expr_result<<'\n';  
-                    }
-                    else if(sizeof_type){ // size of type
-                        err_stack_reg = get_free_reg();
-                        expr_result_reg = std::to_string( err_stack_reg );
-                    }
-                    else{   // variable
-                        if(!scopes[0][expr_result].is_global){
-                            uint reg_save = scopes[scope_index][expr_result].reg_ID;
-                            force_update_variable();  // froce a new reg
-                                // load from stack
-                            dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
-                            
-                            err_stack_reg = scopes[scope_index][expr_result].reg_ID;
-                            expr_result_reg = std::to_string(scopes[scope_index][expr_result].reg_ID);
-                            dstStream<<"\tadd\t"<<"$"<<expr_result_reg<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
-                        
-                            scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
-                        }
-                        else{ // global var load
-                            uint reg_save = scopes[scope_index][expr_result].reg_ID;
-                            force_update_variable();  // froce a new reg
-                                // load from heap
-                            
-                            err_stack_reg = scopes[scope_index][expr_result].reg_ID;
-                            
-                            // load address of global var from heap
-                            dstStream<<"\tlui\t"<<"$"<<err_stack_reg<<",%hi("<<expr_result<<")\n";
-
-                            // load value form heap
-                            dstStream<<"\tlw\t$"<<err_stack_reg<<",%lo("<<expr_result<<")($"<<err_stack_reg<<")\n";
-
-                            scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
-
-                            expr_result_reg = std::to_string(err_stack_reg); // reg with value of global var
-                        }
-                    }
-
-
-                    err_stack.push_back(err_stack_reg); // save reg to preserved stack
+                if(regex_match(expr_result, reNum)){ // literal int
+                    err_stack_reg = get_free_reg();
+                    expr_result_reg = std::to_string( err_stack_reg ); // find a free reg - format [0-9]+
+                    UNARY_UPDATE(); // check for unary opr
+                    dstStream<<"\taddi\t"<<"$"<<expr_result_reg<<",$0,"<<expr_result<<'\n';  
                 }
+                else if(sizeof_type){ // size of type
+                    err_stack_reg = get_free_reg();
+                    expr_result_reg = std::to_string( err_stack_reg );
+                }
+                else{   // variable
+                    if(!scopes[0][expr_result].is_global){
+                        uint reg_save = scopes[scope_index][expr_result].reg_ID;
+                        force_update_variable();  // froce a new reg
+                            // load from stack
+                        dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                        
+                        err_stack_reg = scopes[scope_index][expr_result].reg_ID;
+                        expr_result_reg = std::to_string(scopes[scope_index][expr_result].reg_ID);
+                        dstStream<<"\tadd\t"<<"$"<<expr_result_reg<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
+                    
+                        scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
+                    }
+                    else{ // global var load
+                        uint reg_save = scopes[scope_index][expr_result].reg_ID;
+                        force_update_variable();  // froce a new reg
+                            // load from heap
+                        
+                        err_stack_reg = scopes[scope_index][expr_result].reg_ID;
+                        
+                        // load address of global var from heap
+                        dstStream<<"\tlui\t"<<"$"<<err_stack_reg<<",%hi("<<expr_result<<")\n";
+
+                        // load value form heap
+                        dstStream<<"\tlw\t$"<<err_stack_reg<<",%lo("<<expr_result<<")($"<<err_stack_reg<<")\n";
+
+                        scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
+
+                        expr_result_reg = std::to_string(err_stack_reg); // reg with value of global var
+                    }
+                }
+
+
+                err_stack.push_back(err_stack_reg); // save reg to preserved stack
             }
-            
-            else{
-                expr_result_reg = std::to_string(err_overide_reg); // use set reg
-            }
+        }
+        
+        else{
+            expr_result_reg = std::to_string(err_overide_reg); // use set reg
+        }
 
         return expr_result_reg;
 
