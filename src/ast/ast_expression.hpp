@@ -1086,11 +1086,11 @@ class expr_add : public Node {
             else{ // subtraction
                 context.internal_expr_value -= context.internal_temp_value;
                 if(context.expr_primary_type == UI){
-                    dst<<"\tsubu\t"<<"$"<<temp_register<<",$"<<temp_register<<"$"<<mul_reg<<'\n'; // register addition -> storage 
+                    dst<<"\tsubu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n'; // register addition -> storage 
                 }
                 
                 else{
-                    dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<"$"<<mul_reg<<'\n'; // register addition -> storage 
+                    dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n'; // register addition -> storage 
                 }
             }
             
@@ -1897,6 +1897,7 @@ class expr_primary : public Node {
                 if(!context.scopes[0][Sval].is_global){
                     context.expr_result = Sval;
                     context.internal_temp_value = context.scopes[context.scope_index][Sval].internal_value;
+                    context.internal_expr_value = context.internal_temp_value;
                     context.set_expr_result_type();
                 }
                 else{
@@ -1904,32 +1905,33 @@ class expr_primary : public Node {
                     uint g_reg = context.extract_expr_reg();
                     context.expr_result = "$"+std::to_string(g_reg);
                     context.internal_temp_value = context.scopes[0][Sval].internal_value;
+                    context.internal_expr_value = context.internal_temp_value;
 
                 }
             } 
             else if(Ibool){
                 context.expr_result = std::to_string(Ival);
-                context.internal_temp_value = Ival;
+                context.internal_temp_value = context.internal_expr_value = Ival;
                 context.expr_primary_type = I;
             }
             else if(UIbool){
                 context.expr_result = std::to_string(UIval);
-                context.internal_temp_value = UIval;
+                context.internal_temp_value = context.internal_expr_value = UIval;
                 context.expr_primary_type = UI;
             }
             else if(LIbool){
                 context.expr_result = std::to_string(LIval);
-                context.internal_temp_value = LIval;
+                context.internal_temp_value = context.internal_expr_value = LIval;
                 context.expr_primary_type = LI;
             }
             else if(ULbool){
                 context.expr_result = std::to_string(ULval);
-                context.internal_temp_value = ULval;
+                context.internal_temp_value = context.internal_expr_value = ULval;
                 context.expr_primary_type = UL;
             } 
             else if(Cbool){
                 context.expr_result = std::to_string(Cval);
-                context.internal_temp_value = Cval;
+                context.internal_temp_value = context.internal_expr_value = Cval;
                 context.expr_primary_type = C;
             }
             else if(exp != NULL){

@@ -83,13 +83,12 @@ struct CompileContext{
 
         if(found){
             // store variable in reg back onto stack
-            dstStream<<"\tsw\t$"<<reg_counter<<","<<s_pos*4<<"($fp)";
+            dstStream<<"\tsw\t$"<<reg_counter<<","<<s_pos*4<<"($fp)\n";
         }
 
         // now free it
         reg_free[reg_counter] = true; // free the reg
-
-        if(++reg_counter == 15u) reg_counter = 8u; // loop back for next replacement
+        if(++reg_counter == 14u) reg_counter = 8u; // loop back for next replacement
 
     }
 
@@ -126,7 +125,8 @@ struct CompileContext{
         uint local = get_free_reg();
         scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
         scopes[scope_index][expr_result].stack_position = s_pos;
-        dstStream<<"\tlw\t$"<<local<<","<<s_pos*4<<"($sp)\n";
+
+        if(!(s_pos==0)) dstStream<<"\tlw\t$"<<local<<","<<s_pos*4<<"($sp)\n";
 
     }
 
@@ -165,7 +165,6 @@ struct CompileContext{
         // variable
         else{
             if(!scopes[0][expr_result].is_global){  // not global
-                dstStream<<"UGGHH   H"<<expr_result<<std::endl;
                 uint reg_save = scopes[scope_index][expr_result].reg_ID;
 
                 force_update_variable();  // force the variable a new reg
