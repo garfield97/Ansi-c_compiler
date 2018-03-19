@@ -15,7 +15,7 @@
 extern std::ofstream dstStream;
 
 struct binding{
-    uint reg_ID;        // register number
+    uint reg_ID;        // register number //for global stores adrees
     std::string type;   // C type being stored
     uint stack_position;
     long int internal_value;
@@ -164,13 +164,31 @@ struct CompileContext{
         else if(regex_match(expr_result, is_reg)) sscanf(expr_result.c_str(),"$%d", &reg);
         // variable
         else{
-            uint reg_save = scopes[scope_index][expr_result].reg_ID;
+            if(!scopes[0][expr_result].is_global){  // not global
+                dstStream<<"UGGHH   H"<<expr_result<<std::endl;
+                uint reg_save = scopes[scope_index][expr_result].reg_ID;
 
-            force_update_variable();  // force the variable a new reg
-            reg = scopes[scope_index][expr_result].reg_ID;
-            dstStream<<"\tlw\t"<<"$"<<reg<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
+                force_update_variable();  // force the variable a new reg
+                reg = scopes[scope_index][expr_result].reg_ID;
+                dstStream<<"\tlw\t"<<"$"<<reg<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
 
-            scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
+                scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
+            }
+            else{   // global var
+                uint reg_save = scopes[scope_index][expr_result].reg_ID;
+                force_update_variable();  // froce a new reg
+                    
+                // load from heap
+                reg = scopes[scope_index][expr_result].reg_ID;
+
+                // load address of global var from heap
+                dstStream<<"\tlui\t"<<"$"<<reg<<",%hi("<<expr_result<<")\n";
+
+                // load value form heap
+                dstStream<<"\tlw\t$"<<reg<<",%lo("<<expr_result<<")($"<<reg<<")\n";
+
+                scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
+            }
         }
 
         return reg;
@@ -216,8 +234,7 @@ struct CompileContext{
                         expr_result_reg = std::to_string( err_stack_reg );
                     }
                     else{   // variable
-                        if(!scopes[scope_index][expr_result].is_global){
-                            dstStream<<"not global: "<<expr_result<<"\n";
+                        if(!scopes[0][expr_result].is_global){
                             uint reg_save = scopes[scope_index][expr_result].reg_ID;
                             force_update_variable();  // froce a new reg
                                 // load from stack
@@ -235,11 +252,16 @@ struct CompileContext{
                                 // load from heap
                             
                             err_stack_reg = scopes[scope_index][expr_result].reg_ID;
-                            expr_result_reg = std::to_string(scopes[scope_index][expr_result].reg_ID);
                             
-                            dstStream<<"\tlui\t"<<"$"<<err_stack_reg<<",%hi("<<expr_result<<")";
+                            // load address of global var from heap
+                            dstStream<<"\tlui\t"<<"$"<<err_stack_reg<<",%hi("<<expr_result<<")\n";
+
+                            // load value form heap
+                            dstStream<<"\tlw\t$"<<err_stack_reg<<",%lo("<<expr_result<<")($"<<err_stack_reg<<")\n";
 
                             scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
+
+                            expr_result_reg = std::to_string(err_stack_reg); // reg with value of global var
                         }
                     }
 
