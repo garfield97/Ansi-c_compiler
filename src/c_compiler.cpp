@@ -73,6 +73,8 @@ int main(int argc, char* argv[])
 
         CC.sizeof_type = false;
 
+        CC.extract_global = false;
+
         CC.assign_reg = 0;
         CC.assigning = false; // for expr_assing not to lose its reg
         CC.assign_reg_set = false;

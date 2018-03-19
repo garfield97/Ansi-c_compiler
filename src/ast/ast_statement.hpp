@@ -383,30 +383,36 @@ class statement_jump : public Node{
             if(expr != NULL) {
                                      
                 expr->compile(dst, context); // prints out an immediate or a register value
+
+                if(context.scopes[0][context.expr_result].is_global){ // global var
+                    uint gv_reg = context.get_free_reg();
+                    dst<<"\tlui\t"<<"$"<<gv_reg<<",%hi("<<context.expr_result<<")\n";
+                    dst<<"\tlw\t$"<<gv_reg<<",%lo("<<context.expr_result<<")($"<<gv_reg<<")\n";
+                    dst<<"\tadd\t$2,$0,"<<gv_reg<<std::endl;
+                }
                 
-                context.update_variable(); 
                 
-                if(regex_match(context.expr_result, context.reNum)){
+                // not global
+                else{
+                    context.update_variable(); 
+                }
+
+                if(regex_match(context.expr_result, context.reNum)){ // literal
                     dst<<"\taddi\t$2,$0,"<<context.expr_result<<'\n';
                 }
                 
-                else if(regex_match(context.expr_result, context.reChar)){
+                else if(regex_match(context.expr_result, context.reChar)){ // literal char
                     int temp_int;
                     std::stringstream convert(context.expr_result);
                     convert>>temp_int;
                     dst<<"\taddi\t$2,$0,"<<temp_int<<'\n';
                 }
                 
-                
-                else if(regex_match(context.expr_result, context.is_reg)){
-                    
+                else if(regex_match(context.expr_result, context.is_reg)){ // register
                     dst<<"\tadd\t$2,$0,"<<context.expr_result<<std::endl;
-                    
                 }  
                 
-                else{
-                
-                    context.update_variable();
+                else{                                                           // local var
                     dst<<"\tadd\t$2,$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<std::endl;
                 }
 

@@ -39,8 +39,8 @@ struct CompileContext{
     uint get_free_reg(){
 
         for(uint i=0u; i<32u; i++){
-            if(reg_free[i] == true && ( i >= 8u && i <= 14u ) && not_in_err_stack(i) ){ // register to be saved by calling function
-                reg_free[i] = false;
+            if(reg_free[i] == true && ( i >= 8u && i <= 14u ) && (extract_global || not_in_err_stack(i)) ){ // register to be saved by calling function
+                reg_free[i] = false;                                    // short circuit
 
                         // EXPR_ASSIGNMENT 
                 if(assigning && !assign_reg_set){ // need to set assign reg
@@ -174,25 +174,22 @@ struct CompileContext{
                 scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
             }
             else{   // global var
-                uint reg_save = scopes[scope_index][expr_result].reg_ID;
-                force_update_variable();  // froce a new reg
-                    
-                // load from heap
-                reg = scopes[scope_index][expr_result].reg_ID;
-
+                extract_global = true;
+                reg = get_free_reg();
+                extract_global = false;
+                
                 // load address of global var from heap
                 dstStream<<"\tlui\t"<<"$"<<reg<<",%hi("<<expr_result<<")\n";
 
                 // load value form heap
                 dstStream<<"\tlw\t$"<<reg<<",%lo("<<expr_result<<")($"<<reg<<")\n";
-
-                scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
             }
         }
 
         return reg;
     }
 
+    bool extract_global;
 
   
 
@@ -340,6 +337,8 @@ struct CompileContext{
 
 
     std::string expr_result;
+    std::string global_expr_result;
+    bool expr_primary_global_var; // for assigning a glboal var a new valuie
     LITERAL_TYPE expr_primary_type;
     std::string expr_cast_type;
     bool type_cast;

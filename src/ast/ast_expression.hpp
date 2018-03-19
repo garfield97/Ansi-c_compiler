@@ -191,13 +191,23 @@ class expr_assignment : public Node {
                 context.assign_reg_set = false;
             }
             
+            context.expr_primary_global_var = false; // reset
+
             // EXPR_UNARY
             unary->compile(dst,context); // store variable into expression result
-            
             std::string var_assigned = context.expr_result;
 
-            std::string unary_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-            
+            // check for global
+            bool global_var = context.expr_primary_global_var;
+            context.expr_primary_global_var = false; // reset
+
+
+            std::string unary_reg;
+            if(!global_var) unary_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            else{
+                var_assigned = context.global_expr_result;
+                unary_reg = std::to_string(context.get_free_reg());
+            }
             
             binding tmp = context.scopes[context.scope_index][context.expr_result];
 
@@ -309,9 +319,17 @@ class expr_assignment : public Node {
             }
 
 
-             
-            dst<<"\tsw\t"<<"$"<<unary_reg<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;  // get s_pos from top of function  
-        
+            if(!global_var){
+                dst<<"\tsw\t"<<"$"<<unary_reg<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;  // get s_pos from top of function  
+            }
+            else{   // writing to global
+                // load address
+                uint addr_reg = context.get_free_reg();
+                dst<<"\tlui\t"<<"$"<<addr_reg<<",%hi("<<var_assigned<<")\n";
+
+                dst<<"\tsw\t"<<"$"<<unary_reg<<",%lo("<<var_assigned<<")($"<<addr_reg<<")\n";
+            }
+
             // update reg for variable binding
             sscanf(unary_reg.c_str(),"$%d", &tmp.reg_ID);
             context.scopes[context.scope_index][var_assigned] = tmp;
@@ -1901,9 +1919,12 @@ class expr_primary : public Node {
                     context.set_expr_result_type();
                 }
                 else{
+                    context.expr_primary_global_var = true;
+                    context.global_expr_result = Sval;
                     context.expr_result = Sval;
                     uint g_reg = context.extract_expr_reg();
                     context.expr_result = "$"+std::to_string(g_reg);
+
                     context.internal_temp_value = context.scopes[0][Sval].internal_value;
                     context.internal_expr_value = context.internal_temp_value;
 
