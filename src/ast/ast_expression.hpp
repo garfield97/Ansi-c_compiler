@@ -207,13 +207,13 @@ class expr_assignment : public Node {
             bool global_var = context.expr_primary_global_var;
             context.expr_primary_global_var = false; // reset
 
-
-            std::string unary_reg;
-            if(!global_var) unary_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-            else{
+            if(global_var){
                 var_assigned = context.global_expr_result;
-                unary_reg = std::to_string(context.get_free_reg());
             }
+
+
+            std::string unary_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+
             
             binding tmp = context.scopes[context.scope_index][context.expr_result];
 
@@ -771,7 +771,7 @@ class expr_and : public Node {
             // get RH term register
             uint eq_reg = context.extract_expr_reg();
             context.expr_primary_global_var = false; // reset
-            
+
 
             // bitwise AND
             context.internal_expr_value &= context.internal_temp_value;
