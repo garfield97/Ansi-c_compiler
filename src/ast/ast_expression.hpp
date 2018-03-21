@@ -542,7 +542,7 @@ class expr_logic_and : public Node {
             uint logic_and_reg = context.extract_expr_reg();
             context.expr_primary_global_var = false; // reset
 
-            
+
 
 
             // compare l_a_reg
@@ -604,6 +604,7 @@ class expr_inclusive_or : public Node {
             context.internal_expr_value = context.internal_temp_value; // get internal value form rec
 
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            context.expr_primary_global_var = false; // reset
 
 
             // free bools for rhs
@@ -615,7 +616,6 @@ class expr_inclusive_or : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -623,6 +623,7 @@ class expr_inclusive_or : public Node {
 
             // get RH term register
             uint xor_reg = context.extract_expr_reg();
+            context.expr_primary_global_var = false; // reset
 
 
             // bitwise OR
@@ -675,6 +676,7 @@ class expr_xor : public Node {
             context.internal_expr_value = context.internal_temp_value; // get internal value form rec
 
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            context.expr_primary_global_var = false; // reset
 
 
             // free bools for rhs
@@ -694,6 +696,7 @@ class expr_xor : public Node {
 
             // get RH term register
             uint and_reg = context.extract_expr_reg();
+            context.expr_primary_global_var = false; // reset
 
 
             // bitwise OR
@@ -747,6 +750,7 @@ class expr_and : public Node {
             context.internal_expr_value = context.internal_temp_value;
             
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            context.expr_primary_global_var = false; // reset
 
 
             // free bools for rhs
@@ -766,7 +770,8 @@ class expr_and : public Node {
 
             // get RH term register
             uint eq_reg = context.extract_expr_reg();
-
+            context.expr_primary_global_var = false; // reset
+            
 
             // bitwise AND
             context.internal_expr_value &= context.internal_temp_value;
