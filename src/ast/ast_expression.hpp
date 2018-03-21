@@ -826,7 +826,7 @@ class expr_equality : public Node {
             rec->compile(dst, context); // store variable into expression result
             context.internal_expr_value = context.internal_temp_value;
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-
+            context.expr_primary_global_var = false; // reset
 
             // free bools for rhs
             bool t = context.err_top, b = context.err_bottom; // save state locally
@@ -837,7 +837,6 @@ class expr_equality : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -845,6 +844,9 @@ class expr_equality : public Node {
 
             // get RH term register
             uint logic_and_reg = context.extract_expr_reg();
+            context.expr_primary_global_var = false; // reset
+
+
             if(op == "=="){
                 context.internal_expr_value = context.internal_expr_value == context.internal_temp_value;
                 dst<<"\tseq\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<logic_and_reg<<'\n';
@@ -906,6 +908,7 @@ class expr_relational : public Node {
             rec->compile(dst, context); // store variable into expression result
 
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            context.expr_primary_global_var = false; // reset
 
 
             // free bools for rhs
@@ -926,8 +929,10 @@ class expr_relational : public Node {
 
             // get RH term register
             uint relational_reg = context.extract_expr_reg();
+            context.expr_primary_global_var = false; // reset
 
-        if(context.expr_primary_type == UI){  
+
+            if(context.expr_primary_type == UI){  
                 if(op == "<"){
                     context.internal_expr_value = context.internal_expr_value < context.internal_temp_value;
                     dst<<"\tsltu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<relational_reg<<'\n';
@@ -1012,6 +1017,7 @@ class expr_shift : public Node {
             rec->compile(dst, context); // store variable into expression result
             context.internal_expr_value = context.internal_temp_value;
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            context.expr_primary_global_var = false; // reset
 
 
             // free bools for rhs
@@ -1031,7 +1037,8 @@ class expr_shift : public Node {
 
             // get RH term register
             uint shift_reg = context.extract_expr_reg();
-
+            context.expr_primary_global_var = false; // reset
+            
 
             if(op == "<<"){
                 context.internal_expr_value <<= context.internal_temp_value;
@@ -1096,6 +1103,8 @@ class expr_add : public Node {
             context.internal_expr_value = context.internal_temp_value; // get internal value form rec
 
             std::string temp_register = context.am_i_bottom();
+            context.expr_primary_global_var = false; // reset
+
 
             // check to free for rhs
             bool t = context.err_top, b = context.err_bottom; // save state locally
@@ -1105,14 +1114,13 @@ class expr_add : public Node {
             exp->compile(dst,context); // compile right most term
             context.UNARY_UPDATE();
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
 
 
-            // check result type
             std::string mul_reg = std::to_string(context.extract_expr_reg());
+            context.expr_primary_global_var = false; // reset
 
             
             if(op == "+"){
@@ -1189,6 +1197,7 @@ class expr_mul : public Node {
             context.internal_expr_value = context.internal_temp_value;
             
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            context.expr_primary_global_var = false; // reset
 
 
             // check to free for rhs
@@ -1199,7 +1208,6 @@ class expr_mul : public Node {
             exp->compile(dst,context); // compile right most term // will change reg
             context.UNARY_UPDATE();
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -1207,7 +1215,8 @@ class expr_mul : public Node {
 
             // check literal
             uint cast_reg = context.extract_expr_reg();
-            
+            context.expr_primary_global_var = false; // reset
+
 
             if(op == "*"){
                 
@@ -1308,13 +1317,13 @@ class expr_cast : public Node {
 
             rec->compile(dst, context); // get value
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
 
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-
+            context.expr_primary_global_var = false; // reset
+            
 
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
         }
