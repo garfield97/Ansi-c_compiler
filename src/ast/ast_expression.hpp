@@ -86,6 +86,7 @@ class expr_conditional : public Node {
 
             // evaluate expr_logic_or
             eLOR->compile(dst, context); // store variable into expression result
+            context.expr_primary_global_var = false; // reset
             std::string cmp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
             // beq zero - zero
@@ -106,6 +107,7 @@ class expr_conditional : public Node {
                 expr->compile(dst,context); // compile right most term 
                 context.UNARY_UPDATE();
 
+                context.expr_primary_global_var = false; // reset
                 context.err_top = t;        // restore state
                 context.err_bottom = b;
                 context.expr_result_reg = r;
@@ -217,11 +219,11 @@ class expr_assignment : public Node {
             std::string r = context.expr_result_reg;
             context.err_top = false;
             context.err_bottom = false;
-
             context.type_cast = false;
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -321,6 +323,9 @@ class expr_assignment : public Node {
 
             if(!global_var){
                 dst<<"\tsw\t"<<"$"<<unary_reg<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;  // get s_pos from top of function  
+                // update reg for variable binding
+                sscanf(unary_reg.c_str(),"$%d", &tmp.reg_ID);
+                context.scopes[context.scope_index][var_assigned] = tmp;
             }
             else{   // writing to global
                 // load address
@@ -330,9 +335,7 @@ class expr_assignment : public Node {
                 dst<<"\tsw\t"<<"$"<<unary_reg<<",%lo("<<var_assigned<<")($"<<addr_reg<<")\n";
             }
 
-            // update reg for variable binding
-            sscanf(unary_reg.c_str(),"$%d", &tmp.reg_ID);
-            context.scopes[context.scope_index][var_assigned] = tmp;
+
 
 
             if(top){    
@@ -417,6 +420,8 @@ class expr_logic_or : public Node {
             // EXPR_LOGIC_OR
             rec->compile(dst, context); // store variable into expression result
 
+            context.expr_primary_global_var = false; // reset
+
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
 
@@ -435,6 +440,7 @@ class expr_logic_or : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -507,6 +513,7 @@ class expr_logic_and : public Node {
             // EXPR_LOGIC_AND
             rec->compile(dst, context); // store variable into expression result
 
+            context.expr_primary_global_var = false; // reset
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
             // compare temp_register

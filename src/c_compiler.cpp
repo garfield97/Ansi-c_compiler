@@ -71,6 +71,8 @@ int main(int argc, char* argv[])
 
         CC.declaring = false; // distignuish whether to check through scopes above 
 
+        CC.expr_primary_global_var = false;
+
         CC.sizeof_type = false;
 
         CC.extract_global = false;

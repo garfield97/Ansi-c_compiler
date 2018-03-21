@@ -50,7 +50,12 @@ class statement_compound : public Node{
         {
             
             context.scope_index++; // incrementing the scope index
+
             std::map<std::string,binding>bindings; //create a map for pushing it out at the end.
+            // dumby variable to avoi empty map
+            binding tmp;
+            bindings["000"] = tmp; // "000" invalid C var name - so insert to get begin and end
+
             context.scopes.push_back(bindings);
             
             uint declaration_amount_save = context.declarations;
@@ -62,7 +67,6 @@ class statement_compound : public Node{
                 list->compile(dst,context);
             }
             
-        
             // clear stack from this scope - get rid of variables etc
             // context.declarations has amount of declarations
                 uint new_size = context.stack_size - context.declarations;
@@ -598,15 +602,15 @@ class statement_iteration : public Node{
 
                 statement_expr->compile(dst,context);           //generate the statement expression for declaration, eg int i
                 dst<<"$"<<top_label<<":\n";
-               
+
                 statement_expr_rep->compile(dst,context);           //generate the condition statement eg i<10
                 tmp_condition_reg = context.extract_expr_reg();     //extract the condition for the first time            
                 
                 dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
  
-                   
+                
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
-               
+
                 expr->compile(dst,context);                             //operate on the variable  eg i++; only after first condition check thopugh
              
                 dst<<"\tb\t"<<"$"<<top_label<<'\n';

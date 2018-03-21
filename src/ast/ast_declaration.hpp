@@ -478,7 +478,6 @@ class declarator_init : public Node{
                 else{
                     dst<<"\tmove\t$15,$0\n";
                 }
-
                 dst<<"\tsw\t$15,"<<context.stack_size*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
             
 

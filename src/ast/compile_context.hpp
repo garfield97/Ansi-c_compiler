@@ -70,6 +70,7 @@ struct CompileContext{
 
         // first save any varubale stored in reg_counter
         // search through variables in current scope
+        //std::cout << scope_index << std::endl;
         for(std::map<std::string, binding>::iterator it= scopes[scope_index].begin(); it !=scopes[scope_index].end(); ++it){
             if(it->second.reg_ID == reg_counter){ // replace this variable
                 // save locally
@@ -207,13 +208,13 @@ struct CompileContext{
                 return false; // found this value in the stack
             }
         }
-
+        
         return true; // free to use this value - its not been preserved
     }
 
     std::string am_i_bottom(){ // returns reg as num in string
 
-        if(expr_primary_global_var){
+        if(expr_primary_global_var){ // expr primary
             expr_result = global_expr_result;
         }
         // not conditional
@@ -291,7 +292,9 @@ struct CompileContext{
         if(err_top == true){
             err_top = false;
             err_bottom = false;
-            err_stack.pop_back();
+            if(! (err_stack.size() == 0)){
+                err_stack.pop_back();
+            }
             expr_result = "$"+r;
         }
     }
