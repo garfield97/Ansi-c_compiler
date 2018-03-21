@@ -86,8 +86,9 @@ class expr_conditional : public Node {
 
             // evaluate expr_logic_or
             eLOR->compile(dst, context); // store variable into expression result
-            context.expr_primary_global_var = false; // reset
+
             std::string cmp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            context.expr_primary_global_var = false; // reset
 
             // beq zero - zero
             dst<<"\tbeq\t"<<"$"<<cmp_reg<<",$0,"<<"$"<<zero<<"\n";
@@ -107,13 +108,15 @@ class expr_conditional : public Node {
                 expr->compile(dst,context); // compile right most term 
                 context.UNARY_UPDATE();
 
-                context.expr_primary_global_var = false; // reset
                 context.err_top = t;        // restore state
                 context.err_bottom = b;
                 context.expr_result_reg = r;
 
                 // get register to pass back
                 uint extracted_reg = context.extract_expr_reg();
+                context.expr_primary_global_var = false; // reset
+
+
                 dst<<"\tmove\t"<<"$"<<context.err_overide_reg<<",$"<<extracted_reg<<"\n";
             
                 // b skip
@@ -133,6 +136,7 @@ class expr_conditional : public Node {
                 eConditional->compile(dst,context); // compile right most term 
                 context.UNARY_UPDATE();
 
+                context.expr_primary_global_var = false; // reset
                 context.err_top = t;        // restore state
                 context.err_bottom = b;
                 context.expr_result_reg = r;
@@ -193,7 +197,7 @@ class expr_assignment : public Node {
                 context.assign_reg_set = false;
             }
             
-            context.expr_primary_global_var = false; // reset
+
 
             // EXPR_UNARY
             unary->compile(dst,context); // store variable into expression result
@@ -420,11 +424,9 @@ class expr_logic_or : public Node {
             // EXPR_LOGIC_OR
             rec->compile(dst, context); // store variable into expression result
 
-            context.expr_primary_global_var = false; // reset
-
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
 
-
+            context.expr_primary_global_var = false; // reset
 
             //bne temp 0 - move 1
             dst<<"\tbne\t$"<<temp_register<<",$0,$"<<one<<"\n";
@@ -440,7 +442,6 @@ class expr_logic_or : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -448,6 +449,7 @@ class expr_logic_or : public Node {
 
             // get RH term register
             uint logic_or_reg = context.extract_expr_reg();
+            context.expr_primary_global_var = false; // reset
 
 
 
@@ -513,8 +515,9 @@ class expr_logic_and : public Node {
             // EXPR_LOGIC_AND
             rec->compile(dst, context); // store variable into expression result
 
-            context.expr_primary_global_var = false; // reset
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            context.expr_primary_global_var = false; // reset
+
 
             // compare temp_register
             dst<<"\tbeq\t"<<"$"<<temp_register<<",$0"<<",$"<<zero<<'\n';
@@ -537,6 +540,9 @@ class expr_logic_and : public Node {
 
             // get RH term register
             uint logic_and_reg = context.extract_expr_reg();
+            context.expr_primary_global_var = false; // reset
+
+            
 
 
             // compare l_a_reg
@@ -609,6 +615,7 @@ class expr_inclusive_or : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -679,6 +686,7 @@ class expr_xor : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -750,6 +758,7 @@ class expr_and : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -823,6 +832,7 @@ class expr_equality : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -903,6 +913,7 @@ class expr_relational : public Node {
             context.internal_expr_value = context.internal_temp_value;
             context.UNARY_UPDATE();
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -1007,6 +1018,7 @@ class expr_shift : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -1088,6 +1100,7 @@ class expr_add : public Node {
             exp->compile(dst,context); // compile right most term
             context.UNARY_UPDATE();
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -1181,6 +1194,7 @@ class expr_mul : public Node {
             exp->compile(dst,context); // compile right most term // will change reg
             context.UNARY_UPDATE();
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -1289,6 +1303,7 @@ class expr_cast : public Node {
 
             rec->compile(dst, context); // get value
 
+            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;

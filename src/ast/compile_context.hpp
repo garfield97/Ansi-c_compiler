@@ -158,6 +158,11 @@ struct CompileContext{
     
 
     uint extract_expr_reg(){
+
+        if(expr_primary_global_var){ // expr primary
+            expr_result = global_expr_result;
+        }
+
         uint reg;
         //literal
         if(regex_match(expr_result, reNum)) reg = set_literal_reg();
@@ -165,7 +170,7 @@ struct CompileContext{
         else if(regex_match(expr_result, is_reg)) sscanf(expr_result.c_str(),"$%d", &reg);
         // variable
         else{
-            if(!scopes[0][expr_result].is_global){  // not global
+            if(!expr_primary_global_var){  // not global
                 uint reg_save = scopes[scope_index][expr_result].reg_ID;
 
                 force_update_variable();  // force the variable a new reg
@@ -235,7 +240,7 @@ struct CompileContext{
                     expr_result_reg = std::to_string( err_stack_reg );
                 }
                 else{   // variable
-                    if(!scopes[0][expr_result].is_global){
+                    if(!expr_primary_global_var){
                         uint reg_save = scopes[scope_index][expr_result].reg_ID;
                         force_update_variable();  // froce a new reg
                             // load from stack
