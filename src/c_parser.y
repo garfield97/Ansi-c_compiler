@@ -418,7 +418,7 @@ DECLARATION_EXTERNAL : DEFINITION_FUNCTION { $$ = $1; }
                      | DECLARATION         { $$ = $1; }
 
 
-DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND ';'             { $$ = new definition_function();} 
+DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR ';'             { $$ = new definition_function();} 
                     |SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
          
 
