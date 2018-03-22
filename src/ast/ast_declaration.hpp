@@ -100,11 +100,14 @@ class definition_function : public Node{
             
             
             
-            
+            context.parameter_num = 0;
             
             dst<<'\t'<<".text"<<'\n';
             declarator->compile(dst,context);
             
+            
+            context.parameter_num = 0;
+
             
             // presevre return address
             dst<<"\taddiu\t$sp,$sp,-8\n"; // pushed stack down
@@ -112,7 +115,8 @@ class definition_function : public Node{
             context.stack_size++;
             dst<<"\tsw\t$31,8($sp)\n"; // preseverve return addr
             dst<<"\tsw\t$fp,4($sp)\n"; // stores value of fp intp sp+4
-            dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp
+            dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp           
+            
 
             // now evaluate compound statement
 
@@ -774,14 +778,30 @@ class declaration_parameter : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             current->compile(dst,context);
-            
             uint tmp_return_size = get_type_bytesize(context.tmp_v);            //API to return the size of type
             
+            
+            binding tmp;
+            tmp.type = context.tmp_v;
+            tmp.reg_ID = 33;
+            tmp.is_global = false;
+            
+            
             context.parameter = true;
+            recur->compile(dst,context);        //stores variable name in tmp_v
             
-            recur->compile(dst,context);
+            // add var to stack
+            this.push_stack();
+            dst<<"\tsw\t$a"<<context.parameter_num<<","<<context.stack_size*4<<"($fp)\n";
+            tmp.stack_position = context.stack_size;
             
-            context.parameter = false;
+            
+            context.param_bindings[context.tmp_v] = v;
+            
+            
+            context.parameter = false; 
+            
+            context.paramter_num++;  // for next parameter                              
             
             
         }

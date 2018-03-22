@@ -466,7 +466,10 @@ struct CompileContext{
     }    
     
     bool parameter;
-        
+    
+    uint parameter_num;
+    
+    std::map<std::string, binding> param_bindings;        
 
 
 };
