@@ -859,8 +859,9 @@ class declarator_direct : public Node{
         {
         
             if(symbol != " "){
+
     
-                if(context.scope_index == 0){
+                if(!context.parameter && (context.scope_index == 0)){
                     dst<<'\t'<<".global "<<symbol<<'\n';
                     context.current_func = symbol;
                     
