@@ -778,7 +778,7 @@ class declaration_parameter : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             current->compile(dst,context);
-            uint tmp_return_size = get_type_bytesize(context.tmp_v);            //API to return the size of type
+            uint tmp_return_size = context.get_type_bytesize(context.tmp_v);            //API to return the size of type
             
             
             binding tmp;
@@ -791,17 +791,17 @@ class declaration_parameter : public Node{
             recur->compile(dst,context);        //stores variable name in tmp_v
             
             // add var to stack
-            this.push_stack();
+            this->push_stack(dst,context);
             dst<<"\tsw\t$a"<<context.parameter_num<<","<<context.stack_size*4<<"($fp)\n";
             tmp.stack_position = context.stack_size;
             
             
-            context.param_bindings[context.tmp_v] = v;
+            context.param_bindings[context.tmp_v] = tmp;
             
             
             context.parameter = false; 
             
-            context.paramter_num++;  // for next parameter                              
+            context.parameter_num++;  // for next parameter                              
             
             
         }
@@ -910,16 +910,17 @@ class declarator_direct : public Node{
                     
             }
             
-            else if(brackets){
+            else if((next == NULL) && brackets){
                     current->compile(dst,context);
                     dst<<'\t'<<".ent "<<context.current_func<<'\n';
                     dst<<context.current_func<<":"<<'\n';
+
                     
                     context.functions[context.current_func] = context.function_type;
 
             }
             
-            else if(next != NULL  && brackets){
+            else if((next != NULL)  && brackets){
                     
                     current->compile(dst,context);
                     dst<<'\t'<<".ent "<<context.current_func<<'\n';
