@@ -32,7 +32,7 @@ HEXAD_CONSTANT    		(0x|0X)[0-9a-fA-F]+[integer_suffix]?
 
 CHAR_CONSTANT     		L?['][.]+[']
 
-FLOAT_CONSTANT			-?([0-9]+|[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?)
+FLOAT_CONSTANT			([0-9]+|[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?)
 
 INCLUDE					#[.^\n]
 
@@ -177,6 +177,11 @@ OTHER					.
 						if(u && !l)		{ get_HEXA_U(); 	return UNSIGNED_C;}
 						if(!u && l)		{ get_HEXA_L(); 	return LONG_C;}
 						if(u && l)		{ get_HEXA_UL(); 	return UNSIGNED_LONG_C;}
+					}
+
+{FLOAT_CONSTANT}	{ fprintf(stderr, "Float constant : %s\n", yytext);
+						get_FLOAT();
+						return FLOAT_C;
 					}
 
 {CHAR_CONSTANT}		{ fprintf(stderr, "Character : %s\n", yytext);
@@ -441,7 +446,14 @@ void get_HEXA_UL(){
     sscanf(yytext,"%x",&num);
     yylval.longuintValue = (unsigned long) num; 
 }
-    
+
+
+void get_FLOAT(){
+	double num;
+	sscanf(yytext,"%lf",&num);
+	yylval.floatValue = num; 
+
+} 
 
 
 void get_CHARACTER(){

@@ -1862,6 +1862,7 @@ class expr_primary : public Node {
         unsigned int UIval;
         long int LIval;
         unsigned long ULval;
+        double Fval;
         char Cval;
         bool Sbool;
         bool Ibool;
@@ -1869,6 +1870,7 @@ class expr_primary : public Node {
         bool LIbool;
         bool ULbool;
         bool Cbool;
+        bool Fbool;
         
     public:
         expr_primary(std::string _val)
@@ -1880,6 +1882,7 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(false)
             , Cbool(false)
+            , Fbool(false)
         {}
 
         expr_primary(int _val)
@@ -1891,6 +1894,7 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(false)
             , Cbool(false)
+            , Fbool(false)
         {}
 
         expr_primary(unsigned int _val)
@@ -1902,6 +1906,7 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(false)
             , Cbool(false)
+            , Fbool(false)
         {}
 
         expr_primary(long int _val)
@@ -1913,6 +1918,7 @@ class expr_primary : public Node {
             , LIbool(true)
             , ULbool(false)
             , Cbool(false)
+            , Fbool(false)
         {}
 
         expr_primary(unsigned long _val)
@@ -1924,6 +1930,19 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(true)
             , Cbool(false)
+            , Fbool(false)
+        {}
+
+        expr_primary(double _val)
+            : exp(NULL)
+            , Fval(_val)
+            , Sbool(false)
+            , Ibool(false)
+            , UIbool(false)
+            , LIbool(false)
+            , ULbool(true)
+            , Cbool(false)
+            , Fbool(true)
         {}
 
         expr_primary(char _val)
@@ -1935,6 +1954,7 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(false)
             , Cbool(true)
+            , Fbool(false)
         {}
 
         expr_primary(NodePtr _exp)
@@ -1945,6 +1965,7 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(false)
             , Cbool(false)
+            , Fbool(false)
         {}
 
     public:
