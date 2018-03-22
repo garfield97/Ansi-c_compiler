@@ -94,8 +94,18 @@ class definition_function : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+            
+            specifier_declaration->compile(dst,context);  //invoking the type
+            context.function_type = context.tmp_v;
+            
+            
+            
+            
+            
             dst<<'\t'<<".text"<<'\n';
             declarator->compile(dst,context);
+            
+            
             // presevre return address
             dst<<"\taddiu\t$sp,$sp,-8\n"; // pushed stack down
             context.stack_size++;
@@ -763,8 +773,17 @@ class declaration_parameter : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            current->compile(dst,context);
+            
+            uint tmp_return_size = get_type_bytesize(context.tmp_v);            //API to return the size of type
+            
+            context.parameter = true;
+            
+            recur->compile(dst,context);
+            
+            context.parameter = false;
+            
+            
         }
 };
 
@@ -874,6 +893,24 @@ class declarator_direct : public Node{
                     current->compile(dst,context);
                     dst<<'\t'<<".ent "<<context.current_func<<'\n';
                     dst<<context.current_func<<":"<<'\n';
+                    
+                    context.functions[context.current_func] = context.function_type;
+
+            }
+            
+            else if(next != NULL  && brackets){
+                    
+                    current->compile(dst,context);
+                    dst<<'\t'<<".ent "<<context.current_func<<'\n';
+                    dst<<context.current_func<<":"<<'\n';
+                    
+                    context.functions[context.current_func] = context.function_type;
+                    
+                    next->compile(dst,context);
+                    
+                    
+            
+            
             }
             
             //HEY 

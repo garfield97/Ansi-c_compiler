@@ -80,6 +80,7 @@ int main(int argc, char* argv[])
         CC.assign_reg = 0;
         CC.assigning = false; // for expr_assing not to lose its reg
         CC.assign_reg_set = false;
+        CC.parameter = false;
 
         CC.makeNameUnq = 0; // used for creating labels
 
