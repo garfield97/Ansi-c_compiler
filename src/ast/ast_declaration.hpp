@@ -57,6 +57,12 @@ class definition_function : public Node{
             ,declarator(_arg2)
             ,statement_compound(_arg3)
         {}
+        
+        definition_function() // char used to differentiate
+            :specifier_declaration(NULL)
+            ,declarator(NULL)
+            ,statement_compound(NULL)
+        {}
 
         std::string name = "definition_function"; 
 
@@ -94,6 +100,12 @@ class definition_function : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+        
+            if(statement_compound == NULL){
+                return;
+            }
+                
+            
             
             specifier_declaration->compile(dst,context);  //invoking the type
             context.function_type = context.tmp_v;
