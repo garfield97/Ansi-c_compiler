@@ -23,6 +23,7 @@
   long int longintValue;
   unsigned long longuintValue;
   char characterValue;
+  double floatValue;
 }
 
            
@@ -30,7 +31,7 @@
 %token IDENTIFIER STRING_LITERAL SIZEOF 
  
 %token INT_C UNSIGNED_C LONG_C UNSIGNED_LONG_C
-%token CHARACTER_C
+%token CHARACTER_C FLOAT_C
 
 // Keywords
 %token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
@@ -72,6 +73,7 @@
 %type <longintValue> LONG_C
 %type <longuintValue> UNSIGNED_LONG_C
 %type <characterValue> CHARACTER_C
+%type <floatValue> FLOAT_C
 
 
 %start ROOT
@@ -87,6 +89,7 @@ EXPR_PRIMARY  :IDENTIFIER                 { $$ = new expr_primary(*$1); }
               |LONG_C                     { $$ = new expr_primary($1);  }
               |UNSIGNED_LONG_C            { $$ = new expr_primary($1);  }
               |CHARACTER_C                { $$ = new expr_primary($1);  }
+              |FLOAT_C                    { $$ = new expr_primary($1);  }
               |STRING_LITERAL             { $$ = new expr_primary(*$1); }
               |L_BRACKET EXPR R_BRACKET   { $$ = new expr_primary($2);  }
             
@@ -101,7 +104,7 @@ EXPR_POSTFIX : EXPR_PRIMARY                                     { $$ = $1;      
              | EXPR_POSTFIX OP_DEC                              { $$ = new expr_postfix("--", $1);     }
 
 
-ARG_EXPR_LIST : EXPR_ASSIGNMENT                       { $$ = $1;                        }
+ARG_EXPR_LIST : EXPR_ASSIGNMENT                       { $$ = new arg_expr_list($1);     }
               | ARG_EXPR_LIST ',' EXPR_ASSIGNMENT     { $$ = new arg_expr_list($1, $3); }
 
            

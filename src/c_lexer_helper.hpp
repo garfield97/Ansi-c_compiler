@@ -18,6 +18,8 @@ void get_HEXA_U();
 void get_HEXA_L();
 void get_HEXA_UL();
 
+void get_FLOAT();
+
 void get_CHARACTER();
 
 #endif

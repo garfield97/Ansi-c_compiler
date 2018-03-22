@@ -1905,6 +1905,7 @@ class expr_primary : public Node {
         unsigned int UIval;
         long int LIval;
         unsigned long ULval;
+        double Fval;
         char Cval;
         bool Sbool;
         bool Ibool;
@@ -1912,6 +1913,7 @@ class expr_primary : public Node {
         bool LIbool;
         bool ULbool;
         bool Cbool;
+        bool Fbool;
         
     public:
         expr_primary(std::string _val)
@@ -1923,6 +1925,7 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(false)
             , Cbool(false)
+            , Fbool(false)
         {}
 
         expr_primary(int _val)
@@ -1934,6 +1937,7 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(false)
             , Cbool(false)
+            , Fbool(false)
         {}
 
         expr_primary(unsigned int _val)
@@ -1945,6 +1949,7 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(false)
             , Cbool(false)
+            , Fbool(false)
         {}
 
         expr_primary(long int _val)
@@ -1956,6 +1961,7 @@ class expr_primary : public Node {
             , LIbool(true)
             , ULbool(false)
             , Cbool(false)
+            , Fbool(false)
         {}
 
         expr_primary(unsigned long _val)
@@ -1967,6 +1973,19 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(true)
             , Cbool(false)
+            , Fbool(false)
+        {}
+
+        expr_primary(double _val)
+            : exp(NULL)
+            , Fval(_val)
+            , Sbool(false)
+            , Ibool(false)
+            , UIbool(false)
+            , LIbool(false)
+            , ULbool(true)
+            , Cbool(false)
+            , Fbool(true)
         {}
 
         expr_primary(char _val)
@@ -1978,6 +1997,7 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(false)
             , Cbool(true)
+            , Fbool(false)
         {}
 
         expr_primary(NodePtr _exp)
@@ -1988,6 +2008,7 @@ class expr_primary : public Node {
             , LIbool(false)
             , ULbool(false)
             , Cbool(false)
+            , Fbool(false)
         {}
 
     public:
@@ -2053,23 +2074,28 @@ class expr_primary : public Node {
             }
             else if(UIbool){
                 context.expr_result = std::to_string(UIval);
-                context.internal_temp_value = context.internal_expr_value = UIval;
+                context.internal_temp_value = context.internal_expr_value = (long)UIval;
                 context.expr_primary_type = UI;
             }
             else if(LIbool){
                 context.expr_result = std::to_string(LIval);
-                context.internal_temp_value = context.internal_expr_value = LIval;
+                context.internal_temp_value = context.internal_expr_value = (long)LIval;
                 context.expr_primary_type = LI;
             }
             else if(ULbool){
                 context.expr_result = std::to_string(ULval);
-                context.internal_temp_value = context.internal_expr_value = ULval;
+                context.internal_temp_value = context.internal_expr_value = (long)ULval;
                 context.expr_primary_type = UL;
             } 
             else if(Cbool){
-                context.expr_result = std::to_string(Cval);
-                context.internal_temp_value = context.internal_expr_value = Cval;
+                context.expr_result = std::to_string((int)Cval);
+                context.internal_temp_value = context.internal_expr_value = (long)Cval;
                 context.expr_primary_type = C;
+            }
+            else if(Fbool){
+                context.expr_result = std::to_string(Fval);
+                context.internal_temp_value = context.internal_expr_value = (long)Fval;
+                context.expr_primary_type = F;
             }
             else if(exp != NULL){
                 exp->compile(dst, context);
