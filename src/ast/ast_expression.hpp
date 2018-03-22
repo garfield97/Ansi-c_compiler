@@ -1586,9 +1586,9 @@ class arg_expr_list : public Node {
             , exp(_exp)
         {}
         
-        arg_expr_list(NodePtr _next)
-            : next(_next)
-            , exp(NULL)
+        arg_expr_list(NodePtr _arg1)
+            : next(NULL)
+            , exp(_arg1)
         {}
     public:
     
@@ -1610,31 +1610,22 @@ class arg_expr_list : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-           
-            bool top = context.am_i_top();     // check if i'm top node;
             
             context.func_arg_reg_count = 0;
             // ARG_EXPR_LIST
             
-            next->compile(dst, context); // store variable into expression result
-            std::string arg_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-            dst<<"\tmove\t$a"<<context.func_arg_reg_count<<",$"<<arg_reg<<'\n';
+            if(next != NULL) next->compile(dst, context); // store variable into expression result
+
+            
+            exp->compile(dst,context); // compile right most term 
+            context.UNARY_UPDATE();
+
+            // get RH term register
+            uint exp_reg = context.extract_expr_reg();
+            dst<<"\tmove\t$a"<<context.func_arg_reg_count<<",$"<<exp_reg<<'\n';
             context.func_arg_reg_count++;
-            
-            if(exp != NULL){
-                exp->compile(dst,context); // compile right most term 
-                context.UNARY_UPDATE();
 
-                // get RH term register
-                uint exp_reg = context.extract_expr_reg();
-                dst<<"\tmove\t$a"<<context.func_arg_reg_count<<",$"<<exp_reg<<'\n';
-            }
 
-            
-            //uint exp_reg = context.extract_expr_reg();
-
-            context.internal_temp_value = context.internal_expr_value;
-            if(top) context.i_am_top(arg_reg); // send to above node that isnt recursive
         }
 };
 
