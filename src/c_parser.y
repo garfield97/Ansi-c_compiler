@@ -418,10 +418,7 @@ DECLARATION_EXTERNAL : DEFINITION_FUNCTION { $$ = $1; }
                      | DECLARATION         { $$ = $1; }
 
 
-DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND { $$ = new definition_function($1, $2, $3, $4); }
-                    | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
-                    | DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND                       { $$ = new definition_function('$', $1, $2, $3); }
-                    | DECLARATOR STATEMENT_COMPOUND                                        { $$ = new definition_function($1, $2); }
+DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
          
 
 %%

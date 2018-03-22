@@ -42,44 +42,20 @@ class declaration_external : public Node {
 class definition_function : public Node{
 
 
-    //DEFINITION_FUNCTION : SPECIFIER_DECLARATION DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND { $$ = new definition_function($1, $2, $3, $4); }
-    //                    | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
-    //                    | DECLARATOR LIST_DECLARATION STATEMENT_COMPOUND                       { $$ = new definition_function('$', $1, $2, $3); }
-    //                    | DECLARATOR STATEMENT_COMPOUND       
+    //DEFINITION_FUNCTION : 
+    //                    SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
+     
 
     private:
         NodePtr  specifier_declaration;
         NodePtr  declarator;
-        NodePtr  list_declaration;
         NodePtr  statement_compound;
 
     public:
-        definition_function(NodePtr _arg1,NodePtr _arg2,NodePtr _arg3,NodePtr _arg4)
-            :specifier_declaration(_arg1)
-            ,declarator(_arg2)
-            ,list_declaration(_arg3)
-            ,statement_compound(_arg4)
-        {}
-
         definition_function(NodePtr _arg1,NodePtr _arg2, char x, NodePtr _arg3) // char used to differentiate
             :specifier_declaration(_arg1)
             ,declarator(_arg2)
-            ,list_declaration(NULL)
             ,statement_compound(_arg3)
-        {}
-
-        definition_function(char x, NodePtr _arg_1,NodePtr _arg_2,NodePtr _arg_3) // char used to differentiate
-            :specifier_declaration(NULL)
-            ,declarator(_arg_1)
-            ,list_declaration(_arg_2)
-            ,statement_compound(_arg_3)
-        {} 
-     
-        definition_function(NodePtr _arg1,NodePtr _arg2)
-            :specifier_declaration(NULL)
-            ,declarator(_arg1)
-            ,list_declaration(NULL)
-            ,statement_compound(_arg2)
         {}
 
         std::string name = "definition_function"; 
