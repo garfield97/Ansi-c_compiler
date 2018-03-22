@@ -469,7 +469,10 @@ struct CompileContext{
     
     uint parameter_num;
     
-    std::map<std::string, binding> param_bindings;        
+    std::map<std::string, binding> param_bindings;    
+    
+    uint save_stack_pos_31;
+    uint save_stack_pos_fp;
 
 
 };
