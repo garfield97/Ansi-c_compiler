@@ -213,7 +213,6 @@ class expr_assignment : public Node {
 
 
             std::string unary_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-
             
             binding tmp = context.scopes[context.scope_index][context.expr_result];
 
@@ -227,7 +226,6 @@ class expr_assignment : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -241,6 +239,7 @@ class expr_assignment : public Node {
 
             // get RH term register
             uint exp_reg = context.extract_expr_reg();
+            context.expr_primary_global_var = false; // reset
 
 
             // sets tmp_v with operator
@@ -688,7 +687,6 @@ class expr_xor : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -762,7 +760,6 @@ class expr_and : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -921,7 +918,6 @@ class expr_relational : public Node {
             context.internal_expr_value = context.internal_temp_value;
             context.UNARY_UPDATE();
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -1029,7 +1025,6 @@ class expr_shift : public Node {
             exp->compile(dst,context); // compile right most term 
             context.UNARY_UPDATE();
 
-            context.expr_primary_global_var = false; // reset
             context.err_top = t;        // restore state
             context.err_bottom = b;
             context.expr_result_reg = r;
@@ -1323,7 +1318,7 @@ class expr_cast : public Node {
 
             std::string temp_register = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
             context.expr_primary_global_var = false; // reset
-            
+
 
             if(top) context.i_am_top(temp_register); // send to above node that isnt recursive
         }
@@ -1408,7 +1403,8 @@ class expr_unary : public Node {
             if(brackets) context.sizeof_type = true;
 
             std::string exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-
+            bool global_var = context.expr_primary_global_var;
+            context.expr_primary_global_var = false; // reset
 
             // Operations
 
@@ -1446,10 +1442,18 @@ class expr_unary : public Node {
                 else{
                     dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
                 }
-                context.force_update_variable();
-                uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
-                dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
-                dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
+
+                if(global_var){
+                    uint addr = context.get_free_reg();
+                    dst<<"\tlui\t"<<"$"<<addr<<",%hi("<<context.expr_result<<")\n";
+                    dstStream<<"\tsw\t$"<<exp_reg<<",%lo("<<context.expr_result<<")($"<<addr<<")\n";
+                }
+                else{
+                    context.force_update_variable();
+                    uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
+                    dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
+                    dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
+                }
             }
 
             if(terminal == "--"){
@@ -1459,10 +1463,17 @@ class expr_unary : public Node {
                 else{
                     dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",-1"<<std::endl;
                 }
-                context.force_update_variable();
-                uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
-                dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
-                dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
+                if(global_var){
+                    uint addr = context.get_free_reg();
+                    dst<<"\tlui\t"<<"$"<<addr<<",%hi("<<context.expr_result<<")\n";
+                    dstStream<<"\tsw\t$"<<exp_reg<<",%lo("<<context.expr_result<<")($"<<addr<<")\n";
+                }
+                else{
+                    context.force_update_variable();
+                    uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
+                    dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
+                    dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
+                }
             }
                 
 
@@ -1476,9 +1487,12 @@ class expr_unary : public Node {
                 context.expr_result = var_save;
 
                 if(tmp_op == "-"){
-                    context.internal_expr_value = -context.internal_temp_value;             
-                    if(context.update_variable()){}                           
-                    dst<<"\tsub\t$"<<exp_reg<<",$0,$"<<exp_reg<<'\n';              
+                    context.internal_expr_value = -context.internal_temp_value;
+           
+                    if(global_var || context.update_variable()){}
+
+                    dst<<"\tsub\t$"<<exp_reg<<",$0,$"<<exp_reg<<'\n';
+           
                 }
                 if(tmp_op == "+"){
                 
@@ -1511,7 +1525,7 @@ class expr_unary : public Node {
                 }
                 if(tmp_op == "~"){ 
                     context.internal_expr_value = ~context.internal_temp_value;                
-                    if(context.update_variable()){}                           
+                    if(global_var || context.update_variable()){}                           
                     dst<<"\tnot\t$"<<exp_reg<<",$"<<exp_reg<<'\n';              
                 }       
             }
@@ -1728,20 +1742,29 @@ class expr_postfix : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             bool top = context.am_i_top();     // check if i'm top node;
-            next->compile(dst,context); // compile right most term
 
+            next->compile(dst,context); // compile right most term
             context.UNARY_UPDATE();
-            
             context.internal_expr_value = context.internal_temp_value;
+
+
+
          
+
             if(bracket){ // function call
                 binding tmp;
                 tmp.reg_ID = 33;
                 tmp.stack_position = 6969;
                 context.scopes[context.scope_index][context.expr_result] = tmp;
             }
+
+
             std::string exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-            
+            bool global_var = context.expr_primary_global_var; // global postfix
+            context.expr_primary_global_var = false; // reset
+
+
+
             // Operations
 
             // INC and DEC
@@ -1757,8 +1780,15 @@ class expr_postfix : public Node {
                     dst<<"\tmove\t$"<<exp_reg<<",$"<<exp_reg<<std::endl;      //same as before but for signed
                     dst<<"\taddi\t$"<<local<<",$"<<exp_reg<<",1\n";                 
                 }
-                dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";   //saves values back onto stack
 
+                if(global_var){
+                    uint addr = context.get_free_reg();
+                    dst<<"\tlui\t"<<"$"<<addr<<",%hi("<<context.global_expr_result<<")\n";
+                    dst<<"\tsw\t$"<<local<<",%lo("<<context.global_expr_result<<")($"<<addr<<")\n";
+                }
+                else{
+                    dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";   //saves values back onto stack
+                }
             }
 
             else if(opr == "--"){
@@ -1773,8 +1803,15 @@ class expr_postfix : public Node {
                     dst<<"\tmove\t$"<<exp_reg<<",$"<<exp_reg<<std::endl;      //same as before but for signed
                     dst<<"\taddi\t$"<<local<<",$"<<exp_reg<<",-1\n";                 
                 }
-                dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";   //saves values back onto stack
 
+                if(global_var){
+                    uint addr = context.get_free_reg();
+                    dst<<"\tlui\t"<<"$"<<addr<<",%hi("<<context.global_expr_result<<")\n";
+                    dst<<"\tsw\t$"<<local<<",%lo("<<context.global_expr_result<<")($"<<addr<<")\n";
+                }
+                else{
+                    dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";   //saves values back onto stack
+                }
             }             
                         
             // function call of 0 arguments
