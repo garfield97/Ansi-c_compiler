@@ -113,7 +113,7 @@ class definition_function : public Node{
             dst<<"\taddiu\t$sp,$sp,-8\n"; // pushed stack down
             context.stack_size++;
             context.stack_size++;
-            dst<<"\tsw\t$31,8($sp)\n"; // preseverve return addr
+            dst<<"\tsw\t$31,"<<context.stack_size<<"($sp)\n"; // preseverve return addr
             dst<<"\tsw\t$fp,4($sp)\n"; // stores value of fp intp sp+4
             dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp           
             
