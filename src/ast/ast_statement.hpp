@@ -52,9 +52,17 @@ class statement_compound : public Node{
             context.scope_index++; // incrementing the scope index
 
             std::map<std::string,binding>bindings; //create a map for pushing it out at the end.
-            // dumby variable to avoi empty map
-            binding tmp;
-            bindings["000"] = tmp; // "000" invalid C var name - so insert to get begin and end
+            
+            // copy in params for a function
+            if(context.parameter){
+                std::map<std::string, binding>::iterator it;
+                
+                for(it = context.param_bindings.begin(); it != context.param_bindings.end(); ++it){
+                    bindings[it->first] = it->second;
+                }
+                context.param_bindings.clear();
+                context.parameter = false;
+            }
 
             context.scopes.push_back(bindings);
             

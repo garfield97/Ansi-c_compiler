@@ -94,15 +94,29 @@ class definition_function : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+            
+            specifier_declaration->compile(dst,context);  //invoking the type
+            context.function_type = context.tmp_v;
+            
+            
+            
+            context.parameter_num = 0;
+            
             dst<<'\t'<<".text"<<'\n';
             declarator->compile(dst,context);
+            
+            
+            context.parameter_num = 0;
+
+            
             // presevre return address
             dst<<"\taddiu\t$sp,$sp,-8\n"; // pushed stack down
             context.stack_size++;
             context.stack_size++;
             dst<<"\tsw\t$31,8($sp)\n"; // preseverve return addr
             dst<<"\tsw\t$fp,4($sp)\n"; // stores value of fp intp sp+4
-            dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp
+            dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp           
+            
 
             // now evaluate compound statement
 
@@ -763,8 +777,33 @@ class declaration_parameter : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            dst<<"AST Node: "<<name<<" does not yet support compile function"<<std::endl;
-            exit(1);
+            current->compile(dst,context);
+            uint tmp_return_size = get_type_bytesize(context.tmp_v);            //API to return the size of type
+            
+            
+            binding tmp;
+            tmp.type = context.tmp_v;
+            tmp.reg_ID = 33;
+            tmp.is_global = false;
+            
+            
+            context.parameter = true;
+            recur->compile(dst,context);        //stores variable name in tmp_v
+            
+            // add var to stack
+            this.push_stack();
+            dst<<"\tsw\t$a"<<context.parameter_num<<","<<context.stack_size*4<<"($fp)\n";
+            tmp.stack_position = context.stack_size;
+            
+            
+            context.param_bindings[context.tmp_v] = v;
+            
+            
+            context.parameter = false; 
+            
+            context.paramter_num++;  // for next parameter                              
+            
+            
         }
 };
 
@@ -875,6 +914,24 @@ class declarator_direct : public Node{
                     current->compile(dst,context);
                     dst<<'\t'<<".ent "<<context.current_func<<'\n';
                     dst<<context.current_func<<":"<<'\n';
+                    
+                    context.functions[context.current_func] = context.function_type;
+
+            }
+            
+            else if(next != NULL  && brackets){
+                    
+                    current->compile(dst,context);
+                    dst<<'\t'<<".ent "<<context.current_func<<'\n';
+                    dst<<context.current_func<<":"<<'\n';
+                    
+                    context.functions[context.current_func] = context.function_type;
+                    
+                    next->compile(dst,context);
+                    
+                    
+            
+            
             }
             
             //HEY 

@@ -439,6 +439,38 @@ struct CompileContext{
     }
     
     int func_arg_reg_count;
+    std::string function_type;
+    std::map<std::string,std::string>functions;
+    
+    uint get_type_bytesize(std::string type){
+    
+        if(type == "char" || "unsigned char" || "signed char"){
+            return 1;
+        }
+        
+        
+        else if(type == "short" || "signed short" || "unsigned short"){
+            return 2;
+        }
+        
+        else if(type == "long long int" || "long long" || "signed long long" || "unsigned long long" || 
+                         "signed long long int" || "unsigned long long int" || "long float"|| "double"){
+        
+            return 8;
+        
+        }
+        else{
+            return 4;
+        }
+        
+    }    
+    
+    bool parameter;
+    
+    uint parameter_num;
+    
+    std::map<std::string, binding> param_bindings;        
+
 
 };
 
