@@ -1606,6 +1606,7 @@ class arg_expr_list : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
+           
             bool top = context.am_i_top();     // check if i'm top node;
 
             // ARG_EXPR_LIST
@@ -1630,10 +1631,6 @@ class arg_expr_list : public Node {
 
             // get RH term register
             //uint exp_reg = context.extract_expr_reg();
-
-
-
-
 
             context.internal_temp_value = context.internal_expr_value;
             if(top) context.i_am_top(arg_reg); // send to above node that isnt recursive
@@ -1837,6 +1834,40 @@ class expr_postfix : public Node {
                 dst<<"\tmove\t$"<<exp_reg<<",$2\n";
 
             }
+            
+            else if (bracket && (exp != NULL)){
+
+                //allocate space on stack for this function
+                this->push_stack(dst,context);
+                uint s_pos = context.stack_size;
+
+                // save $8-$15 to the stack
+                context.save_8_15();
+
+                uint save_size = context.stack_size;
+                context.stack_size = 0;
+                //next is the function name
+                dst<<"\tjal\t"<<context.expr_result<<"\n\tnop\n";
+
+                dst<<"\tsw\t$2,"<<s_pos*4<<"($fp)\n";
+                context.stack_size = save_size;
+                
+                exp->compile(dst,context);   //call the argument expression lists to compile
+                this->push_stack(dst,context); 
+                s_pos = context.stack_size;
+                
+
+
+                // restore $8-15
+                context.restore_8_15();
+
+                dst<<"\tmove\t$"<<exp_reg<<",$2\n";
+                
+                //need to call the arg_exp_list
+                
+            
+            }
+            
 
             // end of operations code
 
