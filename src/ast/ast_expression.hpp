@@ -1585,7 +1585,11 @@ class arg_expr_list : public Node {
             : next(_next)
             , exp(_exp)
         {}
-
+        
+        arg_expr_list(NodePtr _next)
+            : next(_next)
+            , exp(NULL)
+        {}
     public:
     
         std::string name = "arg_expr_list";
@@ -1608,28 +1612,37 @@ class arg_expr_list : public Node {
         {
            
             bool top = context.am_i_top();     // check if i'm top node;
-
+            
+            if(top){
+                context.func_arg_reg_count = 0;
+            }
             // ARG_EXPR_LIST
+            
             next->compile(dst, context); // store variable into expression result
-            context.internal_expr_value = context.internal_temp_value;
             std::string arg_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            dst<<"\tmove\t$a"<<context.func_arg_reg_count<<",$"<<arg_reg<<'\n';
+            context.func_arg_reg_count++;
+            
+            if(exp != NULL){
+                // free bools for rhs
+                bool t = context.err_top, b = context.err_bottom; // save context state locally
+                std::string r = context.expr_result_reg;
+                context.err_top = false;
+                context.err_bottom = false;
 
+                exp->compile(dst,context); // compile right most term 
+                context.UNARY_UPDATE();
 
-            // free bools for rhs
-            bool t = context.err_top, b = context.err_bottom; // save state locally
-            std::string r = context.expr_result_reg;
-            context.err_top = false;
-            context.err_bottom = false;
+                context.err_top = t;        // restore state
+                context.err_bottom = b;
+                context.expr_result_reg = r;
+                // get RH term register
+                uint exp_reg = context.extract_expr_reg();
+                dst<<"\tmove\t$a"<<context.func_arg_reg_count<<",$"<<exp_reg<<'\n';
 
-            exp->compile(dst,context); // compile right most term 
-            context.UNARY_UPDATE();
+            }
 
-            context.err_top = t;        // restore state
-            context.err_bottom = b;
-            context.expr_result_reg = r;
-
-
-            // get RH term register
+            
             //uint exp_reg = context.extract_expr_reg();
 
             context.internal_temp_value = context.internal_expr_value;
@@ -1821,49 +1834,48 @@ class expr_postfix : public Node {
                 context.save_8_15();
 
                 uint save_size = context.stack_size;
-                context.stack_size = 0;
+                context.stack_size = 0;  // setting stack for 0 for function 
                 //next is the function name
                 dst<<"\tjal\t"<<context.expr_result<<"\n\tnop\n";
 
                 dst<<"\tsw\t$2,"<<s_pos*4<<"($fp)\n";
                 context.stack_size = save_size;
 
-                // restore $8-15
+                // restore $8-15    
                 context.restore_8_15();
 
                 dst<<"\tmove\t$"<<exp_reg<<",$2\n";
 
             }
             
-            else if (bracket && (exp != NULL)){
+            else if (bracket && (exp != NULL)){   //function call of multiple arguments
 
-                //allocate space on stack for this function
                 this->push_stack(dst,context);
                 uint s_pos = context.stack_size;
+              
+                exp->compile(dst,context);
 
                 // save $8-$15 to the stack
+               
+               
                 context.save_8_15();
 
                 uint save_size = context.stack_size;
+                
                 context.stack_size = 0;
+                
+                
+                
                 //next is the function name
                 dst<<"\tjal\t"<<context.expr_result<<"\n\tnop\n";
 
                 dst<<"\tsw\t$2,"<<s_pos*4<<"($fp)\n";
                 context.stack_size = save_size;
-                
-                exp->compile(dst,context);   //call the argument expression lists to compile
-                this->push_stack(dst,context); 
-                s_pos = context.stack_size;
-                
-
 
                 // restore $8-15
                 context.restore_8_15();
 
                 dst<<"\tmove\t$"<<exp_reg<<",$2\n";
-                
-                //need to call the arg_exp_list
                 
             
             }

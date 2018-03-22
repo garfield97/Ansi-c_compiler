@@ -437,6 +437,8 @@ struct CompileContext{
         stack_size -= 8;
         dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl;  
     }
+    
+    int func_arg_reg_count;
 
 };
 
