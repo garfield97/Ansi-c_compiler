@@ -1821,7 +1821,7 @@ class expr_postfix : public Node {
                 //next is the function name
                 dst<<"\tjal\t"<<func<<"\n\tnop\n";
 
-                dst<<"\tsw\t$2,"<<s_pos*4<<"($fp)\n";
+                dst<<"\tsw\t$2,"<<s_pos*4<<"($sp)\n";
                 context.stack_size = save_size;
 
                 // restore $8-15    
@@ -1853,7 +1853,7 @@ class expr_postfix : public Node {
                 //next is the function name
                 dst<<"\tjal\t"<<func<<"\n\tnop\n";
 
-                dst<<"\tsw\t$2,"<<s_pos*4<<"($fp)\n";
+                dst<<"\tsw\t$2,"<<s_pos*4<<"($sp)\n";
                 context.stack_size = save_size;
 
                 // restore $8-15

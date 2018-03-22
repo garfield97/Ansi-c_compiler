@@ -11,7 +11,8 @@ int g(int y,int x){
 int main(){
     
     int x;
+	int y;
     x = f(x,5);
-    int y = g(x,12);
+    y = g(x,12);
     return x+y;
 }
