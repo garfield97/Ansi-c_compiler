@@ -797,9 +797,7 @@ class declaration_parameter : public Node{
             
             
             context.param_bindings[context.tmp_v] = tmp;
-            
-            
-            context.parameter = false; 
+        
             
             context.parameter_num++;  // for next parameter                              
             
