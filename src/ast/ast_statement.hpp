@@ -433,7 +433,7 @@ class statement_jump : public Node{
             if(symbol == "return"){
                 // push stack
                 dst<<"\taddu\t$sp,$fp,$0\n"; // restore sp
-                dst<<"\tlw\t$31,"<<(context.save_stack_pos_31)*4<"($sp)\n";
+                dst<<"\tlw\t$31,"<<(context.save_stack_pos_31)*4<<"($sp)\n";
                 dst<<"\tlw\t$fp,"<<(context.save_stack_pos_fp)*4<<"($sp)\n";
                 dst<<"\taddiu\t$sp,$sp,"<<context.stack_size*4<<"\n";
                 dst<<"\tj\t$31\n\tnop\n"; // jump to return addr

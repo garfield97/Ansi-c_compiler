@@ -1613,9 +1613,7 @@ class arg_expr_list : public Node {
            
             bool top = context.am_i_top();     // check if i'm top node;
             
-            if(top){
-                context.func_arg_reg_count = 0;
-            }
+            context.func_arg_reg_count = 0;
             // ARG_EXPR_LIST
             
             next->compile(dst, context); // store variable into expression result
@@ -1624,22 +1622,12 @@ class arg_expr_list : public Node {
             context.func_arg_reg_count++;
             
             if(exp != NULL){
-                // free bools for rhs
-                bool t = context.err_top, b = context.err_bottom; // save context state locally
-                std::string r = context.expr_result_reg;
-                context.err_top = false;
-                context.err_bottom = false;
-
                 exp->compile(dst,context); // compile right most term 
                 context.UNARY_UPDATE();
 
-                context.err_top = t;        // restore state
-                context.err_bottom = b;
-                context.expr_result_reg = r;
                 // get RH term register
                 uint exp_reg = context.extract_expr_reg();
                 dst<<"\tmove\t$a"<<context.func_arg_reg_count<<",$"<<exp_reg<<'\n';
-
             }
 
             
@@ -1758,21 +1746,25 @@ class expr_postfix : public Node {
             context.internal_expr_value = context.internal_temp_value;
 
 
-
+            std::string func = context.expr_result;
          
+            std::string exp_reg;
+
+            bool global_var = false;
 
             if(bracket){ // function call
                 binding tmp;
                 tmp.reg_ID = 33;
                 tmp.stack_position = 6969;
                 context.scopes[context.scope_index][context.expr_result] = tmp;
+                exp_reg = std::to_string(context.get_free_reg());
             }
-
-
-            std::string exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-            bool global_var = context.expr_primary_global_var; // global postfix
-            context.expr_primary_global_var = false; // reset
-
+            else{
+                exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+                
+                global_var = context.expr_primary_global_var; // global postfix
+                context.expr_primary_global_var = false; // reset
+            }
 
 
             // Operations
@@ -1836,7 +1828,7 @@ class expr_postfix : public Node {
                 uint save_size = context.stack_size;
                 context.stack_size = 0;  // setting stack for 0 for function 
                 //next is the function name
-                dst<<"\tjal\t"<<context.expr_result<<"\n\tnop\n";
+                dst<<"\tjal\t"<<func<<"\n\tnop\n";
 
                 dst<<"\tsw\t$2,"<<s_pos*4<<"($fp)\n";
                 context.stack_size = save_size;
@@ -1850,10 +1842,11 @@ class expr_postfix : public Node {
             
             else if (bracket && (exp != NULL)){   //function call of multiple arguments
 
+                context.func_arg_reg_count = 0;
+                exp->compile(dst,context); //arguments
+
                 this->push_stack(dst,context);
                 uint s_pos = context.stack_size;
-              
-                exp->compile(dst,context);
 
                 // save $8-$15 to the stack
                
@@ -1867,7 +1860,7 @@ class expr_postfix : public Node {
                 
                 
                 //next is the function name
-                dst<<"\tjal\t"<<context.expr_result<<"\n\tnop\n";
+                dst<<"\tjal\t"<<func<<"\n\tnop\n";
 
                 dst<<"\tsw\t$2,"<<s_pos*4<<"($fp)\n";
                 context.stack_size = save_size;
