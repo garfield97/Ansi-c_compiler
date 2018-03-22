@@ -114,7 +114,7 @@ class definition_function : public Node{
             context.stack_size++;
             context.stack_size++;
             dst<<"\tsw\t$31,"<<(context.stack_size+2)*4<<"($sp)\n"; // preseverve return addr
-            dst<<"\tsw\t$fp,"<<(context.stack+1)*4<<"($sp)\n"; // stores value of fp intp sp+4
+            dst<<"\tsw\t$fp,"<<(context.stack_size+1)*4<<"($sp)\n"; // stores value of fp intp sp+4
             dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp           
             
 
