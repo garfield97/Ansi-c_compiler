@@ -104,7 +104,7 @@ EXPR_POSTFIX : EXPR_PRIMARY                                     { $$ = $1;      
              | EXPR_POSTFIX OP_DEC                              { $$ = new expr_postfix("--", $1);     }
 
 
-ARG_EXPR_LIST : EXPR_ASSIGNMENT                       { $$ = $1;                        }
+ARG_EXPR_LIST : EXPR_ASSIGNMENT                       { $$ = new arg_expr_list($1);     }
               | ARG_EXPR_LIST ',' EXPR_ASSIGNMENT     { $$ = new arg_expr_list($1, $3); }
 
            

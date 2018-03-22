@@ -247,6 +247,27 @@ class specifier_declaration : public Node{
                 
                 context.tmp_v = "unsigned " + context.tmp_v;
             }
+
+            if(context.tmp_v == "signed"){
+                
+                next->compile(dst,context);
+                
+                context.tmp_v = "signed " + context.tmp_v;
+            }
+
+            if(context.tmp_v == "long"){
+                
+                next->compile(dst,context);
+                
+                context.tmp_v = "long " + context.tmp_v;
+            }
+
+            if(context.tmp_v == "short"){
+                
+                next->compile(dst,context);
+                
+                context.tmp_v = "short " + context.tmp_v;
+            }
             
             
             
