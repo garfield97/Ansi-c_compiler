@@ -72,7 +72,7 @@ struct CompileContext{
         // search through variables in current scope
         //std::cout << scope_index << std::endl;
         for(std::map<std::string, binding>::iterator it= scopes[scope_index].begin(); it !=scopes[scope_index].end(); ++it){
-            if(it->second.reg_ID == reg_counter){ // replace this variable
+            if(it->second.reg_ID == reg_counter && (it->first != expr_result)){ // replace this variable
                 // save locally
                 s_pos = it->second.stack_position;
                 found = true;
@@ -105,7 +105,7 @@ struct CompileContext{
             s_pos = tmp.stack_position;
         }
             
-        if(local == 33){    // unassigned -
+        if((local == 33) && (s_pos != 0)){    // unassigned -
             local = get_free_reg();
             scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
             scopes[scope_index][expr_result].stack_position = s_pos;

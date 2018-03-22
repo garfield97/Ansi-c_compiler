@@ -398,7 +398,7 @@ class statement_jump : public Node{
                 
                 // not global
                 else{
-                    context.update_variable(); 
+                    context.force_update_variable(); 
                 }
 
                 if(regex_match(context.expr_result, context.reNum)){ // literal
@@ -450,7 +450,6 @@ class statement_jump : public Node{
         }
 };
 
-// need to overhaul declare for this
 class statement_iteration : public Node{
     //STATEMENT_ITERATION : WHILE L_BRACKET EXPR R_BRACKET STATEMENT
     //                    | DO STATEMENT WHILE L_BRACKET EXPR R_BRACKET ';' 
@@ -648,7 +647,6 @@ class statement_iteration : public Node{
             
         }
 };
-
 
 class statement_selection : public Node{
     //STATEMENT_SELECTION : IF L_BRACKET EXPR R_BRACKET STATEMENT

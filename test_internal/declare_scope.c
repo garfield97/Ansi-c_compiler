@@ -4,5 +4,5 @@ int main(){
 	for(i=0; i<4; ++i){
 		int z = 0;
 	}
-	return 0;
+	return i;
 }

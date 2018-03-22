@@ -3,5 +3,5 @@ int main(){
 	int y = 2;
 	int z;
 	z = x - y;
-	return 10;
+	return z;
 }
