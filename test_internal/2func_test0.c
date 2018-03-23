@@ -1,13 +1,11 @@
 int f(int x,int y){
-	x = 9;
-    y=5;
-    return y;
+    return y+x;
 }
 
 
 int main(){
     
     int x = 2;
-	x = f(4,5);
+	x = f(4,5) + f(3,4);
     return x;
 }
