@@ -16,6 +16,8 @@ int main(){
         z=3;
         zz=7;
         
+       return  a(x,y,z,zz);
+        
 }
 
 int a (int x,int y,int z,int zz){
