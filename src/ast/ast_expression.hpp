@@ -1610,21 +1610,34 @@ class arg_expr_list : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            
+
             context.func_arg_reg_count = 0;
             // ARG_EXPR_LIST
             
             if(next != NULL) next->compile(dst, context); // store variable into expression result
 
-            
-            exp->compile(dst,context); // compile right most term 
+
+
+            // argument expr
+            bool t = context.err_top, b = context.err_bottom; // save state locally
+            std::string r = context.expr_result_reg;
+            context.err_top = false;
+            context.err_bottom = false;
+            exp->compile(dst,context);
             context.UNARY_UPDATE();
 
+            context.err_top = t;        // restore state
+            context.err_bottom = b;
+            context.expr_result_reg = r;
+
+
             // get RH term register
-            uint exp_reg = context.extract_expr_reg();
+            uint exp_reg = context.extract_expr_reg(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            context.expr_primary_global_var = false; // reset
+
+            // move into arg reg
             dst<<"\tmove\t$a"<<context.func_arg_reg_count<<",$"<<exp_reg<<'\n';
             context.func_arg_reg_count++;
-
 
         }
 };
@@ -1743,12 +1756,18 @@ class expr_postfix : public Node {
 
             bool global_var = false;
 
-            if(bracket){ // function call
+            if(bracket){ // function call - for int
                 binding tmp;
-                tmp.reg_ID = 33;
-                tmp.stack_position = 6969;
+                tmp.reg_ID = context.get_free_reg();
+                exp_reg = std::to_string(tmp.reg_ID);
+                // make space on stack for return val
+                this->push_stack(dst,context);
+                tmp.stack_position = context.stack_size;
+                // get its type
+                ////
                 context.scopes[context.scope_index][context.expr_result] = tmp;
-                exp_reg = std::to_string(context.get_free_reg());
+
+                context.declarations++; // used when exiting scope - since allocated space on stack
             }
             else{
                 exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
@@ -1809,15 +1828,14 @@ class expr_postfix : public Node {
                         
             // function call of 0 arguments
             else if (bracket && (exp == NULL)){
-                //allocate space on stack for this function
-                this->push_stack(dst,context);
-                uint s_pos = context.stack_size;
-
+                uint s_pos = context.scopes[context.scope_index][context.expr_result].stack_position;
                 // save $8-$15 to the stack
                 context.save_8_15();
 
                 uint save_size = context.stack_size;
                 context.stack_size = 0;  // setting stack for 0 for function 
+
+
                 //next is the function name
                 dst<<"\tjal\t"<<func<<"\n\tnop\n";
 
@@ -1833,22 +1851,20 @@ class expr_postfix : public Node {
             
             else if (bracket && (exp != NULL)){   //function call of multiple arguments
 
+                // f pos on stack
+                uint s_pos = context.scopes[context.scope_index][context.expr_result].stack_position;
+                std::string func_name = context.expr_result;
+
                 context.func_arg_reg_count = 0;
                 exp->compile(dst,context); //arguments
 
-                this->push_stack(dst,context);
-                uint s_pos = context.stack_size;
 
                 // save $8-$15 to the stack
-               
-               
                 context.save_8_15();
 
                 uint save_size = context.stack_size;
-                
                 context.stack_size = 0;
-                
-                
+                               
                 
                 //next is the function name
                 dst<<"\tjal\t"<<func<<"\n\tnop\n";
@@ -1860,7 +1876,9 @@ class expr_postfix : public Node {
                 context.restore_8_15();
 
                 dst<<"\tmove\t$"<<exp_reg<<",$2\n";
-                
+                // save to stack
+
+                context.expr_result =  func_name;                
             
             }
             

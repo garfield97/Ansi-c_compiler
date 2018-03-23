@@ -46,7 +46,7 @@ public:
     
     void push_stack(std::ostream &dst, CompileContext &context) const{
         
-        
+
         dst<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-4"<<'\n';
         
         for(uint i = 1; i <= context.stack_size ; i++){ 

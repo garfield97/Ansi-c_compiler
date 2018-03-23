@@ -10,9 +10,9 @@ int g(int y,int x){
 
 int main(){
     
-    int x;
-	int y;
-    x = f(x,5);
-    y = g(x,12);
+    int x = 6;
+	int y = 7;
+
+    y = g(6,12);
     return x+y;
 }
