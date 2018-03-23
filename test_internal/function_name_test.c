@@ -10,7 +10,7 @@ int main(){
 
 
 int f(int x){
-    int f;
+
     if(x !=0){
          return  f(x-1);
     }
