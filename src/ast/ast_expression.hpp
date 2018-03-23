@@ -1610,21 +1610,34 @@ class arg_expr_list : public Node {
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            
+
             context.func_arg_reg_count = 0;
             // ARG_EXPR_LIST
             
             if(next != NULL) next->compile(dst, context); // store variable into expression result
 
-            
-            exp->compile(dst,context); // compile right most term 
+
+
+            // argument expr
+            bool t = context.err_top, b = context.err_bottom; // save state locally
+            std::string r = context.expr_result_reg;
+            context.err_top = false;
+            context.err_bottom = false;
+            exp->compile(dst,context);
             context.UNARY_UPDATE();
 
+            context.err_top = t;        // restore state
+            context.err_bottom = b;
+            context.expr_result_reg = r;
+
+
             // get RH term register
-            uint exp_reg = context.extract_expr_reg();
+            uint exp_reg = context.extract_expr_reg(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
+            context.expr_primary_global_var = false; // reset
+
+            // move into arg reg
             dst<<"\tmove\t$a"<<context.func_arg_reg_count<<",$"<<exp_reg<<'\n';
             context.func_arg_reg_count++;
-
 
         }
 };
@@ -1753,6 +1766,8 @@ class expr_postfix : public Node {
                 // get its type
                 ////
                 context.scopes[context.scope_index][context.expr_result] = tmp;
+
+                context.declarations++; // used when exiting scope - since allocated space on stack
             }
             else{
                 exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
