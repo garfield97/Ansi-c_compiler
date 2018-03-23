@@ -21,6 +21,10 @@ class statement_compound : public Node{
 
         
         std::string name = "statement_compound";
+
+        virtual std::string get_name() const override{
+            return "statement_compound";
+        }
             
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -48,7 +52,7 @@ class statement_compound : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            
+
             context.scope_index++; // incrementing the scope index
 
             std::map<std::string,binding>bindings; //create a map for pushing it out at the end.
@@ -561,10 +565,10 @@ class statement_iteration : public Node{
                 uint expr_reg = context.extract_expr_reg();
         
                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
-        
-            
+          
+                
                 statement->compile(dst,context);
-            
+
                 expr_reg = context.extract_expr_reg();            
                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
                 dst<<"$"<<bottom_label<<":\n";
@@ -585,7 +589,7 @@ class statement_iteration : public Node{
                 dst<<"$"<<top_label<<":\n";
 
                 statement->compile(dst,context);                
-            
+
                 expr->compile(dst,context);        
                 uint expr_reg = context.extract_expr_reg();  
             
@@ -615,7 +619,7 @@ class statement_iteration : public Node{
                 
                 dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
  
-                
+
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
 
                 expr->compile(dst,context);                             //operate on the variable  eg i++; only after first condition check thopugh
@@ -643,9 +647,9 @@ class statement_iteration : public Node{
                 
                 dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
  
-                   
+
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
-             
+
                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
               
                 dst<<"$"<<bottom_label<<":\n"; 
@@ -732,9 +736,9 @@ class statement_selection : public Node{
                 std::string bottom_label = context.makeName("if_label");
                 
                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
-                        
+      
                 statement->compile(dst,context);
-            
+
                 dst<<"$"<<bottom_label<<":\n"; 
             }
             

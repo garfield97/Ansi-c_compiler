@@ -239,7 +239,14 @@ struct CompileContext{
                     err_stack_reg = get_free_reg();
                     expr_result_reg = std::to_string( err_stack_reg );
                 }
-                else{   // variable
+
+                else if(functions.find(expr_result) != functions.end()){  // function call
+                    err_stack_reg = get_free_reg();
+                    expr_result_reg = std::to_string( err_stack_reg );
+                }
+
+                else
+                {   // variable
                     if(!expr_primary_global_var){
                         uint reg_save = scopes[scope_index][expr_result].reg_ID;
                         force_update_variable();  // froce a new reg
@@ -420,7 +427,7 @@ struct CompileContext{
         stack_size += 8;
     }
 
-    void restore_8_15(){
+    void restore_8_15(){ 
 
         for(uint i = 0; i < 8; i++){
             //load from stack
