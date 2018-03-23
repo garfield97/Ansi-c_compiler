@@ -122,15 +122,27 @@ class definition_function : public Node{
 
             
             // presevre return address
-            dst<<"\taddiu\t$sp,$sp,-8\n"; // pushed stack down
-            context.stack_size++;
-            context.stack_size++;
-            dst<<"\tsw\t$31,"<<(context.stack_size)*4<<"($sp)\n"; // preseverve return addr
-            context.save_stack_pos_31 = (context.stack_size);
-            context.save_stack_pos_fp = (context.stack_size-1);
-            dst<<"\tsw\t$fp,"<<(context.stack_size-1)*4<<"($sp)\n"; // stores value of fp intp sp+4
-            dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp           
+            if(context.stack_size != 0){
+                this->push_stack(dst,context); // shift arguments on stack
+                this->push_stack(dst,context);
+
+                dst<<"\tsw\t$31,"<<(context.stack_size)*4<<"($sp)\n"; // preseverve return addr
+                context.save_stack_pos_31 = (context.stack_size);
+                context.save_stack_pos_fp = (context.stack_size-1);
+                dst<<"\tsw\t$fp,"<<(context.stack_size-1)*4<<"($sp)\n"; // stores value of fp intp sp+4
+                dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp   
+            }
             
+            else{ // no arguments
+                dst<<"\taddiu\t$sp,$sp,-8\n"; // pushed stack down
+                context.stack_size++;
+                context.stack_size++;
+                dst<<"\tsw\t$31,"<<(context.stack_size)*4<<"($sp)\n"; // preseverve return addr
+                context.save_stack_pos_31 = (context.stack_size);
+                context.save_stack_pos_fp = (context.stack_size-1);
+                dst<<"\tsw\t$fp,"<<(context.stack_size-1)*4<<"($sp)\n"; // stores value of fp intp sp+4
+                dst<<"\taddu\t$fp,$sp,$0\n"; // moves value of sp into fp           
+            }
 
             // now evaluate compound statement
 
@@ -806,7 +818,7 @@ class declaration_parameter : public Node{
             
             // add var to stack
             this->push_stack(dst,context);
-            dst<<"\tsw\t$a"<<context.parameter_num<<","<<context.stack_size*4<<"($fp)\n";
+            dst<<"\tsw\t$a"<<context.parameter_num<<","<<context.stack_size*4<<"($sp)\n";
             tmp.stack_position = context.stack_size;
             
             
