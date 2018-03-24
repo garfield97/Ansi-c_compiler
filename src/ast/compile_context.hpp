@@ -451,21 +451,26 @@ struct CompileContext{
     
     uint get_type_bytesize(std::string type){
     
-        if(type == "char" || "unsigned char" || "signed char"){
+        if(type == "char" || type == "unsigned char" || type == "signed char"){
             return 1;
         }
         
         
-        else if(type == "short" || "signed short" || "unsigned short"){
+        else if(type == "short" || type == "signed short" || type == "unsigned short"){
             return 2;
         }
         
-        else if(type == "long long int" || "long long" || "signed long long" || "unsigned long long" || 
-                         "signed long long int" || "unsigned long long int" || "long float"|| "double"){
+        else if(type == "long long int" || type == "long long" || type == "signed long long" || type == "unsigned long long" || 
+                         type == "signed long long int" || type == "unsigned long long int" || type == "long float"|| type == "double"){
         
             return 8;
         
         }
+
+        else if(type == "void"){
+            return 0;
+        }
+
         else{
             return 4;
         }

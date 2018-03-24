@@ -68,10 +68,10 @@ class definition_function : public Node{
 
         virtual void PrettyPrint(std::ostream &dst) const override
         {
-        /*
-            if(next != null) next->print();
-            declaration->print();
-        */
+            /*
+                if(next != null) next->print();
+                declaration->print();
+            */
             dst<<"AST Node: "<<name<<" does not yet support PrettyPrint function"<<std::endl;
             exit(1);
         }
@@ -101,7 +101,7 @@ class definition_function : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
         
-            if(statement_compound == NULL){
+            if(statement_compound == NULL){  // prototype
                 return;
             }
                 
@@ -148,7 +148,17 @@ class definition_function : public Node{
 
             statement_compound->compile(dst, context);
 
-            dst<<'\t'<<".end "<<context.current_func<<std::endl;
+            uint return_size = context.get_type_bytesize(context.functions[context.current_func]);
+            // void function
+            if(return_size == 0){
+                dst<<"\taddu\t$sp,$fp,$0\n"; // restore sp
+                dst<<"\tlw\t$31,"<<(context.save_stack_pos_31)*4<<"($sp)\n";
+                dst<<"\tlw\t$fp,"<<(context.save_stack_pos_fp)*4<<"($sp)\n";
+                dst<<"\taddiu\t$sp,$sp,"<<context.stack_size*4<<"\n";
+                dst<<"\tj\t$31\n\tnop\n"; // jump to return addr
+            }
+
+            dst<<'\t'<<".end "<<context.current_func<<"\n\n";
             // reset context
             context.function_end();
         
