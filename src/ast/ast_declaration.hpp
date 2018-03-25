@@ -509,7 +509,7 @@ class declarator_init : public Node{
             }
            
             
-            context.scopes[context.scope_index][context.tmp_v] = temp; // not sure if this map works
+            context.scopes[context.scope_index][context.tmp_v] = temp; 
 
 
             if(context.scope_index != 0){

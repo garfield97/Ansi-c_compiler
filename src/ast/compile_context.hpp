@@ -197,6 +197,33 @@ struct CompileContext{
 
     bool extract_global;
 
+
+    bool check_global(uint index, std::string var){
+        // returns false if find var names not in global scope
+
+        bool global_scope = false;
+        if(index == 0) global_scope = true; // global
+
+        //iterate through map of current scope
+        for(std::map<std::string, binding>::iterator it= scopes[index].begin(); it !=scopes[index].end(); ++it){
+
+            // not global
+            if((var == it->first) && (it->second.is_global == false) && !global_scope )
+                return false;
+
+            // global
+            if((var == it->first) && (it->second.is_global == true) && global_scope )
+                return true;
+            
+        }
+
+        if(global_scope){
+            return false; // function name
+
+        }
+        return check_global(index-1, var);
+    }
+
   
 
     std::string expr_result_reg; // deal with recursion and passing registers
@@ -240,7 +267,7 @@ struct CompileContext{
                     expr_result_reg = std::to_string( err_stack_reg );
                 }
 
-                else if(functions.find(expr_result) != functions.end()){  // function call
+                else if(calling_function){  // function call
                     err_stack_reg = get_free_reg();
                     expr_result_reg = std::to_string( err_stack_reg );
                 }
@@ -448,6 +475,15 @@ struct CompileContext{
     int func_arg_reg_count;
     std::string function_type;
     std::map<std::string,std::string>functions;
+
+    bool calling_function;
+
+    bool is_function(std::string name){
+        if(functions.count(name) == 0){
+            return false; // not a funciton
+        }
+        return true;
+    }
     
     uint get_type_bytesize(std::string type){
     
