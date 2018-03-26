@@ -35,6 +35,14 @@ typedef enum{
 
 struct CompileContext{
 
+    // fp regs
+    bool fp_reg_free[20]; // caller-saved
+
+
+
+
+
+    // normal regs
     bool reg_free[32];              // check if reg available
     uint get_free_reg(){
 
@@ -92,6 +100,10 @@ struct CompileContext{
         if(++reg_counter == 14u) reg_counter = 8u; // loop back for next replacement
 
     }
+
+
+
+
 
     bool update_variable(){ // return true when given a new reg - i.e. loaded from the stack // only for variables
 
@@ -460,7 +472,15 @@ struct CompileContext{
     }
 
 
-    void save_8_15(){
+    void save_8_15(bool reg_array[] ){
+
+        for(uint i=0; i<32; ++i){
+            reg_array[i] = reg_free[i];
+            reg_free[i] = true;
+        }
+            
+
+
         dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-32"<<'\n';
         
         for(uint i = 1; i <= stack_size ; i++){ 
@@ -477,7 +497,49 @@ struct CompileContext{
         stack_size += 8;
     }
 
-    void restore_8_15(){ 
+    void restore_8_15(bool reg_array[] ){
+
+        for(uint i=0; i<32; ++i)
+            reg_free[i] = reg_array[i];
+
+
+        for(uint i = 0; i < 8; i++){
+            //load from stack
+            dstStream<<"\tlw\t$"<<15-i<<","<<(stack_size-i)*4<<"($sp)"<<'\n';
+        }
+
+        // shift up
+        for(uint i = 1; i <= stack_size-8 ; i++){ 
+            dstStream<<"\tlw\t$15,"<<i*4<<"($sp)"<<'\n'; 
+            dstStream<<"\tsw\t$15,"<<i*4+32<<"($sp)"<<'\n';
+        }                   
+
+        dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,32"<<'\n';
+        stack_size -= 8;
+        dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl;  
+    }
+
+
+
+
+    void save_0_19(){
+        dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-32"<<'\n';
+        
+        for(uint i = 1; i <= stack_size ; i++){ 
+            dstStream<<"\tlw\t$15,"<<i*4+32<<"($sp)"<<'\n'; 
+            dstStream<<"\tsw\t$15,"<<i*4<<"($sp)"<<'\n';
+        }                    
+
+        for(uint i = 0; i < 8; i++){
+            //store to stack
+            dstStream<<"\tsw\t$"<<i+8<<","<<(i+stack_size+1)*4<<"($sp)"<<'\n';
+        }
+
+        dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl; 
+        stack_size += 8;
+    }
+
+    void restore_0_19(){ 
 
         for(uint i = 0; i < 8; i++){
             //load from stack
@@ -495,6 +557,8 @@ struct CompileContext{
         dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl;  
     }
     
+
+
     int func_arg_reg_count;
     std::string function_type;
     std::map<std::string,std::string>functions;

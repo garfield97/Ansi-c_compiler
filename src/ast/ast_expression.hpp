@@ -1844,7 +1844,8 @@ class expr_postfix : public Node {
             // function call of 0 arguments
             else if (bracket && (exp == NULL)){
                 // save $8-$15 to the stack
-                context.save_8_15();
+                bool save_reg_state[32];
+                context.save_8_15(save_reg_state);
 
                 uint save_size = context.stack_size;
                 context.stack_size = 0;  // setting stack for 0 for function 
@@ -1856,7 +1857,7 @@ class expr_postfix : public Node {
                 context.stack_size = save_size;
 
                 // restore $8-15    
-                context.restore_8_15();
+                context.restore_8_15(save_reg_state);
 
                 dst<<"\tmove\t$"<<exp_reg<<",$2\n";
 
@@ -1869,7 +1870,8 @@ class expr_postfix : public Node {
 
 
                 // save $8-$15 to the stack
-                context.save_8_15();
+                bool save_reg_state[32];
+                context.save_8_15(save_reg_state);
 
                 uint save_size = context.stack_size;
                 context.stack_size = 0;
@@ -1881,7 +1883,7 @@ class expr_postfix : public Node {
                 context.stack_size = save_size;
 
                 // restore $8-15
-                context.restore_8_15();
+                context.restore_8_15(save_reg_state);
 
                 dst<<"\tmove\t$"<<exp_reg<<",$2\n";
                 // save to stack

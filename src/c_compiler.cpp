@@ -52,6 +52,10 @@ int main(int argc, char* argv[])
             CC.reg_free[i] = true;
         }
 
+        for(int i=0; i<=19; i++){
+            CC.fp_reg_free[i] = true;
+        }
+
         CC.UNARY_OP_MINUS_CHECK = false; // 
         
         CC.scope_index=0; //default global
