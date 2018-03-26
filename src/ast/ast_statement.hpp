@@ -400,7 +400,8 @@ class statement_jump : public Node{
                                      
                 expr->compile(dst, context); // prints out an immediate or a register value
 
-                if(context.scopes[0][context.expr_result].is_global){ // global var
+                if( context.expr_primary_global_var ) { // global var
+                    context.expr_primary_global_var = false;
                     uint gv_reg = context.get_free_reg();
                     dst<<"\tlui\t"<<"$"<<gv_reg<<",%hi("<<context.expr_result<<")\n";
                     dst<<"\tlw\t$"<<gv_reg<<",%lo("<<context.expr_result<<")($"<<gv_reg<<")\n";
