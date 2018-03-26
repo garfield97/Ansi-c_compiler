@@ -30,13 +30,78 @@ typedef enum{
     LI,  // long integer
     UL,  // unsigned long
     C,   // character
-    F    // float
+    F,   // float
+    D    // double
 } LITERAL_TYPE;
 
 struct CompileContext{
 
+
+
+
+
     // fp regs
     bool fp_reg_free[20]; // caller-saved
+    uint fp_assign_reg;
+    uint get_fp_free_reg(){
+
+        for(uint i=2u; i<=19u; i++){
+            if( (fp_reg_free[i] == true) && (extract_global || fp_not_in_err_stack(i)) ){ // register to be saved by calling function
+                fp_reg_free[i] = false;                                    // short circuit
+
+                        // EXPR_ASSIGNMENT 
+                if(assigning && !assign_reg_set){ // need to set assign reg
+                    fp_assign_reg = i;
+                    assign_reg_set = true;
+                }
+
+                return i;
+            }
+        }
+
+        // all reg occupied
+        free_up_fp_reg();  // free up a reg from $8-$15
+        return get_fp_free_reg(); // now get a free reg - guaranteed
+    }
+
+    uint fp_reg_counter;
+    void free_up_fp_reg(){
+        uint s_pos;
+        bool found = false;
+        std::string type;
+
+        if(fp_reg_counter == assign_reg && assigning) ++fp_reg_counter; // avoid freeing assign_reg
+
+        // first save any varubale stored in fp_reg_counter
+        // search through variables in current scope
+        //std::cout << scope_index << std::endl;
+        for(std::map<std::string, binding>::iterator it= scopes[scope_index].begin(); it !=scopes[scope_index].end(); ++it){
+            if(it->second.reg_ID == fp_reg_counter && (it->first != expr_result)){ // replace this variable
+                // save locally
+                s_pos = it->second.stack_position;
+                type = it->second.type;
+                found = true;
+
+                // update variable to not ina register
+                it->second.reg_ID = 33;
+            }
+        }
+
+        if(found){
+            // store variable in reg back onto stack
+            if(type == "float") dstStream<<"\tswc1\t$"<<fp_reg_counter<<","<<s_pos*4<<"($fp)\n";
+
+            else dstStream<<"\tsdc1\t$"<<fp_reg_counter<<","<<s_pos*4<<"($fp)\n";
+        }
+
+        // now free it
+        fp_reg_free[fp_reg_counter] = true; // free the reg
+        if(++fp_reg_counter == 19u) fp_reg_counter = 2u; // loop back for next replacement
+
+    }
+
+
+
 
 
 
@@ -65,12 +130,8 @@ struct CompileContext{
         return get_free_reg(); // now get a free reg - guaranteed
     }
 
-    bool assigning;  // when true - do not free up assign reg
-    bool assign_reg_set;
     uint assign_reg; // this cannot be freed
-
     uint reg_counter;
-
     void free_up_reg(){
         uint s_pos;
         bool found = false;
@@ -100,6 +161,52 @@ struct CompileContext{
         if(++reg_counter == 14u) reg_counter = 8u; // loop back for next replacement
 
     }
+
+
+
+
+
+    std::string expr_result_reg; // deal with recursion and passing registers
+    bool err_top;
+    bool err_bottom;
+    bool err_overide;
+    bool sizeof_type;
+
+
+    std::vector<uint> err_stack;
+    uint err_overide_reg;
+
+    std::vector<uint> fp_err_stack;
+    uint fp_err_overide_reg;
+
+
+    bool not_in_err_stack(uint x){
+        for(uint i = 0; i < err_stack.size(); ++i){
+            if(err_stack[i] == x){
+                return false; // found this value in the stack
+            }
+        }
+        
+        return true; // free to use this value - its not been preserved
+    }
+
+    bool fp_not_in_err_stack(uint x){
+        for(uint i = 0; i < fp_err_stack.size(); ++i){
+            if(fp_err_stack[i] == x){
+                return false; // found this value in the stack
+            }
+        }
+        
+        return true; // free to use this value - its not been preserved
+    }
+    
+    
+    bool assigning;  // when true - do not free up assign reg
+    bool assign_reg_set;
+
+
+
+
 
 
 
@@ -216,61 +323,7 @@ struct CompileContext{
         return reg;
     }
 
-    bool extract_global;
 
-    std::map<std::string,bool> extern_globals; // clear at end of a scope
-    bool extern_global;
-
-    bool check_global(uint index, std::string var){
-        // returns false if find var names not in global scope
-        //searchthrough map of current scope
-        uint found = scopes[index].count(var);
-
-        uint Extern =  extern_globals.count(var);
-
-            // external global
-            if(Extern){
-                return true;
-            }
-
-            // not global
-            if((index != 0) && found ){
-                return false;
-            }
-
-
-            // global
-            else if((index == 0) && found ){
-                return true;
-            }
-            
-
-        if(index == 0){
-            return false; // function name
-        }
-
-        return check_global(index-1, var);
-    }
-
-  
-
-    std::string expr_result_reg; // deal with recursion and passing registers
-    bool err_top;
-    bool err_bottom;
-    std::vector<uint> err_stack;
-    bool err_overide;
-    uint err_overide_reg;
-    bool sizeof_type;
-
-    bool not_in_err_stack(uint x){
-        for(uint i = 0; i < err_stack.size(); ++i){
-            if(err_stack[i] == x){
-                return false; // found this value in the stack
-            }
-        }
-        
-        return true; // free to use this value - its not been preserved
-    }
 
     std::string am_i_bottom(){ // returns reg as num in string
 
@@ -365,9 +418,20 @@ struct CompileContext{
             if(! (err_stack.size() == 0)){
                 err_stack.pop_back();
             }
+            if(! (fp_err_stack.size() == 0)){
+                fp_err_stack.pop_back();
+            }
             expr_result = "$"+r;
         }
     }
+
+
+
+
+
+
+
+
 
 
     std::string break_label;
@@ -376,6 +440,9 @@ struct CompileContext{
 
     long int internal_expr_value;
     long int internal_temp_value;
+
+
+
 
 
     // used to check if variable is a literal - set in int main
@@ -398,6 +465,11 @@ struct CompileContext{
         }
         return false; // not a variable
     }
+
+
+
+
+
 
     uint stack_size;                // dealing with stack pointer
 
@@ -432,16 +504,20 @@ struct CompileContext{
             else if(type == "unsigned int"){
                 expr_primary_type = UI;
             }
-            else if(type == "long int"){
-                expr_primary_type = LI;
-            }
-            else if(type == "unsigned long"){
-                expr_primary_type = UL;
-            } 
             else if(type == "char"){
                 expr_primary_type = C;
             }
+            else if(type == "float"){
+                expr_primary_type = F;
+            }
+            else if(type == "double"){
+                expr_primary_type = D;
+            }
     }
+
+
+
+
 
 
     int makeNameUnq;
@@ -456,6 +532,8 @@ struct CompileContext{
     }
 
 
+
+
     bool UNARY_OP_MINUS_CHECK;
     void UNARY_OP_MINUS_UPDATE(){
         expr_result = "-" + expr_result;
@@ -466,6 +544,54 @@ struct CompileContext{
         if(UNARY_OP_MINUS_CHECK) UNARY_OP_MINUS_UPDATE();
     }
 
+
+
+
+
+    // global checks
+
+    bool extract_global;
+
+    std::map<std::string,bool> extern_globals; // clear at end of a scope
+    bool extern_global;
+
+    bool check_global(uint index, std::string var){
+        // returns false if find var names not in global scope
+        //searchthrough map of current scope
+        uint found = scopes[index].count(var);
+
+        uint Extern =  extern_globals.count(var);
+
+            // external global
+            if(Extern){
+                return true;
+            }
+
+            // not global
+            if((index != 0) && found ){
+                return false;
+            }
+
+
+            // global
+            else if((index == 0) && found ){
+                return true;
+            }
+            
+
+        if(index == 0){
+            return false; // function name
+        }
+
+        return check_global(index-1, var);
+    }
+
+
+
+
+
+
+    // function calling
     void function_end(){
         stack_size = 0;
         
@@ -520,9 +646,16 @@ struct CompileContext{
     }
 
 
+    /*
+    void save_2_19(bool reg_array[] ){
+
+        for(uint i=0; i<32; ++i){
+            reg_array[i] = reg_free[i];
+            reg_free[i] = true;
+        }
 
 
-    void save_0_19(){
+
         dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-32"<<'\n';
         
         for(uint i = 1; i <= stack_size ; i++){ 
@@ -539,7 +672,11 @@ struct CompileContext{
         stack_size += 8;
     }
 
-    void restore_0_19(){ 
+    void restore_2_19(bool reg_array[] ){
+
+        for(uint i=0; i<32; ++i)
+            reg_free[i] = reg_array[i];
+
 
         for(uint i = 0; i < 8; i++){
             //load from stack
@@ -557,7 +694,7 @@ struct CompileContext{
         dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl;  
     }
     
-
+    */
 
     int func_arg_reg_count;
     std::string function_type;
