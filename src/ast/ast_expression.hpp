@@ -1605,8 +1605,11 @@ class arg_expr_list : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            next->translate(dst, context);
-            dst<<",";
+            if(next != NULL){
+                next->translate(dst, context);
+                dst<<",";
+            }
+
             exp->translate(dst, context);
         }
 
