@@ -229,9 +229,8 @@ class declaration : public Node{
                 
                 specifier_declaration->compile(dst,context); // assigns tmp_v with C type
                 
-                context.global_var_size = "4";// default
-                if(context.tmp_v == "char") context.global_var_size = "1";
-             //   if(tmp_v == "long int") context.global_var_size = 1; add supports later
+
+                context.global_var_size = context.get_type_bytesize(context.tmp_v);// default
                 
                 declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v            
 
@@ -495,6 +494,9 @@ class declarator_init : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             binding temp;
+
+            bool local_var = (context.scope_index != 0 ) && !context.extern_global;
+
             
            
             temp.type = context.tmp_v; // set from declaration
@@ -503,9 +505,9 @@ class declarator_init : public Node{
             temp.reg_ID = 33;    // forgot to initialise reg_ID into 33 -> not empty 
 
             
-            if(context.scope_index != 0) this->push_stack(dst,context); //stack size is changed here.(incremented)
+            if(local_var) this->push_stack(dst,context); //stack size is changed here.(incremented)
             
-            else dst<<"\t.data\t"<<'\n'; //global variables
+            else if(context.scope_index == 0) dst<<"\t.data\t"<<'\n'; //global variables
                   
             temp.stack_position = context.stack_size;
 
@@ -521,11 +523,15 @@ class declarator_init : public Node{
                 dst<<context.tmp_v<<":\n";
             }
            
-            
-            context.scopes[context.scope_index][context.tmp_v] = temp; 
 
+            if(context.extern_global){ // extern global declaration
+                context.extern_globals[context.tmp_v] = true;
+            }
+            else{
+                context.scopes[context.scope_index][context.tmp_v] = temp; 
+            }
 
-            if(context.scope_index != 0){
+            if(local_var){
                 if( initializer != NULL){
                     context.assigning = true;
                     context.declaring = true;
@@ -544,7 +550,7 @@ class declarator_init : public Node{
                 context.declarations++; // keep track of how many declaration were made in current scope
             }
             
-            else{
+            else if (context.scope_index == 0) {
                 if( initializer != NULL){
                     context.assigning = true;
                     context.declaring = true;
@@ -555,6 +561,7 @@ class declarator_init : public Node{
                 }
             }
             
+            context.extern_global = false; //reset
 
         }
 };
@@ -827,7 +834,6 @@ class declaration_parameter : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             current->compile(dst,context);
-            uint tmp_return_size = context.get_type_bytesize(context.tmp_v);            //API to return the size of type
             
             
             binding tmp;

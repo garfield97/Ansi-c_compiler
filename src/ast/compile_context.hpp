@@ -206,11 +206,20 @@ struct CompileContext{
 
     bool extract_global;
 
+    std::map<std::string,bool> extern_globals; // clear at end of a scope
+    bool extern_global;
 
     bool check_global(uint index, std::string var){
         // returns false if find var names not in global scope
         //searchthrough map of current scope
         uint found = scopes[index].count(var);
+
+        uint Extern =  extern_globals.count(var);
+
+            // external global
+            if(Extern){
+                return true;
+            }
 
             // not global
             if((index != 0) && found ){

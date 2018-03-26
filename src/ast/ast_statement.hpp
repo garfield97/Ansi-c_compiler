@@ -96,6 +96,8 @@ class statement_compound : public Node{
             context.scope_index--; // decrementing the scope index so we can keep track of which scope we are in
             context.scopes.pop_back(); // pop out
 
+            context.extern_globals.clear(); // clear out external global vars
+
 
         }
 };
