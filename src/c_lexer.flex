@@ -342,6 +342,8 @@ L?\"(\\.|[^\\"])*\"	{ fprintf(stderr, "String : %s\n", yytext);
 
 {COMMENT}		{ fprintf(stderr, "comment\n"); }
 
+"//"[^\n]*		{ fprintf(stderr, "line comment\n"); }
+
 {WHITESPACE}    { fprintf(stderr, "Newline, tab or space\n");  }
 
 

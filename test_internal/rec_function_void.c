@@ -1,10 +1,6 @@
-
-
+    
 
 void count_to_ten(int count);
-        
-
-
 
 int main(){
        int n;

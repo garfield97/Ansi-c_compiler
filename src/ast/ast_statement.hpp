@@ -21,6 +21,10 @@ class statement_compound : public Node{
 
         
         std::string name = "statement_compound";
+
+        virtual std::string get_name() const override{
+            return "statement_compound";
+        }
             
         virtual void PrettyPrint(std::ostream &dst) const override
         {
@@ -48,7 +52,7 @@ class statement_compound : public Node{
 
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
-            
+
             context.scope_index++; // incrementing the scope index
 
             std::map<std::string,binding>bindings; //create a map for pushing it out at the end.
@@ -400,32 +404,31 @@ class statement_jump : public Node{
                     uint gv_reg = context.get_free_reg();
                     dst<<"\tlui\t"<<"$"<<gv_reg<<",%hi("<<context.expr_result<<")\n";
                     dst<<"\tlw\t$"<<gv_reg<<",%lo("<<context.expr_result<<")($"<<gv_reg<<")\n";
-                    dst<<"\tadd\t$2,$0,"<<gv_reg<<std::endl;
+                    dst<<"\tadd\t$2,$0,$"<<gv_reg<<std::endl;
                 }
                 
-                
-                // not global
                 else{
+                    // not global
                     context.force_update_variable(); 
-                }
 
-                if(regex_match(context.expr_result, context.reNum)){ // literal
-                    dst<<"\taddi\t$2,$0,"<<context.expr_result<<'\n';
-                }
-                
-                else if(regex_match(context.expr_result, context.reChar)){ // literal char
-                    int temp_int;
-                    std::stringstream convert(context.expr_result);
-                    convert>>temp_int;
-                    dst<<"\taddi\t$2,$0,"<<temp_int<<'\n';
-                }
-                
-                else if(regex_match(context.expr_result, context.is_reg)){ // register
-                    dst<<"\tadd\t$2,$0,"<<context.expr_result<<std::endl;
-                }  
-                
-                else{                                                           // local var
-                    dst<<"\tadd\t$2,$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<std::endl;
+                    if(regex_match(context.expr_result, context.reNum)){ // literal
+                        dst<<"\taddi\t$2,$0,"<<context.expr_result<<'\n';
+                    }
+                    
+                    else if(regex_match(context.expr_result, context.reChar)){ // literal char
+                        int temp_int;
+                        std::stringstream convert(context.expr_result);
+                        convert>>temp_int;
+                        dst<<"\taddi\t$2,$0,"<<temp_int<<'\n';
+                    }
+                    
+                    else if(regex_match(context.expr_result, context.is_reg)){ // register
+                        dst<<"\tadd\t$2,$0,"<<context.expr_result<<std::endl;
+                    }  
+                    
+                    else{                                                           // local var
+                        dst<<"\tadd\t$2,$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<std::endl;
+                    }
                 }
 
             }
@@ -561,10 +564,10 @@ class statement_iteration : public Node{
                 uint expr_reg = context.extract_expr_reg();
         
                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
-        
-            
+          
+                
                 statement->compile(dst,context);
-            
+
                 expr_reg = context.extract_expr_reg();            
                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
                 dst<<"$"<<bottom_label<<":\n";
@@ -585,7 +588,7 @@ class statement_iteration : public Node{
                 dst<<"$"<<top_label<<":\n";
 
                 statement->compile(dst,context);                
-            
+
                 expr->compile(dst,context);        
                 uint expr_reg = context.extract_expr_reg();  
             
@@ -615,7 +618,7 @@ class statement_iteration : public Node{
                 
                 dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
  
-                
+
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
 
                 expr->compile(dst,context);                             //operate on the variable  eg i++; only after first condition check thopugh
@@ -643,9 +646,9 @@ class statement_iteration : public Node{
                 
                 dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
  
-                   
+
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
-             
+
                 dst<<"\tb\t"<<"$"<<top_label<<'\n';
               
                 dst<<"$"<<bottom_label<<":\n"; 
@@ -732,9 +735,9 @@ class statement_selection : public Node{
                 std::string bottom_label = context.makeName("if_label");
                 
                 dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
-                        
+      
                 statement->compile(dst,context);
-            
+
                 dst<<"$"<<bottom_label<<":\n"; 
             }
             

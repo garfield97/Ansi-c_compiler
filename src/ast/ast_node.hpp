@@ -32,6 +32,10 @@ class Node
 public:
     std::string name;
 
+    virtual std::string get_name() const{
+        return name;
+    }
+
     virtual ~Node()
     {}
 
@@ -43,6 +47,8 @@ public:
 
     //! Evaluate the tree using the given mapping of variables to numbers
     virtual void compile(std::ostream &dst, CompileContext &context) const =0;
+
+
     
     void push_stack(std::ostream &dst, CompileContext &context) const{
         

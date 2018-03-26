@@ -214,8 +214,10 @@ class expr_assignment : public Node {
 
             std::string unary_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
             
-            binding tmp = context.scopes[context.scope_index][context.expr_result];
-
+            binding tmp;
+            
+            if(global_var) tmp = context.scopes[0][context.expr_result];
+            else tmp = context.scopes[context.scope_index][context.expr_result];
 
             // free bools for rhs
             bool t = context.err_top, b = context.err_bottom; // save state locally
@@ -1498,7 +1500,7 @@ class expr_unary : public Node {
                 
                 }
                 if(tmp_op == "!"){
-                    if(context.update_variable()){} 
+                    if(global_var || context.update_variable()){} 
                     
                     std::string zero = context.makeName("eq0");
                     std::string skip = context.makeName("skip");
@@ -1603,8 +1605,11 @@ class arg_expr_list : public Node {
 
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
-            next->translate(dst, context);
-            dst<<",";
+            if(next != NULL){
+                next->translate(dst, context);
+                dst<<",";
+            }
+
             exp->translate(dst, context);
         }
 
@@ -1757,17 +1762,15 @@ class expr_postfix : public Node {
             bool global_var = false;
 
             if(bracket){ // function call - for int
+                context.calling_function = true; // used in check bottom
                 binding tmp;
-                tmp.reg_ID = context.get_free_reg();
-                exp_reg = std::to_string(tmp.reg_ID);
-                // make space on stack for return val
-                this->push_stack(dst,context);
-                tmp.stack_position = context.stack_size;
+                exp_reg = context.am_i_bottom();
+
+                context.calling_function = false;
                 // get its type
                 ////
                 context.scopes[context.scope_index][context.expr_result] = tmp;
 
-                context.declarations++; // used when exiting scope - since allocated space on stack
             }
             else{
                 exp_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
@@ -1781,8 +1784,14 @@ class expr_postfix : public Node {
 
             // INC and DEC
             if(opr == "++"){
+                
+                if(global_var) context.global_force_update = true;
                 context.force_update_variable();
-                uint local = context.scopes[context.scope_index][context.expr_result].reg_ID; //get x into loca
+                context.global_force_update = false;
+
+                uint local;
+                if(global_var) local = context.scopes[0][context.expr_result].reg_ID;
+                else local = context.scopes[context.scope_index][context.expr_result].reg_ID;
                 
                 if(context.expr_primary_type == UI){
                     dst<<"\tmove\t$"<<exp_reg<<",$"<<exp_reg<<std::endl; // set y = x 
@@ -1804,8 +1813,14 @@ class expr_postfix : public Node {
             }
 
             else if(opr == "--"){
+
+                if(global_var) context.global_force_update = true;
                 context.force_update_variable();
-                uint local = context.scopes[context.scope_index][context.expr_result].reg_ID; //get x into loca
+                context.global_force_update = false;
+                
+                uint local;
+                if(global_var) local = context.scopes[0][context.expr_result].reg_ID;
+                else local = context.scopes[context.scope_index][context.expr_result].reg_ID;
                 
                 if(context.expr_primary_type == UI){
                     dst<<"\tmove\t$"<<exp_reg<<",$"<<exp_reg<<std::endl; // set y = x 
@@ -1828,7 +1843,6 @@ class expr_postfix : public Node {
                         
             // function call of 0 arguments
             else if (bracket && (exp == NULL)){
-                uint s_pos = context.scopes[context.scope_index][context.expr_result].stack_position;
                 // save $8-$15 to the stack
                 context.save_8_15();
 
@@ -1839,7 +1853,6 @@ class expr_postfix : public Node {
                 //next is the function name
                 dst<<"\tjal\t"<<func<<"\n\tnop\n";
 
-                dst<<"\tsw\t$2,"<<s_pos*4<<"($sp)\n";
                 context.stack_size = save_size;
 
                 // restore $8-15    
@@ -1850,10 +1863,6 @@ class expr_postfix : public Node {
             }
             
             else if (bracket && (exp != NULL)){   //function call of multiple arguments
-
-                // f pos on stack
-                uint s_pos = context.scopes[context.scope_index][context.expr_result].stack_position;
-                std::string func_name = context.expr_result;
 
                 context.func_arg_reg_count = 0;
                 exp->compile(dst,context); //arguments
@@ -1869,7 +1878,6 @@ class expr_postfix : public Node {
                 //next is the function name
                 dst<<"\tjal\t"<<func<<"\n\tnop\n";
 
-                dst<<"\tsw\t$2,"<<s_pos*4<<"($sp)\n";
                 context.stack_size = save_size;
 
                 // restore $8-15
@@ -1878,7 +1886,7 @@ class expr_postfix : public Node {
                 dst<<"\tmove\t$"<<exp_reg<<",$2\n";
                 // save to stack
 
-                context.expr_result =  func_name;                
+                context.expr_result =  func;                
             
             }
             
@@ -2051,13 +2059,8 @@ class expr_primary : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
             if(Sbool){
-                if(!context.scopes[0][Sval].is_global){
-                    context.expr_result = Sval;
-                    context.internal_temp_value = context.scopes[context.scope_index][Sval].internal_value;
-                    context.internal_expr_value = context.internal_temp_value;
-                    context.set_expr_result_type();
-                }
-                else{
+  
+                if( context.check_global(context.scope_index, Sval) && !context.is_function(Sval) ) { // global var
                     context.expr_primary_global_var = true;
                     context.global_expr_result = Sval;
                     context.expr_result = Sval;
@@ -2068,7 +2071,17 @@ class expr_primary : public Node {
                     context.internal_expr_value = context.internal_temp_value;
 
                 }
+
+                else{
+                    context.expr_result = Sval;
+                    context.internal_temp_value = context.scopes[context.scope_index][Sval].internal_value;
+                    context.internal_expr_value = context.internal_temp_value;
+                    context.set_expr_result_type();
+                }
+
             } 
+
+
             else if(Ibool){
                 context.expr_result = std::to_string(Ival);
                 context.internal_temp_value = context.internal_expr_value = Ival;
