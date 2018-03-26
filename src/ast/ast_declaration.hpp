@@ -52,15 +52,15 @@ class definition_function : public Node{
         NodePtr  statement_compound;
 
     public:
-        definition_function(NodePtr _arg1,NodePtr _arg2, char x, NodePtr _arg3) // char used to differentiate
+        definition_function(NodePtr _arg1,NodePtr _arg2, NodePtr _arg3) // char used to differentiate
             :specifier_declaration(_arg1)
             ,declarator(_arg2)
             ,statement_compound(_arg3)
         {}
         
-        definition_function() // char used to differentiate
-            :specifier_declaration(NULL)
-            ,declarator(NULL)
+        definition_function(NodePtr _arg1,NodePtr _arg2) // char used to differentiate
+            :specifier_declaration(_arg1)
+            ,declarator(_arg2)
             ,statement_compound(NULL)
         {}
 
@@ -79,6 +79,19 @@ class definition_function : public Node{
         virtual void translate(std::ostream &dst, TranslateContext &context) const override
         {
            //         | SPECIFIER_DECLARATION DECLARATOR STATEMENT_COMPOUND                  { $$ = new definition_function($1, $2, '$', $3); }
+            if(statement_compound == NULL){  // prototype
+                declarator->translate(dst,context);
+
+                if(!context.function_dec){    //this checks if it is a global variable, which it is
+                    context.globalVar.push_back(context.tmp_v);
+                }
+
+                dst<<"=0\n";        // initial 
+ 
+                return;
+            }
+            
+            
             context.function_dec = true;
             declarator->translate(dst,context); 
             context.indent++;
@@ -509,7 +522,7 @@ class declarator_init : public Node{
             }
            
             
-            context.scopes[context.scope_index][context.tmp_v] = temp; // not sure if this map works
+            context.scopes[context.scope_index][context.tmp_v] = temp; 
 
 
             if(context.scope_index != 0){

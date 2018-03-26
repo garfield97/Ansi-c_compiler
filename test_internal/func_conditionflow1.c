@@ -6,18 +6,26 @@ int b(int n);
 int main(){
         
         int n = 9;
+
+	int x = 4;
         
         if(a(n)<12){
                 
-                n = b(n);
+                x = b(n);
         }
         
-        return n;
+        return x;
 }
 
                 
 int a(int n){
         
         return n+5;
+
+}
+
+int b(int n){
+        
+        return a(n)+5;
 
 }

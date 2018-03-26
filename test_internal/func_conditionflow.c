@@ -1,6 +1,3 @@
-
-
-
 int a(int n);
 
 int b(int n);
@@ -9,13 +6,15 @@ int b(int n);
 int main(){
         
         int n = 5;
+
+	int x = 4;
         
         if(a(n)<12){
                 
-                n = b(n);
+                x = b(n);
         }
         
-        return n;
+        return x;
 }
 
                 

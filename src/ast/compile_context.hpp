@@ -117,17 +117,28 @@ struct CompileContext{
     }
 
     void force_update_variable(){ // return true when given a new reg - i.e. loaded from the stack // only for variables
-
-        uint s_pos = scopes[scope_index][expr_result].stack_position;
-        if(!declaring && (s_pos == 0) && (scope_index > 0) && no_match() ){   //var not in this scope
-            s_pos = out_of_scope(scope_index-1).stack_position;
-        }
-                            
+        
         uint local = get_free_reg();
-        scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
-        scopes[scope_index][expr_result].stack_position = s_pos;
 
-        if(!(s_pos==0)) dstStream<<"\tlw\t$"<<local<<","<<s_pos*4<<"($sp)\n";
+        uint s_pos;
+        if(!global_force_update){
+            s_pos = scopes[scope_index][expr_result].stack_position;
+
+
+            if(!declaring && (s_pos == 0) && (scope_index > 0) && no_match() ){   //var not in this scope
+                s_pos = out_of_scope(scope_index-1).stack_position;
+            }
+        
+            scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
+            scopes[scope_index][expr_result].stack_position = s_pos;
+
+            if(!(s_pos==0)) dstStream<<"\tlw\t$"<<local<<","<<s_pos*4<<"($sp)\n";
+
+        }
+
+        else{
+            scopes[0][expr_result].reg_ID = local;
+        }
 
     }
 
@@ -136,11 +147,9 @@ struct CompileContext{
     binding out_of_scope(uint index){
         binding res;
         //iterate through map from scope above
-        for(std::map<std::string, binding>::iterator it= scopes[index].begin(); it !=scopes[index].end(); ++it){
-            if(expr_result == it->first){
-                res = it->second;
-                return res;
-            }
+        if(scopes[index].count(expr_result) == 1){
+            res = scopes[index][expr_result];
+            return res;
         }
 
         if(index == 0) std::exit(EXIT_FAILURE); // safety for invalid C
@@ -197,6 +206,31 @@ struct CompileContext{
 
     bool extract_global;
 
+
+    bool check_global(uint index, std::string var){
+        // returns false if find var names not in global scope
+        //searchthrough map of current scope
+        uint found = scopes[index].count(var);
+
+            // not global
+            if((index != 0) && found ){
+                return false;
+            }
+
+
+            // global
+            else if((index == 0) && found ){
+                return true;
+            }
+            
+
+        if(index == 0){
+            return false; // function name
+        }
+
+        return check_global(index-1, var);
+    }
+
   
 
     std::string expr_result_reg; // deal with recursion and passing registers
@@ -240,7 +274,7 @@ struct CompileContext{
                     expr_result_reg = std::to_string( err_stack_reg );
                 }
 
-                else if(functions.find(expr_result) != functions.end()){  // function call
+                else if(calling_function){  // function call
                     err_stack_reg = get_free_reg();
                     expr_result_reg = std::to_string( err_stack_reg );
                 }
@@ -260,11 +294,14 @@ struct CompileContext{
                         scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
                     }
                     else{ // global var load
-                        uint reg_save = scopes[scope_index][expr_result].reg_ID;
+                        uint reg_save = scopes[0][expr_result].reg_ID;
+
+                        global_force_update = true;
                         force_update_variable();  // froce a new reg
+                        global_force_update = false;
                             // load from heap
                         
-                        err_stack_reg = scopes[scope_index][expr_result].reg_ID;
+                        err_stack_reg = scopes[0][expr_result].reg_ID;
                         
                         // load address of global var from heap
                         dstStream<<"\tlui\t"<<"$"<<err_stack_reg<<",%hi("<<expr_result<<")\n";
@@ -272,7 +309,7 @@ struct CompileContext{
                         // load value form heap
                         dstStream<<"\tlw\t$"<<err_stack_reg<<",%lo("<<expr_result<<")($"<<err_stack_reg<<")\n";
 
-                        scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
+                        scopes[0][expr_result].reg_ID = reg_save; //restore binding
 
                         expr_result_reg = std::to_string(err_stack_reg); // reg with value of global var
                     }
@@ -357,6 +394,10 @@ struct CompileContext{
 
     std::string expr_result;
     std::string global_expr_result;
+
+    bool global_force_update;
+
+
     bool expr_primary_global_var; // for assigning a glboal var a new valuie
     LITERAL_TYPE expr_primary_type;
     std::string expr_cast_type;
@@ -448,6 +489,15 @@ struct CompileContext{
     int func_arg_reg_count;
     std::string function_type;
     std::map<std::string,std::string>functions;
+
+    bool calling_function;
+
+    bool is_function(std::string name){
+        if(functions.count(name) == 0){
+            return false; // not a funciton
+        }
+        return true;
+    }
     
     uint get_type_bytesize(std::string type){
     
