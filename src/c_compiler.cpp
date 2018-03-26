@@ -84,6 +84,8 @@ int main(int argc, char* argv[])
 
         CC.calling_function = false;
 
+        CC.global_force_update = false;
+
         CC.makeNameUnq = 0; // used for creating labels
 
         ast->compile(dstStream, CC);
