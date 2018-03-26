@@ -405,8 +405,8 @@ class statement_jump : public Node{
                 if( context.expr_primary_global_var ) { // global var
                     context.expr_primary_global_var = false;
                     uint gv_reg = context.get_free_reg();
-                    dst<<"\tlui\t"<<"$"<<gv_reg<<",%hi("<<context.expr_result<<")\n";
-                    dst<<"\tlw\t$"<<gv_reg<<",%lo("<<context.expr_result<<")($"<<gv_reg<<")\n";
+                    dst<<"\tlui\t"<<"$"<<gv_reg<<",%hi("<<context.global_expr_result<<")\n";
+                    dst<<"\tlw\t$"<<gv_reg<<",%lo("<<context.global_expr_result<<")($"<<gv_reg<<")\n";
                     dst<<"\tadd\t$2,$0,$"<<gv_reg<<std::endl;
                 }
                 

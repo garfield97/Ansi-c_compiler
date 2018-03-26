@@ -230,7 +230,7 @@ class declaration : public Node{
                 specifier_declaration->compile(dst,context); // assigns tmp_v with C type
                 
 
-                context.global_var_size = context.get_type_bytesize(context.tmp_v);// default
+                context.global_var_size = std::to_string(context.get_type_bytesize(context.tmp_v) );// default
                 
                 declarator_list_init->compile(dst,context); // Returns Identifier of variable to temp_v            
 
