@@ -174,6 +174,8 @@ class definition_function : public Node{
             dst<<'\t'<<".end "<<context.current_func<<"\n\n";
             // reset context
             context.function_end();
+
+            context.print_fp_cd(); // floating constants
         
         }
 };
@@ -500,8 +502,8 @@ class declarator_init : public Node{
             
            
             temp.type = context.tmp_v; // set from declaration
-            
             context.set_expr_result_type(); // use for assign cases on type
+
             temp.reg_ID = 33;    // forgot to initialise reg_ID into 33 -> not empty 
 
             
@@ -511,7 +513,10 @@ class declarator_init : public Node{
                   
             temp.stack_position = context.stack_size;
 
-            
+            if(local_var && (temp.type == "double")) this->push_stack(dst,context); // double takes up 2 words
+
+
+
             declarator->compile(dst,context);   //stores into tmp_v (variable name)
 
             temp.is_global = false;
@@ -532,32 +537,115 @@ class declarator_init : public Node{
             }
 
             if(local_var){
-                if( initializer != NULL){
-                    context.assigning = true;
-                    context.declaring = true;
-                    initializer->compile(dst,context); //if its a constant it stores into expression_results
-                    context.declaring = false;
-                    dst<<"\tadd\t$15,$0,"<<context.expr_result<<'\n';
-                    context.assigning = false;
+
+                if(temp.type == "double")
+                {
+                    if( initializer != NULL){
+
+                        std::string fpc = context.makeName("$dpc");
+
+                        context.assigning = true;
+                        context.declaring = true;
+                        initializer->compile(dst,context); //if its a constant it stores into expression_results
+                        context.declaring = false;
+                        context.assigning = false;
+
+                        if( regex_match(context.expr_result, context.is_reg) )
+                            dst<<"\tmov.d\t$f18,"<<context.expr_result<<'\n';
+
+                        else{ // constant -> fp_constant_dec
+                            std::string tmp = "\t.data\n";
+                            context.fp_constant_dec.push_back(tmp);
+                            tmp = fpc + ":\n";
+                            context.fp_constant_dec.push_back(tmp);
+                            tmp = "\t.double\t" + context.expr_result + "\n\n";
+                            context.fp_constant_dec.push_back(tmp);
+
+
+                            dst<<"\tlui\t$15,%hi("<<fpc<<")\n";
+                            dst<<"\tldc1\t$f18,%lo("<<fpc<<")($15)\n";
+                        }
+                        
+                        dst<<"\tsdc1\t$f18,"<<temp.stack_position*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
+                    }
 
                 }
-                else{
-                    dst<<"\tmove\t$15,$0\n";
+
+
+
+                else if(temp.type == "float")
+                {
+                    if( initializer != NULL){
+
+                        std::string fpc = context.makeName("$fpc");
+
+                        context.assigning = true;
+                        context.declaring = true;
+                        initializer->compile(dst,context); //if its a constant it stores into expression_results
+                        context.declaring = false;
+                        context.assigning = false;
+
+                        if( regex_match(context.expr_result, context.is_reg) )
+                            dst<<"\tmov.s\t$f18,"<<context.expr_result<<'\n';
+
+                        else{ // constant -> fp_constant_dec
+                            std::string tmp = "\t.data\n";
+                            context.fp_constant_dec.push_back(tmp);
+                            tmp = fpc + ":\n";
+                            context.fp_constant_dec.push_back(tmp);
+                            tmp = "\t.float\t" + context.expr_result + "\n\n";
+                            context.fp_constant_dec.push_back(tmp);
+
+
+                            dst<<"\tlui\t$15,%hi("<<fpc<<")\n";
+                            dst<<"\tlwc1\t$f18,%lo("<<fpc<<")($15)\n";
+                        }
+                        
+                        dst<<"\tswc1\t$f18,"<<temp.stack_position*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
+                    }
                 }
-                dst<<"\tsw\t$15,"<<temp.stack_position*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
-            
+
+
+
+                else // int
+                {
+                    if( initializer != NULL){
+                        context.assigning = true;
+                        context.declaring = true;
+                        initializer->compile(dst,context); //if its a constant it stores into expression_results
+                        context.declaring = false;
+                        dst<<"\tadd\t$15,$0,"<<context.expr_result<<'\n';
+                        context.assigning = false;
+
+                    }
+                    else{
+                        dst<<"\tmove\t$15,$0\n";
+                    }
+                    dst<<"\tsw\t$15,"<<temp.stack_position*4<<"($fp)"<<std::endl; //stores the value onto the correct position on the stack.
+                }
 
                 context.declarations++; // keep track of how many declaration were made in current scope
             }
             
             else if (context.scope_index == 0) {
+
                 if( initializer != NULL){
-                    context.assigning = true;
-                    context.declaring = true;
-                    initializer->compile(dst,context); //if its a constant it stores into expression_results
-                    context.declaring = false;
-                    context.assigning = false;                    
-                    dst<<"\t.word\t"<<context.internal_expr_value<<'\n';   
+
+                    if(temp.type == "double")
+                    {}
+
+                    if(temp.type == "float")
+                    {}
+
+                    else // int
+                    {
+                        context.assigning = true;
+                        context.declaring = true;
+                        initializer->compile(dst,context); //if its a constant it stores into expression_results
+                        context.declaring = false;
+                        context.assigning = false;                    
+                        dst<<"\t.word\t"<<context.internal_expr_value<<'\n';
+                    }   
                 }
             }
             

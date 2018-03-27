@@ -38,15 +38,24 @@ struct CompileContext{
 
 
 
+    //fp constants
+    std::vector<std::string> fp_constant_dec;
 
+    void print_fp_cd(){
+        dstStream << std::fixed;
+        for(uint i = 0; i < fp_constant_dec.size(); ++i)
+            dstStream<<fp_constant_dec[i];
+
+        fp_constant_dec.clear();
+    }
 
     // fp regs
     bool fp_reg_free[20]; // caller-saved
     uint fp_assign_reg;
     uint get_fp_free_reg(){
 
-        for(uint i=2u; i<=19u; i++){
-            if( (fp_reg_free[i] == true) && (extract_global || fp_not_in_err_stack(i)) ){ // register to be saved by calling function
+        for(uint i=2u; i<=17u; i++){
+            if( (fp_reg_free[i] == true) && (i%2 == 0) && (extract_global || fp_not_in_err_stack(i)) ){ // register to be saved by calling function
                 fp_reg_free[i] = false;                                    // short circuit
 
                         // EXPR_ASSIGNMENT 
@@ -89,9 +98,9 @@ struct CompileContext{
 
         if(found){
             // store variable in reg back onto stack
-            if(type == "float") dstStream<<"\tswc1\t$"<<fp_reg_counter<<","<<s_pos*4<<"($fp)\n";
+            if(type == "float") dstStream<<"\tswc1\t$f"<<fp_reg_counter<<","<<s_pos*4<<"($fp)\n";
 
-            else dstStream<<"\tsdc1\t$"<<fp_reg_counter<<","<<s_pos*4<<"($fp)\n";
+            else dstStream<<"\tsdc1\t$f"<<fp_reg_counter<<","<<s_pos*4<<"($fp)\n";
         }
 
         // now free it

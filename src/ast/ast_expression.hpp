@@ -1856,7 +1856,6 @@ class expr_postfix : public Node {
 
                 context.stack_size = save_size;
 
-                // restore $8-15    
                 context.restore_8_15(save_reg_state);
 
                 dst<<"\tmove\t$"<<exp_reg<<",$2\n";
@@ -1869,7 +1868,6 @@ class expr_postfix : public Node {
                 exp->compile(dst,context); //arguments
 
 
-                // save $8-$15 to the stack
                 bool save_reg_state[32];
                 context.save_8_15(save_reg_state);
 
@@ -1995,7 +1993,7 @@ class expr_primary : public Node {
             , Ibool(false)
             , UIbool(false)
             , LIbool(false)
-            , ULbool(true)
+            , ULbool(false)
             , Cbool(false)
             , Fbool(true)
         {}
