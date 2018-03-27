@@ -1242,22 +1242,34 @@ class expr_add : public Node {
             if(op == "+"){
                 context.internal_expr_value += context.internal_temp_value;
 
-                if(context.expr_primary_type == UI){
-                    dst<<"\taddu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n'; // register addition -> storage  unsigned register add
+                if(context.expr_primary_type == D){
+                    dst<<"\tadd.d\t"<<"$f"<<temp_register<<",$f"<<temp_register<<",$f"<<mul_reg<<'\n'; 
+                }
+                else if(context.expr_primary_type == F){
+                    dst<<"\tadd.s\t"<<"$f"<<temp_register<<",$f"<<temp_register<<",$f"<<mul_reg<<'\n'; 
+                }
+                else if(context.expr_primary_type == UI){
+                    dst<<"\taddu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n'; 
                 }
                 else{
-                    dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n'; // register addition -> storage  signed register add
+                    dst<<"\tadd\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n';
                 }         
             }
             
             else{ // subtraction
                 context.internal_expr_value -= context.internal_temp_value;
-                if(context.expr_primary_type == UI){
-                    dst<<"\tsubu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n'; // register addition -> storage 
+
+                if(context.expr_primary_type == D){
+                    dst<<"\tsub.d\t"<<"$f"<<temp_register<<",$f"<<temp_register<<",$f"<<mul_reg<<'\n'; 
                 }
-                
+                else if(context.expr_primary_type == F){
+                    dst<<"\tsub.s\t"<<"$f"<<temp_register<<",$f"<<temp_register<<",$f"<<mul_reg<<'\n'; 
+                }
+                else if(context.expr_primary_type == UI){
+                    dst<<"\tsubu\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n';
+                }
                 else{
-                    dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n'; // register addition -> storage 
+                    dst<<"\tsub\t"<<"$"<<temp_register<<",$"<<temp_register<<",$"<<mul_reg<<'\n';
                 }
             }
             
@@ -1337,27 +1349,45 @@ class expr_mul : public Node {
             if(op == "*"){
                 
                 context.internal_expr_value *= context.internal_temp_value;
-                if(context.expr_primary_type == UI){
+
+                if(context.expr_primary_type == D){
+                     dst<<"\tmul.d\t"<<"$f"<<temp_register<<",$f"<<temp_register<<",$f"<<cast_reg<<'\n';
+                }
+                else if(context.expr_primary_type == F){
+                     dst<<"\tmul.s\t"<<"$f"<<temp_register<<",$f"<<temp_register<<",$f"<<cast_reg<<'\n';
+                }
+                else if(context.expr_primary_type == UI){
                     dst<<"\tmultu\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // unsigned mul
+                    dst<<"\tmflo\t$"<<temp_register<<"\n";
                 }
                 else{
                     dst<<"\tmult\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // mul
+                    dst<<"\tmflo\t$"<<temp_register<<"\n";
                 }
 
-                dst<<"\tmflo\t$"<<temp_register<<"\n";
+                
             }
 
             if(op == "/"){ //LO has quotient
             
                 context.internal_expr_value /= context.internal_temp_value;
-                if(context.expr_primary_type == UI){
+
+                if(context.expr_primary_type == D){
+                     dst<<"\tdiv.d\t"<<"$f"<<temp_register<<",$f"<<temp_register<<",$f"<<cast_reg<<'\n';
+                }
+                else if(context.expr_primary_type == F){
+                     dst<<"\tdiv.s\t"<<"$f"<<temp_register<<",$f"<<temp_register<<",$f"<<cast_reg<<'\n';
+                }
+                else if(context.expr_primary_type == UI){
                     dst<<"\tdivu\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // unsigned div
+                    dst<<"\tmflo\t$"<<temp_register<<"\n";
                 }
                 else{
                     dst<<"\tdiv\t"<<"$"<<temp_register<<",$"<<cast_reg<<'\n'; // div
+                    dst<<"\tmflo\t$"<<temp_register<<"\n";
                 }
 
-                dst<<"\tmflo\t$"<<temp_register<<"\n"; 
+                 
             }
 
             if(op == "%"){ //HI has remainder
@@ -1766,7 +1796,7 @@ class arg_expr_list : public Node {
         }
 };
 
-// missing arrayy / functions with args and pointers
+// missing array and pointers
 class expr_postfix : public Node {
     //EXPR_POSTFIX : EXPR_PRIMARY
     //             | EXPR_POSTFIX L_SQUARE EXPR R_SQUARE
@@ -2017,7 +2047,6 @@ class expr_postfix : public Node {
         }
 };
 
-// missing float
 class expr_primary : public Node {
     //EXPR_PRIMARY : IDENTIFIER
     //             | INT_C 

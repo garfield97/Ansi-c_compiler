@@ -423,8 +423,12 @@ class declarator_init_list : public Node{
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
 
+            std::string type = context.tmp_v; // save type
+
             declarator_init->compile(dst,context);
             
+            context.tmp_v = type;
+
             declarator_init1->compile(dst,context);
             
 

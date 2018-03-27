@@ -569,7 +569,26 @@ class statement_jump : public Node{
                         }
                         
                         else if(regex_match(context.expr_result, context.is_reg)){ // register
-                            dst<<"\tadd\t$2,$0,"<<context.expr_result<<std::endl;
+                            if(context.expr_primary_type == D){
+                                uint reg;
+                                sscanf(context.expr_result.c_str(), "$%d", &reg);
+
+                                dst<<"\ttrunc.w.d\t"<<"$f0,$f"<<reg<<"\n"; // truncate double to int (no rounding)
+	                            dst<<"\tmfc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                            }
+
+                            else if(context.expr_primary_type == F){
+                                uint reg;
+                                sscanf(context.expr_result.c_str(), "$%d", &reg);
+
+                                dst<<"\ttrunc.w.s\t"<<"$f0,$f"<<reg<<"\n"; // truncate double to int (no rounding)
+	                            dst<<"\tmfc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                            }
+
+                            else{
+                                dst<<"\tadd\t$2,$0,"<<context.expr_result<<std::endl;
+                            }
+                            
                         }  
                         
                         else{ // local var

@@ -495,6 +495,19 @@ struct CompileContext{
             if(! (fp_err_stack.size() == 0)){
                 fp_err_stack.pop_back();
             }
+
+            /*
+            if(expr_primary_type == D){
+                uint new_r = = get_free_reg(); 
+                dstStream<<"\tcvt.w.d\t"<<"$f"<<r<<",$f"<<r<<"\n";
+                dstStream<<"\tmfc1\t"<<"$"<<new_r<<",$f"<<r<<"\n";
+            }
+            else if(expr_primary_type == F){
+                uint new_r = = get_free_reg(); 
+                dstStream<<"\tcvt.s.d\t"<<"$f"<<r<<",$f"<<r<<"\n";
+                dstStream<<"\tmfc1\t"<<"$"<<new_r<<",$f"<<r<<"\n";
+            }
+            */
             expr_result = "$"+r;
         }
     }
