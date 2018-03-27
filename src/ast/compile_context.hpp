@@ -245,8 +245,12 @@ struct CompileContext{
     }
 
     void force_update_variable(){ // return true when given a new reg - i.e. loaded from the stack // only for variables
-        
-        uint local = get_free_reg();
+        uint local;
+        // float variable
+        if( (expr_primary_type == F) || (expr_primary_type == D) ){
+            local = get_fp_free_reg();
+        }
+        else local = get_free_reg();
 
         uint s_pos;
         if(!global_force_update){
@@ -260,7 +264,15 @@ struct CompileContext{
             scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
             scopes[scope_index][expr_result].stack_position = s_pos;
 
-            if(!(s_pos==0)) dstStream<<"\tlw\t$"<<local<<","<<s_pos*4<<"($sp)\n";
+            if( expr_primary_type == F ){
+                if(!(s_pos==0)) dstStream<<"\tlwc1\t$f"<<local<<","<<s_pos*4<<"($sp)\n";
+            }
+            else if( expr_primary_type == D ){
+                if(!(s_pos==0)) dstStream<<"\tldc1\t$f"<<local<<","<<s_pos*4<<"($sp)\n";
+            }
+            else{
+                if(!(s_pos==0)) dstStream<<"\tlw\t$"<<local<<","<<s_pos*4<<"($sp)\n";
+            }
 
         }
 

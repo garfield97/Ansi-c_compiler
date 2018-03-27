@@ -412,25 +412,186 @@ class statement_jump : public Node{
                 
                 else{
                     // not global
-                    context.force_update_variable(); 
+                    context.force_update_variable();
 
-                    if(regex_match(context.expr_result, context.reNum)){ // literal
-                        dst<<"\taddi\t$2,$0,"<<context.expr_result<<'\n';
+                    if( context.function_type == "double" )
+                    {
+                        if(regex_match(context.expr_result, context.reNum)){ // literal int
+                            dst<<"\taddi\t$2,$0,"<<context.expr_result<<'\n';
+                            dst<<"\tmtc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                            dst<<"\tcvt.d.w\t"<<"$f0,$f0\n";
+                        }
+
+                        else if(regex_match(context.expr_result, context.reFloat)){ // literal float
+                            // declare constant
+                            std::string fpc = context.makeName("$dpc");
+                            std::string tmp = "\t.data\n";
+                            context.fp_constant_dec.push_back(tmp);
+                            tmp = fpc + ":\n";
+                            context.fp_constant_dec.push_back(tmp);
+                            tmp = "\t.double\t" + context.expr_result + "\n\n";
+                            context.fp_constant_dec.push_back(tmp);
+
+
+                            dst<<"\tlui\t$15,%hi("<<fpc<<")\n";
+                            dst<<"\tldc1\t$f0,%lo("<<fpc<<")($15)\n";
+
+                        }
+                        
+                        else if(regex_match(context.expr_result, context.reChar)){ // literal char
+                            int temp_int;
+                            std::stringstream convert(context.expr_result);
+                            convert>>temp_int;
+                            dst<<"\taddi\t$2,$0,"<<temp_int<<'\n';
+                            dst<<"\tmtc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                            dst<<"\tcvt.d.w\t"<<"$f0,$f0\n";
+                        }
+                        
+                        else if(regex_match(context.expr_result, context.is_reg)){ // register
+                            uint reg_num;
+                            sscanf(context.expr_result.c_str(), "$%d", &reg_num);
+
+                            dst<<"\tmov.s\t$f0,$f"<<reg_num<<std::endl;
+                        }  
+                        
+                        else{ // local var
+                            std::string var_type = context.scopes[context.scope_index][context.expr_result].type;
+                            uint var_reg = context.scopes[context.scope_index][context.expr_result].reg_ID;
+                            uint var_pos = 4*context.scopes[context.scope_index][context.expr_result].stack_position;
+
+                            if(var_type == "double"){
+                                dst<<"\tldc1\t"<<"$f0,"<<var_pos<<"($fp)\n"; // load double into f0
+                            }
+                            else if(var_type == "float"){
+                                dst<<"\tlwc1\t"<<"$f0,"<<var_pos<<"($fp)\n"; // load double into f0
+                                dst<<"\tcvt.d.s\t"<<"$f0,$f0\n"; // 
+                            }
+                            else{
+                                dst<<"\tadd\t$2,$0,$"<<var_reg<<std::endl;
+                                dst<<"\tmtc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                                dst<<"\tcvt.d.w\t"<<"$f0,$f0\n";
+                            }                                                    
+                            
+                        }
                     }
-                    
-                    else if(regex_match(context.expr_result, context.reChar)){ // literal char
-                        int temp_int;
-                        std::stringstream convert(context.expr_result);
-                        convert>>temp_int;
-                        dst<<"\taddi\t$2,$0,"<<temp_int<<'\n';
+
+                    if( context.function_type == "float" )
+                    {
+                        if(regex_match(context.expr_result, context.reNum)){ // literal int
+                            dst<<"\taddi\t$2,$0,"<<context.expr_result<<'\n';
+                            dst<<"\tmtc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                            dst<<"\tcvt.s.w\t"<<"$f0,$f0\n";
+                        }
+
+                        else if(regex_match(context.expr_result, context.reFloat)){ // literal float
+                            // declare constant
+                            std::string fpc = context.makeName("$dpc");
+                            std::string tmp = "\t.data\n";
+                            context.fp_constant_dec.push_back(tmp);
+                            tmp = fpc + ":\n";
+                            context.fp_constant_dec.push_back(tmp);
+                            tmp = "\t.float\t" + context.expr_result + "\n\n";
+                            context.fp_constant_dec.push_back(tmp);
+
+
+                            dst<<"\tlui\t$15,%hi("<<fpc<<")\n";
+                            dst<<"\tlwc1\t$f0,%lo("<<fpc<<")($15)\n";
+
+                        }
+                        
+                        else if(regex_match(context.expr_result, context.reChar)){ // literal char
+                            int temp_int;
+                            std::stringstream convert(context.expr_result);
+                            convert>>temp_int;
+                            dst<<"\taddi\t$2,$0,"<<temp_int<<'\n';
+                            dst<<"\tmtc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                            dst<<"\tcvt.s.w\t"<<"$f0,$f0\n";
+                        }
+                        
+                        else if(regex_match(context.expr_result, context.is_reg)){ // register
+                            uint reg_num;
+                            sscanf(context.expr_result.c_str(), "$%d", &reg_num);
+
+                            dst<<"\tmov.s\t$f0,$f"<<reg_num<<std::endl;
+                        }  
+                        
+                        else{ // local var
+                            std::string var_type = context.scopes[context.scope_index][context.expr_result].type;
+                            uint var_reg = context.scopes[context.scope_index][context.expr_result].reg_ID;
+                            uint var_pos = 4*context.scopes[context.scope_index][context.expr_result].stack_position;
+
+                            if(var_type == "double"){
+                                dst<<"\tldc1\t"<<"$f0,"<<var_pos<<"($fp)\n"; // load double into f0
+                                dst<<"\tcvt.s.d\t"<<"$f0,$f0\n";
+                            }
+                            else if(var_type == "float"){
+                                dst<<"\tlwc1\t"<<"$f0,"<<var_pos<<"($fp)\n"; // load float into f0
+                            }
+                            else{
+                                dst<<"\tadd\t$2,$0,$"<<var_reg<<std::endl;
+                                dst<<"\tmtc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                                dst<<"\tcvt.s.w\t"<<"$f0,$f0\n";
+                            }                                                    
+                            
+                        }
                     }
-                    
-                    else if(regex_match(context.expr_result, context.is_reg)){ // register
-                        dst<<"\tadd\t$2,$0,"<<context.expr_result<<std::endl;
-                    }  
-                    
-                    else{                                                           // local var
-                        dst<<"\tadd\t$2,$0,$"<<context.scopes[context.scope_index][context.expr_result].reg_ID<<std::endl;
+
+
+                    if( (context.function_type == "int") || (context.function_type == "unsigned int") )
+                    {
+                        if(regex_match(context.expr_result, context.reNum)){ // literal
+                            dst<<"\taddi\t$2,$0,"<<context.expr_result<<'\n';
+                        }
+
+                        else if(regex_match(context.expr_result, context.reFloat)){ // literal float
+                            // declare constant
+                            std::string fpc = context.makeName("$dpc");
+                            std::string tmp = "\t.data\n";
+                            context.fp_constant_dec.push_back(tmp);
+                            tmp = fpc + ":\n";
+                            context.fp_constant_dec.push_back(tmp);
+                            tmp = "\t.double\t" + context.expr_result + "\n\n";
+                            context.fp_constant_dec.push_back(tmp);
+
+
+                            dst<<"\tlui\t$15,%hi("<<fpc<<")\n";
+                            dst<<"\tldc1\t$f0,%lo("<<fpc<<")($15)\n";
+
+                            dst<<"\ttrunc.w.d\t"<<"$f0,$f0\n"; // truncate double to int (no rounding)
+	                        dst<<"\tmfc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                        }
+                        
+                        else if(regex_match(context.expr_result, context.reChar)){ // literal char
+                            int temp_int;
+                            std::stringstream convert(context.expr_result);
+                            convert>>temp_int;
+                            dst<<"\taddi\t$2,$0,"<<temp_int<<'\n';
+                        }
+                        
+                        else if(regex_match(context.expr_result, context.is_reg)){ // register
+                            dst<<"\tadd\t$2,$0,"<<context.expr_result<<std::endl;
+                        }  
+                        
+                        else{ // local var
+                            std::string var_type = context.scopes[context.scope_index][context.expr_result].type;
+                            uint var_reg = context.scopes[context.scope_index][context.expr_result].reg_ID;
+                            uint var_pos = 4*context.scopes[context.scope_index][context.expr_result].stack_position;
+
+                            if(var_type == "double"){
+                                dst<<"\tldc1\t"<<"$f0,"<<var_pos<<"($fp)\n"; // load double into f0
+                                dst<<"\ttrunc.w.d\t"<<"$f0,$f0\n"; // truncate double to int (no rounding)
+	                            dst<<"\tmfc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                            }
+                            else if(var_type == "float"){
+                                dst<<"\tlwc1\t"<<"$f0,"<<var_pos<<"($fp)\n"; // load double into f0
+                                dst<<"\ttrunc.w.s\t"<<"$f0,$f0\n"; // truncate float to int (no rounding)
+	                            dst<<"\tmfc1\t"<<"$2,$f0\n"; //move from f0 to $2
+                            }
+                            else{
+                                dst<<"\tadd\t$2,$0,$"<<var_reg<<std::endl;
+                            }                                                    
+                            
+                        }
                     }
                 }
 
