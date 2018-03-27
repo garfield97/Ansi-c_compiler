@@ -234,10 +234,25 @@ struct CompileContext{
         }
             
         if((local == 33) && (s_pos != 0)){    // unassigned -
-            local = get_free_reg();
+            if( (expr_primary_type == F) || (expr_primary_type == D) ){
+                local = get_fp_free_reg();
+            }
+            else local = get_free_reg();
+
             scopes[scope_index][expr_result].reg_ID = local; //updating the binding stored in our vectors of map-> no more updates to reg_assign
             scopes[scope_index][expr_result].stack_position = s_pos;
-            dstStream<<"\tlw\t$"<<local<<","<<s_pos*4<<"($sp)\n";
+
+                       
+            if( expr_primary_type == F ){
+                dstStream<<"\tlwc1\t$f"<<local<<","<<s_pos*4<<"($sp)\n";
+            }
+            else if( expr_primary_type == D ){
+                dstStream<<"\tldc1\t$f"<<local<<","<<s_pos*4<<"($sp)\n";
+            }
+            else{
+                dstStream<<"\tlw\t$"<<local<<","<<s_pos*4<<"($sp)\n";
+            }
+
             return true;
         }    
 
@@ -315,19 +330,59 @@ struct CompileContext{
         uint reg;
         //literal
         if(regex_match(expr_result, reNum)) reg = set_literal_reg();
+
         // check if reg
         else if(regex_match(expr_result, is_reg)) sscanf(expr_result.c_str(),"$%d", &reg);
+
+        // constant for double
+        else if( (expr_primary_type==D) && ((regex_match(expr_result, reNum))||(regex_match(expr_result, reFloat))) ){
+        
+            reg = get_fp_free_reg(); //  assign literal a register
+            std::string fpc = makeName("$dpc");
+                            
+            std::string tmp = "\n\t.data\n";
+            fp_constant_dec.push_back(tmp);
+            tmp = fpc + ":\n";
+            fp_constant_dec.push_back(tmp);
+            tmp = "\t.double\t" + expr_result + "\n\n";
+            fp_constant_dec.push_back(tmp);
+
+            dstStream<<"\tlui\t$15,%hi("<<fpc<<")\n";
+            dstStream<<"\tldc1\t$f"<<reg<<",%lo("<<fpc<<")($15)\n";
+            
+        }
+
+        // constant for float
+        else if( (expr_primary_type==F) && ((regex_match(expr_result, reNum))||(regex_match(expr_result, reFloat))) ){
+            
+            reg = get_fp_free_reg(); //  assign literal a register
+            std::string fpc = makeName("$fpc");
+                            
+            std::string tmp = "\n\t.data\n";
+            fp_constant_dec.push_back(tmp);
+            tmp = fpc + ":\n";
+            fp_constant_dec.push_back(tmp);
+            tmp = "\t.float\t" + expr_result + "\n\n";
+            fp_constant_dec.push_back(tmp);
+
+            dstStream<<"\tlui\t$15,%hi("<<fpc<<")\n";
+            dstStream<<"\tlwc1\t$f"<<reg<<",%lo("<<fpc<<")($15)\n";
+
+        }
+
         // variable
         else{
             if(!expr_primary_global_var){  // not global
                 uint reg_save = scopes[scope_index][expr_result].reg_ID;
 
                 force_update_variable();  // force the variable a new reg
+
                 reg = scopes[scope_index][expr_result].reg_ID;
-                dstStream<<"\tlw\t"<<"$"<<reg<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
 
                 scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
+
             }
+
             else{   // global var
                 extract_global = true;
                 reg = get_free_reg();
@@ -379,13 +434,11 @@ struct CompileContext{
                     if(!expr_primary_global_var){
                         uint reg_save = scopes[scope_index][expr_result].reg_ID;
                         force_update_variable();  // froce a new reg
-                            // load from stack
-                        dstStream<<"\tlw\t"<<"$"<<scopes[scope_index][expr_result].reg_ID<<","<<scopes[scope_index][expr_result].stack_position*4<<"($sp)"<<std::endl;   
-                        
+                                                
                         err_stack_reg = scopes[scope_index][expr_result].reg_ID;
                         expr_result_reg = std::to_string(scopes[scope_index][expr_result].reg_ID);
-                        dstStream<<"\tadd\t"<<"$"<<expr_result_reg<<",$0,$"<<scopes[scope_index][expr_result].reg_ID<<'\n'; // move from assigned reg into expr res reg
-                    
+                        
+
                         scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
                     }
                     else{ // global var load

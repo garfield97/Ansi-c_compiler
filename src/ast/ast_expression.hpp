@@ -213,11 +213,15 @@ class expr_assignment : public Node {
 
 
             std::string unary_reg = context.am_i_bottom(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
-            
+
             binding tmp;
             
             if(global_var) tmp = context.scopes[0][context.expr_result];
             else tmp = context.scopes[context.scope_index][context.expr_result];
+
+
+            std::string type = tmp.type;
+            std::string cast_type = type;
 
             // free bools for rhs
             bool t = context.err_top, b = context.err_bottom; // save state locally
@@ -225,7 +229,7 @@ class expr_assignment : public Node {
             context.err_top = false;
             context.err_bottom = false;
             context.type_cast = false;
-            exp->compile(dst,context); // compile right most term 
+            exp->compile(dst,context); // compile right most term
             context.UNARY_UPDATE();
 
             context.err_top = t;        // restore state
@@ -235,7 +239,7 @@ class expr_assignment : public Node {
             // check for cast
             if(context.type_cast){
                 context.type_cast = false;
-                tmp.type = context.expr_cast_type;
+                cast_type = context.expr_cast_type;
             }
 
 
@@ -247,99 +251,214 @@ class expr_assignment : public Node {
             // sets tmp_v with operator
             opr->compile(dst,context);
             std::string mode = context.tmp_v;
-            // get type
-            std::string type = tmp.type;
 
-
-            if(mode == "="){ // normal assign
-                dst<<"\tmove\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-
-            }
-            if(mode == "*="){ // mul assign
-                if(type == "unsigned int"){
-                    dst<<"\tmultu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-                }
-                else{
-                    dst<<"\tmult\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-                }
-                dst<<"\tmflo\t"<<"$"<<unary_reg<<"\n";
-
-            }
-            if(mode == "/="){ // div assign
-                if(type == "unsigned int"){
-                    dst<<"\tdivu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-                }
-                else{
-                    dst<<"\tdiv\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-                }
-                dst<<"\tmflo\t"<<"$"<<unary_reg<<"\n";
-
-            }
-            if(mode == "%="){ // mod assign
-                 if(type == "unsigned int"){
-                    dst<<"\tdivu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-                }
-                else{
-                    dst<<"\tdiv\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-                }
-                dst<<"\tmfhi\t"<<"$"<<unary_reg<<"\n";
-               
-            }
-            if(mode == "+="){ // add assign
-                if(type == "unsigned int"){
-                    dst<<"\taddu\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-                }
-                else{
-                    dst<<"\tadd\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+            if(type == "double")
+            {
+                // casting
+                if(type != cast_type){
+                    if(cast_type == "float"){
+                        dst<<"\tcvt.d.s\t"<<"$f18,$f"<<exp_reg<<"\n";
+                    }
+                    else{
+                        dst<<"\tmtc1\t"<<"$f18,$"<<exp_reg<<"\n";
+                        dst<<"\tcvt.d.w\t"<<"$f18,$f18\n";
+                    }
+                    exp_reg = 18;
                 }
 
-            }
-            if(mode == "-="){ // sub assign
-                if(type == "unsigned int"){
-                    dst<<"\tsubu\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                if(context.expr_primary_type != D){
+                    if(context.expr_primary_type == F){
+                        dst<<"\tcvt.d.s\t"<<"$f"<<exp_reg<<",$f"<<exp_reg<<"\n";
+                    }
+                    else{
+                        dst<<"\tcvt.d.w\t"<<"$f"<<exp_reg<<",$f"<<exp_reg<<"\n";
+                    }
                 }
-                else{
-                    dst<<"\tsub\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-                }
-            }
-            if(mode == "<<="){ // left assign
-                dst<<"\tsllv\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
 
-            }
-            if(mode == ">>="){ // right assign
-                if(type == "unsigned int"){
-                    dst<<"\tsrlv\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                if(mode == "="){ // normal assign
+                    dst<<"\tmov.d\t"<<"$f"<<unary_reg<<",$f"<<exp_reg<<std::endl;
+
                 }
-                else{
-                    dst<<"\tsrav\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                if(mode == "*="){ // mul assign
+                    dst<<"\tmul.d\t"<<"$f"<<unary_reg<<"$f"<<unary_reg<<",$f"<<exp_reg<<std::endl;
+
+                }
+                if(mode == "/="){ // div assign
+                    dst<<"\tdiv.d\t"<<"$f"<<unary_reg<<"$f"<<unary_reg<<",$f"<<exp_reg<<std::endl;
+
+
+                }
+                if(mode == "+="){ // add assign
+                    dst<<"\tadd.d\t"<<"$f"<<unary_reg<<"$f"<<unary_reg<<",$f"<<exp_reg<<std::endl;
+
+                }
+                if(mode == "-="){ // sub assign
+                    dst<<"\tsub.d\t"<<"$f"<<unary_reg<<"$f"<<unary_reg<<",$f"<<exp_reg<<std::endl;
+
+                }
+
+                if(!global_var){
+                    dst<<"\tsdc1\t"<<"$f"<<unary_reg<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;  // get s_pos from top of function  
+                    // update reg for variable binding
+                    sscanf(unary_reg.c_str(),"%d", &tmp.reg_ID);
+                    context.scopes[context.scope_index][var_assigned] = tmp;
+                }
+                else{   // writing to global
+
                 }
 
             }
-            if(mode == "&="){ // and assign
-                dst<<"\tand\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-            }
-            if(mode == "^="){ // xor assign
-                dst<<"\txor\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-            }
-            if(mode == "|="){ // or assign
-                dst<<"\tor\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
-            }
+
+            else if(type == "float")
+            {
+                // casting
+                if(type != cast_type){
+                    if(cast_type == "double"){
+                        dst<<"\tcvt.s.d\t"<<"$f18,$f"<<exp_reg<<"\n";
+                    }
+                    else{
+                        dst<<"\tmtc1\t"<<"$f18,$"<<exp_reg<<"\n";
+                        dst<<"\tcvt.s.w\t"<<"$f18,$f18\n";
+                    }
+                    exp_reg = 18;
+                }
+
+                if(context.expr_primary_type != F){
+                    if(context.expr_primary_type == D){
+                        dst<<"\tcvt.s.d\t"<<"$f"<<exp_reg<<",$f"<<exp_reg<<"\n";
+                    }
+                    else{
+                        dst<<"\tcvt.s.w\t"<<"$f"<<exp_reg<<",$f"<<exp_reg<<"\n";
+                    }
+                }
+
+                if(mode == "="){ // normal assign
+                    dst<<"\tmov.s\t"<<"$f"<<unary_reg<<",$f"<<exp_reg<<std::endl;
+
+                }
+                if(mode == "*="){ // mul assign
+                    dst<<"\tmul.s\t"<<"$f"<<unary_reg<<"$f"<<unary_reg<<",$f"<<exp_reg<<std::endl;
+
+                }
+                if(mode == "/="){ // div assign
+                    dst<<"\tdiv.s\t"<<"$f"<<unary_reg<<"$f"<<unary_reg<<",$f"<<exp_reg<<std::endl;
 
 
-            if(!global_var){
-                dst<<"\tsw\t"<<"$"<<unary_reg<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;  // get s_pos from top of function  
-                // update reg for variable binding
-                sscanf(unary_reg.c_str(),"$%d", &tmp.reg_ID);
-                context.scopes[context.scope_index][var_assigned] = tmp;
-            }
-            else{   // writing to global
-                // load address
-                uint addr_reg = context.get_free_reg();
-                dst<<"\tlui\t"<<"$"<<addr_reg<<",%hi("<<var_assigned<<")\n";
+                }
+                if(mode == "+="){ // add assign
+                    dst<<"\tadd.s\t"<<"$f"<<unary_reg<<"$f"<<unary_reg<<",$f"<<exp_reg<<std::endl;
 
-                dst<<"\tsw\t"<<"$"<<unary_reg<<",%lo("<<var_assigned<<")($"<<addr_reg<<")\n";
+                }
+                if(mode == "-="){ // sub assign
+                    dst<<"\tsub.s\t"<<"$f"<<unary_reg<<"$f"<<unary_reg<<",$f"<<exp_reg<<std::endl;
+
+                }
+
+                if(!global_var){
+                    dst<<"\tswc1\t"<<"$f"<<unary_reg<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;  // get s_pos from top of function  
+                    // update reg for variable binding
+                    sscanf(unary_reg.c_str(),"%d", &tmp.reg_ID);
+                    context.scopes[context.scope_index][var_assigned] = tmp;
+                }
+                else{   // writing to global
+
+                }
+
             }
 
+            else
+            {
+            
+                if(mode == "="){ // normal assign
+                    dst<<"\tmove\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+
+                }
+                if(mode == "*="){ // mul assign
+                    if(type == "unsigned int"){
+                        dst<<"\tmultu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+                    else{
+                        dst<<"\tmult\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+                    dst<<"\tmflo\t"<<"$"<<unary_reg<<"\n";
+
+                }
+                if(mode == "/="){ // div assign
+                    if(type == "unsigned int"){
+                        dst<<"\tdivu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+                    else{
+                        dst<<"\tdiv\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+                    dst<<"\tmflo\t"<<"$"<<unary_reg<<"\n";
+
+                }
+                if(mode == "%="){ // mod assign
+                    if(type == "unsigned int"){
+                        dst<<"\tdivu\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+                    else{
+                        dst<<"\tdiv\t"<<"$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+                    dst<<"\tmfhi\t"<<"$"<<unary_reg<<"\n";
+                
+                }
+                if(mode == "+="){ // add assign
+                    if(type == "unsigned int"){
+                        dst<<"\taddu\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+                    else{
+                        dst<<"\tadd\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+
+                }
+                if(mode == "-="){ // sub assign
+                    if(type == "unsigned int"){
+                        dst<<"\tsubu\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+                    else{
+                        dst<<"\tsub\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+                }
+                if(mode == "<<="){ // left assign
+                    dst<<"\tsllv\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+
+                }
+                if(mode == ">>="){ // right assign
+                    if(type == "unsigned int"){
+                        dst<<"\tsrlv\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+                    else{
+                        dst<<"\tsrav\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                    }
+
+                }
+                if(mode == "&="){ // and assign
+                    dst<<"\tand\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                if(mode == "^="){ // xor assign
+                    dst<<"\txor\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+                if(mode == "|="){ // or assign
+                    dst<<"\tor\t"<<"$"<<unary_reg<<",$"<<unary_reg<<",$"<<exp_reg<<std::endl;
+                }
+
+
+                if(!global_var){
+                    dst<<"\tsw\t"<<"$"<<unary_reg<<","<<tmp.stack_position*4<<"($sp)"<<std::endl;  // get s_pos from top of function  
+                    // update reg for variable binding
+                    sscanf(unary_reg.c_str(),"%d", &tmp.reg_ID);
+                    context.scopes[context.scope_index][var_assigned] = tmp;
+                }
+                else{   // writing to global
+                    // load address
+                    uint addr_reg = context.get_free_reg();
+                    dst<<"\tlui\t"<<"$"<<addr_reg<<",%hi("<<var_assigned<<")\n";
+
+                    dst<<"\tsw\t"<<"$"<<unary_reg<<",%lo("<<var_assigned<<")($"<<addr_reg<<")\n";
+                }
+
+            }
 
 
 
@@ -2110,7 +2229,7 @@ class expr_primary : public Node {
             else if(Fbool){
                 context.expr_result = std::to_string(Fval);
                 context.internal_temp_value = context.internal_expr_value = (long)Fval;
-                context.expr_primary_type = F;
+                context.expr_primary_type = D;
             }
             else if(exp != NULL){
                 exp->compile(dst, context);

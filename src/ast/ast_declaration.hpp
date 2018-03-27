@@ -542,7 +542,7 @@ class declarator_init : public Node{
                 {
                     if( initializer != NULL){
 
-                        std::string fpc = context.makeName("$dpc");
+                        
 
                         context.assigning = true;
                         context.declaring = true;
@@ -554,6 +554,8 @@ class declarator_init : public Node{
                             dst<<"\tmov.d\t$f18,"<<context.expr_result<<'\n';
 
                         else{ // constant -> fp_constant_dec
+                            std::string fpc = context.makeName("$dpc");
+
                             std::string tmp = "\t.data\n";
                             context.fp_constant_dec.push_back(tmp);
                             tmp = fpc + ":\n";
