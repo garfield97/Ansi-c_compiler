@@ -1925,12 +1925,14 @@ class expr_postfix : public Node {
             if(bracket){ // function call - for int
                 context.calling_function = true; // used in check bottom
                 binding tmp;
+                tmp.type = context.functions[func];
+                context.scopes[context.scope_index][context.expr_result] = tmp;
+                context.set_expr_result_type();
+
                 exp_reg = context.am_i_bottom();
 
                 context.calling_function = false;
-                // get its type
-                ////
-                context.scopes[context.scope_index][context.expr_result] = tmp;
+
 
             }
             else{

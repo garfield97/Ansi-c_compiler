@@ -555,8 +555,11 @@ class declarator_init : public Node{
                         context.declaring = false;
                         context.assigning = false;
 
-                        if( regex_match(context.expr_result, context.is_reg) )
-                            dst<<"\tmov.d\t$f18,"<<context.expr_result<<'\n';
+                        if( regex_match(context.expr_result, context.is_reg) ){
+                            uint reg;
+                            sscanf(context.expr_result.c_str(), "$%d", &reg );
+                            dst<<"\tmov.d\t$f18,$f"<<reg<<'\n';
+                        }
 
                         else{ // constant -> fp_constant_dec
                             std::string fpc = context.makeName("$dpc");
@@ -592,8 +595,11 @@ class declarator_init : public Node{
                         context.declaring = false;
                         context.assigning = false;
 
-                        if( regex_match(context.expr_result, context.is_reg) )
-                            dst<<"\tmov.s\t$f18,"<<context.expr_result<<'\n';
+                        if( regex_match(context.expr_result, context.is_reg) ){
+                            uint reg;
+                            sscanf(context.expr_result.c_str(), "$%d", &reg );
+                            dst<<"\tmov.s\t$f18,$f"<<reg<<'\n';
+                        }
 
                         else{ // constant -> fp_constant_dec
                             std::string tmp = "\t.data\n";
@@ -945,14 +951,14 @@ class declaration_parameter : public Node{
             if(tmp.type == "double"){
                 this->push_stack(dst,context);
                 this->push_stack(dst,context);
-                dst<<"\tsw\t$f"<<context.parameter_num<<","<<(context.stack_size-1)*4<<"($sp)\n";
+                dst<<"\tsdc1\t$f"<<context.fp_parameter_num<<","<<(context.stack_size-1)*4<<"($sp)\n";
 
                 tmp.stack_position = context.stack_size-1;
                 context.fp_parameter_num += 2;  // for next parameter
             }
             else if(tmp.type == "float"){
                 this->push_stack(dst,context);
-                dst<<"\tsw\t$f"<<context.parameter_num<<","<<context.stack_size*4<<"($sp)\n";
+                dst<<"\tswc1\t$f"<<context.fp_parameter_num<<","<<context.stack_size*4<<"($sp)\n";
 
                 tmp.stack_position = context.stack_size;
                 context.fp_parameter_num += 2;  // for next parameter

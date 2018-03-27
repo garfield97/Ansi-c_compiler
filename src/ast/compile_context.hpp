@@ -55,7 +55,7 @@ struct CompileContext{
     uint get_fp_free_reg(){
 
         for(uint i=2u; i<=17u; i++){
-            if( (fp_reg_free[i] == true) && (i%2 == 0) && (extract_global || fp_not_in_err_stack(i)) ){ // register to be saved by calling function
+            if( (fp_reg_free[i] == true) && (i!=12) && (i!=14)  && (i%2 == 0) && (extract_global || fp_not_in_err_stack(i)) ){ // register to be saved by calling function
                 fp_reg_free[i] = false;                                    // short circuit
 
                         // EXPR_ASSIGNMENT 
@@ -79,7 +79,7 @@ struct CompileContext{
         bool found = false;
         std::string type;
 
-        if(fp_reg_counter == assign_reg && assigning) ++fp_reg_counter; // avoid freeing assign_reg
+        if(fp_reg_counter == assign_reg && assigning) fp_reg_counter += 2; // avoid freeing assign_reg
 
         // first save any varubale stored in fp_reg_counter
         // search through variables in current scope
@@ -105,7 +105,7 @@ struct CompileContext{
 
         // now free it
         fp_reg_free[fp_reg_counter] = true; // free the reg
-        if(++fp_reg_counter == 19u) fp_reg_counter = 2u; // loop back for next replacement
+        if(++fp_reg_counter == 17u) fp_reg_counter = 2u; // loop back for next replacement
 
     }
 
@@ -425,7 +425,13 @@ struct CompileContext{
                 }
 
                 else if(calling_function){  // function call
-                    err_stack_reg = get_free_reg();
+                    if( ( expr_primary_type == F ) || ( expr_primary_type == D ) ){
+                        err_stack_reg = get_fp_free_reg();
+                    }
+                    else{
+                        err_stack_reg = get_free_reg();
+                    }
+
                     expr_result_reg = std::to_string( err_stack_reg );
                 }
 
@@ -438,7 +444,6 @@ struct CompileContext{
                         err_stack_reg = scopes[scope_index][expr_result].reg_ID;
                         expr_result_reg = std::to_string(scopes[scope_index][expr_result].reg_ID);
                         
-
                         scopes[scope_index][expr_result].reg_ID = reg_save; //restore binding
                     }
                     else{ // global var load
