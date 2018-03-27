@@ -126,11 +126,12 @@ class definition_function : public Node{
             
             
             context.parameter_num = 0;
+            context.fp_parameter_num = 12;
             
             dst<<'\t'<<".text"<<'\n';
             declarator->compile(dst,context);
             
-            
+            context.fp_parameter_num = 12;
             context.parameter_num = 0;
 
             
@@ -940,15 +941,32 @@ class declaration_parameter : public Node{
             recur->compile(dst,context);        //stores variable name in tmp_v
             
             // add var to stack
-            this->push_stack(dst,context);
-            dst<<"\tsw\t$a"<<context.parameter_num<<","<<context.stack_size*4<<"($sp)\n";
-            tmp.stack_position = context.stack_size;
-            
-            
-            context.param_bindings[context.tmp_v] = tmp;
-        
-            
-            context.parameter_num++;  // for next parameter                              
+
+            if(tmp.type == "double"){
+                this->push_stack(dst,context);
+                this->push_stack(dst,context);
+                dst<<"\tsw\t$f"<<context.parameter_num<<","<<(context.stack_size-1)*4<<"($sp)\n";
+
+                tmp.stack_position = context.stack_size-1;
+                context.fp_parameter_num += 2;  // for next parameter
+            }
+            else if(tmp.type == "float"){
+                this->push_stack(dst,context);
+                dst<<"\tsw\t$f"<<context.parameter_num<<","<<context.stack_size*4<<"($sp)\n";
+
+                tmp.stack_position = context.stack_size;
+                context.fp_parameter_num += 2;  // for next parameter
+
+            }
+            else{
+                this->push_stack(dst,context);
+                dst<<"\tsw\t$a"<<context.parameter_num<<","<<context.stack_size*4<<"($sp)\n";
+                tmp.stack_position = context.stack_size;
+                context.parameter_num++;  // for next parameter 
+            }
+
+
+            context.param_bindings[context.tmp_v] = tmp;                      
             
             
         }

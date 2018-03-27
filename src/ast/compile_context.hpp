@@ -685,19 +685,22 @@ struct CompileContext{
     }
 
 
-    void save_8_15(bool reg_array[] ){
+    void save_regs(bool reg_array[] , bool fp_reg_array[] ){
 
         for(uint i=0; i<32; ++i){
             reg_array[i] = reg_free[i];
             reg_free[i] = true;
+            fp_reg_array[i] = fp_reg_free[i];
+            fp_reg_free[i] = true;
         }
+
             
 
 
-        dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-32"<<'\n';
+        dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-96"<<'\n';
         
         for(uint i = 1; i <= stack_size ; i++){ 
-            dstStream<<"\tlw\t$15,"<<i*4+32<<"($sp)"<<'\n'; 
+            dstStream<<"\tlw\t$15,"<<i*4+96<<"($sp)"<<'\n'; 
             dstStream<<"\tsw\t$15,"<<i*4<<"($sp)"<<'\n';
         }                    
 
@@ -706,84 +709,50 @@ struct CompileContext{
             dstStream<<"\tsw\t$"<<i+8<<","<<(i+stack_size+1)*4<<"($sp)"<<'\n';
         }
 
-        dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl; 
-        stack_size += 8;
-    }
-
-    void restore_8_15(bool reg_array[] ){
-
-        for(uint i=0; i<32; ++i)
-            reg_free[i] = reg_array[i];
-
-
-        for(uint i = 0; i < 8; i++){
-            //load from stack
-            dstStream<<"\tlw\t$"<<15-i<<","<<(stack_size-i)*4<<"($sp)"<<'\n';
+        for(uint i = 0; i < 16; i++){
+            //store to stack
+            if( (i+2)%2 == 0) dstStream<<"\tsdc1\t$f"<<i+2<<","<<(i+stack_size+9)*4<<"($sp)"<<'\n';
         }
 
-        // shift up
-        for(uint i = 1; i <= stack_size-8 ; i++){ 
-            dstStream<<"\tlw\t$15,"<<i*4<<"($sp)"<<'\n'; 
-            dstStream<<"\tsw\t$15,"<<i*4+32<<"($sp)"<<'\n';
-        }                   
 
-        dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,32"<<'\n';
-        stack_size -= 8;
-        dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl;  
+        dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl; 
+        stack_size += 24;
     }
 
-
-    /*
-    void save_2_19(bool reg_array[] ){
+    void restore_regs(bool reg_array[], bool fp_reg_array[] ){
 
         for(uint i=0; i<32; ++i){
-            reg_array[i] = reg_free[i];
-            reg_free[i] = true;
-        }
-
-
-
-        dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,-32"<<'\n';
-        
-        for(uint i = 1; i <= stack_size ; i++){ 
-            dstStream<<"\tlw\t$15,"<<i*4+32<<"($sp)"<<'\n'; 
-            dstStream<<"\tsw\t$15,"<<i*4<<"($sp)"<<'\n';
-        }                    
-
-        for(uint i = 0; i < 8; i++){
-            //store to stack
-            dstStream<<"\tsw\t$"<<i+8<<","<<(i+stack_size+1)*4<<"($sp)"<<'\n';
-        }
-
-        dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl; 
-        stack_size += 8;
-    }
-
-    void restore_2_19(bool reg_array[] ){
-
-        for(uint i=0; i<32; ++i)
             reg_free[i] = reg_array[i];
-
+            fp_reg_free[i] = fp_reg_array[i];
+        }
+        
+        for(uint i = 0; i < 16; i++){
+            //store to stack
+            if( (17-i)%2 == 0) dstStream<<"\tldc1\t$f"<<17-i<<","<<(stack_size-i)*4<<"($sp)"<<'\n';
+        }
 
         for(uint i = 0; i < 8; i++){
             //load from stack
-            dstStream<<"\tlw\t$"<<15-i<<","<<(stack_size-i)*4<<"($sp)"<<'\n';
+            dstStream<<"\tlw\t$"<<15-i<<","<<(stack_size-i-16)*4<<"($sp)"<<'\n';
         }
 
         // shift up
-        for(uint i = 1; i <= stack_size-8 ; i++){ 
+        for(uint i = 1; i <= stack_size-24 ; i++){ 
             dstStream<<"\tlw\t$15,"<<i*4<<"($sp)"<<'\n'; 
-            dstStream<<"\tsw\t$15,"<<i*4+32<<"($sp)"<<'\n';
+            dstStream<<"\tsw\t$15,"<<i*4+96<<"($sp)"<<'\n';
         }                   
 
-        dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,32"<<'\n';
-        stack_size -= 8;
+        dstStream<<"\t"<<"addiu"<<"\t"<<"$sp,$sp,96"<<'\n';
+        stack_size -= 24;
         dstStream<<"\taddu\t$fp,$sp,$0"<<std::endl;  
     }
-    
-    */
 
-    int func_arg_reg_count;
+
+
+    
+    
+
+    int func_arg_reg_count, fp_func_arg_reg_count;
     std::string function_type;
     std::map<std::string,std::string>functions;
 
@@ -826,7 +795,7 @@ struct CompileContext{
     
     bool parameter;
     
-    uint parameter_num;
+    uint parameter_num, fp_parameter_num;
     
     std::map<std::string, binding> param_bindings;    
     

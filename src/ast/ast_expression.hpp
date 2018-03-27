@@ -1765,7 +1765,7 @@ class arg_expr_list : public Node {
         virtual void compile(std::ostream &dst, CompileContext &context) const override
         {
 
-            context.func_arg_reg_count = 0;
+            context.func_arg_reg_count = context.fp_func_arg_reg_count = 0;
             // ARG_EXPR_LIST
             
             if(next != NULL) next->compile(dst, context); // store variable into expression result
@@ -1789,9 +1789,21 @@ class arg_expr_list : public Node {
             uint exp_reg = context.extract_expr_reg(); // check if bottom expr node // sets expr_result_reg if, otherwise gets
             context.expr_primary_global_var = false; // reset
 
-            // move into arg reg
-            dst<<"\tmove\t$a"<<context.func_arg_reg_count<<",$"<<exp_reg<<'\n';
-            context.func_arg_reg_count++;
+
+            // move arg into reg
+            if(context.expr_primary_type == D){
+                dst<<"\tmov.d\t$f"<<12+context.fp_func_arg_reg_count<<",$f"<<exp_reg<<'\n';
+                context.fp_func_arg_reg_count+=2;
+            }
+            else if(context.expr_primary_type == F){
+                dst<<"\tmov.s\t$f"<<12+context.fp_func_arg_reg_count<<",$f"<<exp_reg<<'\n';
+                context.fp_func_arg_reg_count+=2;
+            }
+            else{
+                dst<<"\tmove\t$a"<<context.func_arg_reg_count<<",$"<<exp_reg<<'\n';
+                context.func_arg_reg_count++;
+            }
+
 
         }
 };
@@ -1992,9 +2004,12 @@ class expr_postfix : public Node {
                         
             // function call of 0 arguments
             else if (bracket && (exp == NULL)){
+                std::string type = context.functions[func];
+
                 // save $8-$15 to the stack
                 bool save_reg_state[32];
-                context.save_8_15(save_reg_state);
+                bool save_fp_reg_state[32];
+                context.save_regs(save_reg_state, save_fp_reg_state);
 
                 uint save_size = context.stack_size;
                 context.stack_size = 0;  // setting stack for 0 for function 
@@ -2005,20 +2020,30 @@ class expr_postfix : public Node {
 
                 context.stack_size = save_size;
 
-                context.restore_8_15(save_reg_state);
+                context.restore_regs(save_reg_state, save_fp_reg_state);
 
-                dst<<"\tmove\t$"<<exp_reg<<",$2\n";
+                if(type == "double"){
+                    dst<<"\tmov.d\t$f"<<exp_reg<<",$f0\n";
+                }
+                else if(type == "float"){
+                    dst<<"\tmov.s\t$f"<<exp_reg<<",$f0\n";
+                }
+                else dst<<"\tmove\t$"<<exp_reg<<",$2\n";
 
             }
             
             else if (bracket && (exp != NULL)){   //function call of multiple arguments
+                
+                std::string type = context.functions[func];
 
                 context.func_arg_reg_count = 0;
+                context.fp_func_arg_reg_count = 0;
                 exp->compile(dst,context); //arguments
 
 
                 bool save_reg_state[32];
-                context.save_8_15(save_reg_state);
+                bool save_fp_reg_state[32];
+                context.save_regs(save_reg_state, save_fp_reg_state);
 
                 uint save_size = context.stack_size;
                 context.stack_size = 0;
@@ -2029,13 +2054,18 @@ class expr_postfix : public Node {
 
                 context.stack_size = save_size;
 
-                // restore $8-15
-                context.restore_8_15(save_reg_state);
 
-                dst<<"\tmove\t$"<<exp_reg<<",$2\n";
-                // save to stack
+                context.restore_regs(save_reg_state, save_fp_reg_state);
 
-                context.expr_result =  func;                
+                context.expr_result =  func;
+
+                if(type == "double"){
+                    dst<<"\tmov.d\t$f"<<exp_reg<<",$f0\n";
+                }
+                else if(type == "float"){
+                    dst<<"\tmov.s\t$f"<<exp_reg<<",$f0\n";
+                }
+                else dst<<"\tmove\t$"<<exp_reg<<",$2\n";             
             
             }
             
