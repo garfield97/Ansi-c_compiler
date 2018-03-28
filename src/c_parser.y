@@ -1,3 +1,6 @@
+// Grammar developed with the guide of the draft C89 spec
+// X3J11 Technical Committee on the C Programming Language. The C89 Draft. Available from: https://port70.net/~nsz/c/c89/c89-draft.html [Accessed 2nd February 2018].
+
 %code requires{
   #include "ast.hpp"
 
