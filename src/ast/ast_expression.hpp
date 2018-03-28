@@ -548,7 +548,6 @@ class expr_logic_or : public Node {
 
             context.expr_primary_global_var = false; // reset
 
-            //bne temp 0 - move 1
             dst<<"\tbne\t$"<<temp_register<<",$0,$"<<one<<"\n";
 
 
@@ -570,8 +569,6 @@ class expr_logic_or : public Node {
             // get RH term register
             uint logic_or_reg = context.extract_expr_reg();
             context.expr_primary_global_var = false; // reset
-
-
 
             //beq exp 0 - move 0
             dst<<"\tbeq\t$"<<logic_or_reg<<",$0,$"<<zero<<"\n";
@@ -639,7 +636,6 @@ class expr_logic_and : public Node {
             context.expr_primary_global_var = false; // reset
 
 
-            // compare temp_register
             dst<<"\tbeq\t"<<"$"<<temp_register<<",$0"<<",$"<<zero<<'\n';
                 //if eq branch to move 0
 
@@ -663,9 +659,6 @@ class expr_logic_and : public Node {
             context.expr_primary_global_var = false; // reset
 
 
-
-
-            // compare l_a_reg
             dst<<"\tbeq\t"<<"$"<<logic_and_reg<<",$0"<<",$"<<zero<<'\n';
                 // if eq to branch to move 0
             // move 1
@@ -1587,13 +1580,46 @@ class expr_unary : public Node {
 
             // INC and DEC
             if(terminal == "++"){
-                if(context.expr_primary_type == UI){
+
+                if(context.expr_primary_type == D){
+                    std::string one = context.makeName("$one");
+                    std::string tmp = "\n\t.data\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = one + ":\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = "\t.double\t1.0\n\n";
+                    context.fp_constant_dec.push_back(tmp);
+
+                    dstStream<<"\tlui\t$15,%hi("<<one<<")\n";
+                    dstStream<<"\tldc1\t$f18"<<",%lo("<<one<<")($15)\n";
+
+
+                    dst<<"\tadd.d\t$f"<<exp_reg<<",$f"<<exp_reg<<",$f18"<<std::endl;
+ 
+                }
+                else if(context.expr_primary_type == F){
+                    std::string one = context.makeName("$one");
+                    std::string tmp = "\n\t.data\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = one + ":\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = "\t.float\t1.0\n\n";
+                    context.fp_constant_dec.push_back(tmp);
+
+                    dstStream<<"\tlui\t$15,%hi("<<one<<")\n";
+                    dstStream<<"\tlwc1\t$f18"<<",%lo("<<one<<")($15)\n";
+
+
+                    dst<<"\tadd.s\t$f"<<exp_reg<<",$f"<<exp_reg<<",$f18"<<std::endl; 
+                }
+                else if(context.expr_primary_type == UI){
                     dst<<"\taddiu\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
                 }
                 else{
                     dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
                 }
 
+
                 if(global_var){
                     uint addr = context.get_free_reg();
                     dst<<"\tlui\t"<<"$"<<addr<<",%hi("<<context.expr_result<<")\n";
@@ -1602,18 +1628,61 @@ class expr_unary : public Node {
                 else{
                     context.force_update_variable();
                     uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
-                    dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
-                    dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
+                    uint pos = context.scopes[context.scope_index][context.expr_result].stack_position*4;
+
+                    if(context.expr_primary_type == D) dst<<"\tsdc1\t$f"<<exp_reg<<","<<pos<<"($sp)\n";
+
+                    else if(context.expr_primary_type == F) dst<<"\tswc1\t$f"<<exp_reg<<","<<pos<<"($sp)\n";
+
+                    else{
+                        dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
+                        dst<<"\tsw\t$"<<local<<","<<pos<<"($sp)\n";
+                    }
+
                 }
             }
 
             if(terminal == "--"){
+
+                if(context.expr_primary_type == D){
+                    std::string one = context.makeName("$one");
+                    std::string tmp = "\n\t.data\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = one + ":\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = "\t.double\t1.0\n\n";
+                    context.fp_constant_dec.push_back(tmp);
+
+                    dstStream<<"\tlui\t$15,%hi("<<one<<")\n";
+                    dstStream<<"\tldc1\t$f18"<<",%lo("<<one<<")($15)\n";
+
+
+                    dst<<"\tsub.d\t$f"<<exp_reg<<",$f"<<exp_reg<<",$f18"<<std::endl;
+ 
+                }
+                else if(context.expr_primary_type == F){
+                    std::string one = context.makeName("$one");
+                    std::string tmp = "\n\t.data\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = one + ":\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = "\t.float\t1.0\n\n";
+                    context.fp_constant_dec.push_back(tmp);
+
+                    dstStream<<"\tlui\t$15,%hi("<<one<<")\n";
+                    dstStream<<"\tlwc1\t$f18"<<",%lo("<<one<<")($15)\n";
+
+
+                    dst<<"\tsub.s\t$f"<<exp_reg<<",$f"<<exp_reg<<",$f18"<<std::endl; 
+                }
                 if(context.expr_primary_type == UI){
                     dst<<"\tsubiu\t$"<<exp_reg<<",$"<<exp_reg<<",1"<<std::endl;
                 }
                 else{
                     dst<<"\taddi\t$"<<exp_reg<<",$"<<exp_reg<<",-1"<<std::endl;
                 }
+
+
                 if(global_var){
                     uint addr = context.get_free_reg();
                     dst<<"\tlui\t"<<"$"<<addr<<",%hi("<<context.expr_result<<")\n";
@@ -1622,8 +1691,16 @@ class expr_unary : public Node {
                 else{
                     context.force_update_variable();
                     uint local = context.scopes[context.scope_index][context.expr_result].reg_ID;
-                    dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
-                    dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";
+                    uint pos = context.scopes[context.scope_index][context.expr_result].stack_position*4;
+
+                    if(context.expr_primary_type == D) dst<<"\tsdc1\t$f"<<exp_reg<<","<<pos<<"($sp)\n";
+
+                    else if(context.expr_primary_type == F) dst<<"\tswc1\t$f"<<exp_reg<<","<<pos<<"($sp)\n";
+
+                    else{
+                        dst<<"\tmove\t$"<<local<<",$"<<exp_reg<<"\n";
+                        dst<<"\tsw\t$"<<local<<","<<pos<<"($sp)\n";
+                    }
                 }
             }
                 
@@ -1642,7 +1719,37 @@ class expr_unary : public Node {
            
                     if(global_var || context.update_variable()){}
 
-                    dst<<"\tsub\t$"<<exp_reg<<",$0,$"<<exp_reg<<'\n';
+                    if(context.expr_primary_type == D){
+                        std::string zero = context.makeName("$zero");
+                        std::string tmp = "\n\t.data\n";
+                        context.fp_constant_dec.push_back(tmp);
+                        tmp = zero + ":\n";
+                        context.fp_constant_dec.push_back(tmp);
+                        tmp = "\t.double\t0.0\n\n";
+                        context.fp_constant_dec.push_back(tmp);
+
+                        dstStream<<"\tlui\t$15,%hi("<<zero<<")\n";
+                        dstStream<<"\tldc1\t$f18"<<",%lo("<<zero<<")($15)\n";
+
+                        dst<<"\tsub.d\t$f"<<exp_reg<<",$f18"<<",$f"<<exp_reg<<std::endl;
+                    }
+
+                    else if(context.expr_primary_type == F){
+                        std::string zero = context.makeName("$zero");
+                        std::string tmp = "\n\t.data\n";
+                        context.fp_constant_dec.push_back(tmp);
+                        tmp = zero + ":\n";
+                        context.fp_constant_dec.push_back(tmp);
+                        tmp = "\t.float\t0.0\n\n";
+                        context.fp_constant_dec.push_back(tmp);
+
+                        dstStream<<"\tlui\t$15,%hi("<<zero<<")\n";
+                        dstStream<<"\tlwc1\t$f18"<<",%lo("<<zero<<")($15)\n";
+
+                        dst<<"\tsub.s\t$f"<<exp_reg<<",$f18"<<",$f"<<exp_reg<<std::endl;
+                    }
+
+                    else dst<<"\tsub\t$"<<exp_reg<<",$0,$"<<exp_reg<<'\n';
            
                 }
                 if(tmp_op == "+"){
@@ -1670,6 +1777,7 @@ class expr_unary : public Node {
 
                     //end
                     dst<<"$"<<skip<<":\n";
+                        
 
 
                     context.internal_expr_value = !context.internal_temp_value;                
@@ -1955,8 +2063,39 @@ class expr_postfix : public Node {
                 uint local;
                 if(global_var) local = context.scopes[0][context.expr_result].reg_ID;
                 else local = context.scopes[context.scope_index][context.expr_result].reg_ID;
-                
-                if(context.expr_primary_type == UI){
+
+                if(context.expr_primary_type == D){
+                    std::string one = context.makeName("$one");
+                    std::string tmp = "\n\t.data\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = one + ":\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = "\t.double\t1.0\n\n";
+                    context.fp_constant_dec.push_back(tmp);
+
+                    dstStream<<"\tlui\t$15,%hi("<<one<<")\n";
+                    dstStream<<"\tldc1\t$f18"<<",%lo("<<one<<")($15)\n";
+
+
+                    dst<<"\tadd.d\t$f"<<local<<",$f"<<local<<",$f18"<<std::endl;
+ 
+                }
+                else if(context.expr_primary_type == F){
+                    std::string one = context.makeName("$one");
+                    std::string tmp = "\n\t.data\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = one + ":\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = "\t.float\t1.0\n\n";
+                    context.fp_constant_dec.push_back(tmp);
+
+                    dstStream<<"\tlui\t$15,%hi("<<one<<")\n";
+                    dstStream<<"\tlwc1\t$f18"<<",%lo("<<one<<")($15)\n";
+
+
+                    dst<<"\tadd.s\t$f"<<local<<",$f"<<local<<",$f18"<<std::endl; 
+                }
+                else if(context.expr_primary_type == UI){
                     dst<<"\tmove\t$"<<exp_reg<<",$"<<exp_reg<<std::endl; // set y = x 
                     dst<<"\taddiu\t$"<<local<<",$"<<exp_reg<<",1\n";            // increment x by 1  
                 }
@@ -1971,7 +2110,13 @@ class expr_postfix : public Node {
                     dst<<"\tsw\t$"<<local<<",%lo("<<context.global_expr_result<<")($"<<addr<<")\n";
                 }
                 else{
-                    dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";   //saves values back onto stack
+                    uint pos = context.scopes[context.scope_index][context.expr_result].stack_position*4;
+
+                    if(context.expr_primary_type == D) dst<<"\tsdc1\t$f"<<local<<","<<pos<<"($sp)\n";
+
+                    else if(context.expr_primary_type == F) dst<<"\tswc1\t$f"<<local<<","<<pos<<"($sp)\n";
+
+                    else dst<<"\tsw\t$"<<local<<","<<pos<<"($sp)\n";   //saves values back onto stack
                 }
             }
 
@@ -1985,7 +2130,39 @@ class expr_postfix : public Node {
                 if(global_var) local = context.scopes[0][context.expr_result].reg_ID;
                 else local = context.scopes[context.scope_index][context.expr_result].reg_ID;
                 
-                if(context.expr_primary_type == UI){
+
+                if(context.expr_primary_type == D){
+                    std::string one = context.makeName("$one");
+                    std::string tmp = "\n\t.data\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = one + ":\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = "\t.double\t1.0\n\n";
+                    context.fp_constant_dec.push_back(tmp);
+
+                    dstStream<<"\tlui\t$15,%hi("<<one<<")\n";
+                    dstStream<<"\tldc1\t$f18"<<",%lo("<<one<<")($15)\n";
+
+
+                    dst<<"\tsub.d\t$f"<<local<<",$f"<<local<<",$f18"<<std::endl;
+ 
+                }
+                else if(context.expr_primary_type == F){
+                    std::string one = context.makeName("$one");
+                    std::string tmp = "\n\t.data\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = one + ":\n";
+                    context.fp_constant_dec.push_back(tmp);
+                    tmp = "\t.float\t1.0\n\n";
+                    context.fp_constant_dec.push_back(tmp);
+
+                    dstStream<<"\tlui\t$15,%hi("<<one<<")\n";
+                    dstStream<<"\tlwc1\t$f18"<<",%lo("<<one<<")($15)\n";
+
+
+                    dst<<"\tsub.s\t$f"<<local<<",$f"<<local<<",$f18"<<std::endl; 
+                }
+                else if(context.expr_primary_type == UI){
                     dst<<"\tmove\t$"<<exp_reg<<",$"<<exp_reg<<std::endl; // set y = x 
                     dst<<"\taddiu\t$"<<local<<",$"<<exp_reg<<",-1\n";            // decrement x by 1  
                 }
@@ -2000,7 +2177,13 @@ class expr_postfix : public Node {
                     dst<<"\tsw\t$"<<local<<",%lo("<<context.global_expr_result<<")($"<<addr<<")\n";
                 }
                 else{
-                    dst<<"\tsw\t$"<<local<<","<<context.scopes[context.scope_index][context.expr_result].stack_position*4<<"($sp)\n";   //saves values back onto stack
+                    uint pos = context.scopes[context.scope_index][context.expr_result].stack_position*4;
+
+                    if(context.expr_primary_type == D) dst<<"\tsdc1\t$f"<<local<<","<<pos<<"($sp)\n";
+
+                    else if(context.expr_primary_type == F) dst<<"\tswc1\t$f"<<local<<","<<pos<<"($sp)\n";
+
+                    else dst<<"\tsw\t$"<<local<<","<<pos<<"($sp)\n";   //saves values back onto stack
                 }
             }             
                         
