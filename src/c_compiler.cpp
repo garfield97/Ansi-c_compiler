@@ -87,6 +87,8 @@ int main(int argc, char* argv[])
         CC.assign_reg_set = false;
         CC.parameter = false;
 
+        CC.pushing_parameters = false;
+
         CC.calling_function = false;
 
         CC.global_force_update = false;

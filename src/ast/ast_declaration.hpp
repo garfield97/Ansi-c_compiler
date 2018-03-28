@@ -140,6 +140,9 @@ class definition_function : public Node{
                 this->push_stack(dst,context); // shift arguments on stack
                 this->push_stack(dst,context);
 
+                context.pushing_parameters = false;
+
+
                 dst<<"\tsw\t$31,"<<(context.stack_size)*4<<"($sp)\n"; // preseverve return addr
                 context.save_stack_pos_31 = (context.stack_size);
                 context.save_stack_pos_fp = (context.stack_size-1);
@@ -942,7 +945,7 @@ class declaration_parameter : public Node{
             tmp.reg_ID = 33;
             tmp.is_global = false;
             
-            
+            context.pushing_parameters = true;
             context.parameter = true;
             recur->compile(dst,context);        //stores variable name in tmp_v
             

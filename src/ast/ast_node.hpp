@@ -59,7 +59,7 @@ public:
             dst<<"\tlw\t$15,"<<i*4+4<<"($sp)"<<'\n';                                        //permanently assign register 15 as temporary stack shifting storage
             dst<<"\tsw\t$15,"<<i*4<<"($sp)"<<'\n';
         }
-        dst<<"\taddu\t$fp,$sp,$0"<<std::endl;                       //outside of forloop
+        if(!context.pushing_parameters) dst<<"\taddu\t$fp,$sp,$0"<<std::endl;                       //outside of forloop
         context.stack_size++;
     }
     
