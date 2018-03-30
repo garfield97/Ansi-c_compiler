@@ -91,7 +91,7 @@ class expr_conditional : public Node {
             context.expr_primary_global_var = false; // reset
 
             // beq zero - zero
-            dst<<"\tbeq\t"<<"$"<<cmp_reg<<",$0,"<<"$"<<zero<<"\n";
+            dst<<"\tbeq\t"<<"$"<<cmp_reg<<",$0,"<<"$"<<zero<<"\n\tnop\n";
 
 
             context.err_overide = true;
@@ -120,7 +120,7 @@ class expr_conditional : public Node {
                 dst<<"\tmove\t"<<"$"<<context.err_overide_reg<<",$"<<extracted_reg<<"\n";
             
                 // b skip
-                dst<<"\tb\t"<<"$"<<skip<<"\n";
+                dst<<"\tb\t"<<"$"<<skip<<"\n\tnop\n";
             
             
 
@@ -548,7 +548,7 @@ class expr_logic_or : public Node {
 
             context.expr_primary_global_var = false; // reset
 
-            dst<<"\tbne\t$"<<temp_register<<",$0,$"<<one<<"\n";
+            dst<<"\tbne\t$"<<temp_register<<",$0,$"<<one<<"\n\tnop\n";
 
 
 
@@ -571,13 +571,13 @@ class expr_logic_or : public Node {
             context.expr_primary_global_var = false; // reset
 
             //beq exp 0 - move 0
-            dst<<"\tbeq\t$"<<logic_or_reg<<",$0,$"<<zero<<"\n";
+            dst<<"\tbeq\t$"<<logic_or_reg<<",$0,$"<<zero<<"\n\tnop\n";
 
             //move 1
             dst<<"$"<<one<<":\n";
             dst<<"\tmove\t$"<<temp_register<<",$1\n";
             //b end
-            dst<<"\tb\t$"<<end<<"\n";
+            dst<<"\tb\t$"<<end<<"\n\tnop\n";
 
             //move 0
             dst<<"$"<<zero<<":\n";
@@ -636,7 +636,7 @@ class expr_logic_and : public Node {
             context.expr_primary_global_var = false; // reset
 
 
-            dst<<"\tbeq\t"<<"$"<<temp_register<<",$0"<<",$"<<zero<<'\n';
+            dst<<"\tbeq\t"<<"$"<<temp_register<<",$0"<<",$"<<zero<<"\n\tnop\n";
                 //if eq branch to move 0
 
 
@@ -659,12 +659,12 @@ class expr_logic_and : public Node {
             context.expr_primary_global_var = false; // reset
 
 
-            dst<<"\tbeq\t"<<"$"<<logic_and_reg<<",$0"<<",$"<<zero<<'\n';
+            dst<<"\tbeq\t"<<"$"<<logic_and_reg<<",$0"<<",$"<<zero<<"\n\tnop\n";
                 // if eq to branch to move 0
             // move 1
             dst<<"\tmove\t"<<"$"<<temp_register<<",$1\n";
             // branch past move 0
-            dst<<"\tb\t"<<"$"<<skip<<'\n';
+            dst<<"\tb\t"<<"$"<<skip<<"\n\tnop\n";
 
             //move 0
             dst<<"$"<<zero<<":\n";
@@ -1762,12 +1762,12 @@ class expr_unary : public Node {
                     std::string skip = context.makeName("skip");
 
                     // check if its zero
-                    dst<<"\tbeq\t$"<<exp_reg<<",$0,$"<<zero<<"\n";
+                    dst<<"\tbeq\t$"<<exp_reg<<",$0,$"<<zero<<"\n\tnop\n";
 
                     // set to 0
                     dst<<"\taddi\t$"<<exp_reg<<",$0,0"<<'\n';
                     // branch to end
-                    dst<<"\tbeq\t$"<<exp_reg<<",$0,$"<<skip<<"\n";
+                    dst<<"\tbeq\t$"<<exp_reg<<",$0,$"<<skip<<"\n\tnop\n";
                     //dst<<"\tb\t$"<<skip<<":\n"<<"\tnop\n";
 
 

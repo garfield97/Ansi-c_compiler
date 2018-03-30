@@ -327,7 +327,7 @@ class statement_labeled :public Node{
                 uint sw_reg = context.extract_expr_reg();
 
                 // compare to switch expr - bne to skip
-                dst<<"\tbne\t$"<<ce_reg<<",$"<<sw_reg<<",$"<<skip<<"\n";
+                dst<<"\tbne\t$"<<ce_reg<<",$"<<sw_reg<<",$"<<skip<<"\n\tnop\n";
 
                     statement->compile(dst,context);
 
@@ -627,17 +627,17 @@ class statement_jump : public Node{
             
             if(symbol == "goto"){
                 
-                dst<<"\tbeq\t$0,$0,$"<<symbol_2<<"\n";
+                dst<<"\tbeq\t$0,$0,$"<<symbol_2<<"\n\tnop\n";
             }
 
             if(symbol == "break"){
                 
-                dst<<"\tbeq\t$0,$0,$"<<context.break_label<<"\n";
+                dst<<"\tbeq\t$0,$0,$"<<context.break_label<<"\n\tnop\n";
             }
 
             if(symbol == "continue"){
                 
-                dst<<"\tbeq\t$0,$0,$"<<context.continue_label<<"\n";
+                dst<<"\tbeq\t$0,$0,$"<<context.continue_label<<"\n\tnop\n";
             }
             
             
@@ -746,13 +746,13 @@ class statement_iteration : public Node{
         
                 uint expr_reg = context.extract_expr_reg();
         
-                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<"\n\tnop\n";
           
                 
                 statement->compile(dst,context);
 
                 expr_reg = context.extract_expr_reg();            
-                dst<<"\tb\t"<<"$"<<top_label<<'\n';
+                dst<<"\tb\t"<<"$"<<top_label<<"\n\tnop\n";
                 dst<<"$"<<bottom_label<<":\n";
             }
             
@@ -775,9 +775,9 @@ class statement_iteration : public Node{
                 expr->compile(dst,context);        
                 uint expr_reg = context.extract_expr_reg();  
             
-                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<"\n\tnop\n";
             
-                dst<<"\tb\t"<<"$"<<top_label<<'\n';
+                dst<<"\tb\t"<<"$"<<top_label<<"\n\tnop\n";
             
                 dst<<"$"<<bottom_label<<":\n";
             }
@@ -799,14 +799,14 @@ class statement_iteration : public Node{
                 statement_expr_rep->compile(dst,context);           //generate the condition statement eg i<10
                 tmp_condition_reg = context.extract_expr_reg();     //extract the condition for the first time            
                 
-                dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
+                dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<"\n\tnop\n";         //checking if conditions are met, if met exit;
  
 
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
 
                 expr->compile(dst,context);                             //operate on the variable  eg i++; only after first condition check thopugh
              
-                dst<<"\tb\t"<<"$"<<top_label<<'\n';
+                dst<<"\tb\t"<<"$"<<top_label<<"\n\tnop\n";
               
                 dst<<"$"<<bottom_label<<":\n"; 
             }
@@ -827,12 +827,12 @@ class statement_iteration : public Node{
                 statement_expr_rep->compile(dst,context);           //generate the condition statement eg i<10
                 tmp_condition_reg = context.extract_expr_reg();     //extract the condition for the first time            
                 
-                dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<'\n';         //checking if conditions are met, if met exit;
+                dst<<"\tbeq\t"<<"$"<<tmp_condition_reg<<",$0,$"<<bottom_label<<"\n\tnop\n";         //checking if conditions are met, if met exit;
  
 
                 statement->compile(dst,context);                    //generate the statement body, actions taking place during the for loop
 
-                dst<<"\tb\t"<<"$"<<top_label<<'\n';
+                dst<<"\tb\t"<<"$"<<top_label<<"\n\tnop\n";
               
                 dst<<"$"<<bottom_label<<":\n"; 
           
@@ -917,7 +917,7 @@ class statement_selection : public Node{
                 uint expr_reg = context.extract_expr_reg();
                 std::string bottom_label = context.makeName("if_label");
                 
-                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<"\n\tnop\n";
       
                 statement->compile(dst,context);
 
@@ -934,11 +934,11 @@ class statement_selection : public Node{
                 std::string exit_label = context.makeName("exit_label");
 
                 
-                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<'\n';
+                dst<<"\tbeq\t"<<"$"<<expr_reg<<",$0,$"<<bottom_label<<"\n\tnop\n";
                 
                 statement->compile(dst,context);
                 
-                dst<<"\tbne\t$"<<expr_reg<<",$0,$"<<exit_label<<'\n';
+                dst<<"\tbne\t$"<<expr_reg<<",$0,$"<<exit_label<<"\n\tnop\n";
                 
                 dst<<"$"<<bottom_label<<":\n"; 
                 
